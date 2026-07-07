@@ -8,7 +8,7 @@ variable "service_name" {
 variable "namespace" {
   description = "Kubernetes namespace"
   type        = string
-  default     = "atonixcorp"
+  default     = "orcacompute"
 }
 
 variable "environment" {

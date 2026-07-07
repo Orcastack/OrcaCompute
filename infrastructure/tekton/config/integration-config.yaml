@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: tekton-integration-config
-  namespace: atonixcorp-tekton
+  namespace: orcacompute-tekton
   labels:
     app.kubernetes.io/name: tekton-integration
     app.kubernetes.io/version: "0.1"
@@ -12,7 +12,7 @@ data:
     integration:
       puppet:
         enabled: true
-        server: "puppet.atonixcorp.local"
+        server: "puppet.orcacompute.local"
         environment: "production"
         manifests_path: "/etc/puppetlabs/code/environments/production/manifests"
         modules_path: "/etc/puppetlabs/code/environments/production/modules"
@@ -22,17 +22,17 @@ data:
           pre_deployment:
             - name: "Configure deployment environment"
               command: "puppet apply"
-              manifest: "atonixcorp::platform::pre_deploy"
+              manifest: "orcacompute::platform::pre_deploy"
               
           post_deployment:
             - name: "Verify deployment configuration"
               command: "puppet apply"
-              manifest: "atonixcorp::platform::post_deploy"
+              manifest: "orcacompute::platform::post_deploy"
               
           security_hardening:
             - name: "Apply security configurations"
               command: "puppet apply"
-              manifest: "atonixcorp::security"
+              manifest: "orcacompute::security"
               
         # Puppet facts to collect
         facts:
@@ -40,20 +40,20 @@ data:
           - "os"
           - "memory"
           - "processors"
-          - "atonixcorp_environment"
+          - "orcacompute_environment"
 
   gerrit-integration.yaml: |
     # Gerrit integration configuration for Tekton
     integration:
       gerrit:
         enabled: true
-        server_url: "http://gerrit.atonixcorp.local:8081"
+        server_url: "http://gerrit.orcacompute.local:8081"
         username: "tekton-bot"
         ssh_key_secret: "gerrit-ssh-key"
         
         # Project configuration
         projects:
-          - name: "atonixcorp"
+          - name: "orcacompute"
             branch_patterns:
               - "main"
               - "develop"
@@ -71,12 +71,12 @@ data:
         # Webhook configuration
         webhooks:
           patchset_created:
-            pipeline: "atonixcorp-ci-pipeline"
+            pipeline: "orcacompute-ci-pipeline"
             trigger_conditions:
               - "branch:main OR branch:develop"
               
           change_merged:
-            pipeline: "atonixcorp-cd-pipeline"
+            pipeline: "orcacompute-cd-pipeline"
             trigger_conditions:
               - "branch:main"
 
@@ -90,7 +90,7 @@ data:
           credentials_secret: "docker-registry-secret"
           
         image_config:
-          base_name: "atonixcorp"
+          base_name: "orcacompute"
           tag_strategy: "git-commit-sha"
           additional_tags:
             - "latest"
@@ -117,24 +117,24 @@ data:
       kubernetes:
         clusters:
           development:
-            context: "atonixcorp-dev"
-            namespace: "atonixcorp-dev"
+            context: "orcacompute-dev"
+            namespace: "orcacompute-dev"
             config_secret: "kubeconfig-dev"
             
           staging:
-            context: "atonixcorp-staging"
-            namespace: "atonixcorp-staging"
+            context: "orcacompute-staging"
+            namespace: "orcacompute-staging"
             config_secret: "kubeconfig-staging"
             
           production:
-            context: "atonixcorp-production"
-            namespace: "atonixcorp-production"
+            context: "orcacompute-production"
+            namespace: "orcacompute-production"
             config_secret: "kubeconfig-production"
             
         deployment:
           strategy: "rolling"
           helm:
-            chart_path: "./helm/atonixcorp"
+            chart_path: "./helm/orcacompute"
             values_files:
               development: "./helm/values-dev.yaml"
               staging: "./helm/values-staging.yaml"
@@ -155,7 +155,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: puppet-integration
-  namespace: atonixcorp-tekton
+  namespace: orcacompute-tekton
   labels:
     app.kubernetes.io/version: "0.1"
   annotations:
@@ -175,13 +175,13 @@ spec:
     default: "apply"
   - name: PUPPET_MANIFEST
     description: Puppet manifest to apply
-    default: "atonixcorp::platform"
+    default: "orcacompute::platform"
   - name: ENVIRONMENT
     description: Target environment
     default: "development"
   - name: PUPPET_SERVER
     description: Puppet server URL
-    default: "puppet.atonixcorp.local"
+    default: "puppet.orcacompute.local"
   results:
   - name: puppet-status
     description: Puppet execution status
@@ -214,7 +214,7 @@ spec:
         "validate")
           echo "Validating Puppet manifests..."
           puppet parser validate infrastructure/puppet/manifests/*.pp
-          puppet parser validate infrastructure/puppet/modules/atonixcorp/manifests/*.pp
+          puppet parser validate infrastructure/puppet/modules/orcacompute/manifests/*.pp
           ;;
           
         "test")
@@ -237,7 +237,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: gerrit-integration
-  namespace: atonixcorp-tekton
+  namespace: orcacompute-tekton
   labels:
     app.kubernetes.io/version: "0.1"
   annotations:
@@ -273,7 +273,7 @@ spec:
     default: "0"
   - name: GERRIT_SERVER
     description: Gerrit server URL
-    default: "gerrit.atonixcorp.local:29418"
+    default: "gerrit.orcacompute.local:29418"
   results:
   - name: gerrit-status
     description: Gerrit integration status

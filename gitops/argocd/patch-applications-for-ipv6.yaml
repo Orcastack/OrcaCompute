@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: atonixcorp-ipv6-patches
+  name: orcacompute-ipv6-patches
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/atonixcorp/atonixcorp.git
+    repoURL: https://github.com/orcacompute/orcacompute.git
     targetRevision: main
     path: k8s/patches
   destination:
     server: https://kubernetes.default.svc
-    namespace: atonixcorp
+    namespace: orcacompute
   syncPolicy:
     automated:
       prune: true

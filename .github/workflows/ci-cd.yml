@@ -46,7 +46,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -89,7 +89,7 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           SECRET_KEY: test-secret-key
           DEBUG: 'True'
-          DJANGO_SETTINGS_MODULE: atonixcorp.settings
+          DJANGO_SETTINGS_MODULE: orcacompute.settings
         run: |
           cd backend
           python manage.py migrate --noinput
@@ -98,7 +98,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457
         with:
           files: ./backend/coverage.xml
           flags: backend
@@ -111,10 +111,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610
         with:
           node-version: '18'
           cache: 'npm'
@@ -142,7 +142,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457
         with:
           file: ./frontend/coverage/lcov.info
           flags: frontend
@@ -159,7 +159,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
@@ -190,7 +190,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -233,7 +233,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
@@ -247,11 +247,11 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          sed -i "s|image: atonixcorp/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
-          sed -i "s|image: atonixcorp/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
+          sed -i "s|image: orcacompute/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
+          sed -i "s|image: orcacompute/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
           kubectl apply -k k8s/overlays/development/
-          kubectl rollout status deployment/backend -n atonixcorp-dev
-          kubectl rollout status deployment/frontend -n atonixcorp-dev
+          kubectl rollout status deployment/backend -n orcacompute-dev
+          kubectl rollout status deployment/frontend -n orcacompute-dev
 
   # ── Deploy to Production ────────────────────────────────────────────────────
   deploy-prod:
@@ -262,7 +262,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -277,17 +277,17 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          sed -i "s|image: atonixcorp/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
-          sed -i "s|image: atonixcorp/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
+          sed -i "s|image: orcacompute/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
+          sed -i "s|image: orcacompute/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
           kubectl apply -k k8s/overlays/production/
-          kubectl rollout status deployment/backend -n atonixcorp
-          kubectl rollout status deployment/frontend -n atonixcorp
+          kubectl rollout status deployment/backend -n orcacompute
+          kubectl rollout status deployment/frontend -n orcacompute
 
       - name: Run smoke tests
         run: |
           sleep 30
-          curl -f https://api.atonixcorp.com/api/health/ || exit 1
-          curl -f https://atonixcorp.com/ || exit 1
+          curl -f https://api.orcacompute.com/api/health/ || exit 1
+          curl -f https://orcacompute.com/ || exit 1
           echo "Deployment successful and smoke tests passed"
 
   # ── Notify ──────────────────────────────────────────────────────────────────

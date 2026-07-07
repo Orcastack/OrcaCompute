@@ -1,25 +1,25 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: atonixcorp
+  name: orcacompute
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: app-user-sa
-  namespace: atonixcorp
+  namespace: orcacompute
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: app-admin-sa
-  namespace: atonixcorp
+  namespace: orcacompute
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: atonixcorp-user-role
-  namespace: atonixcorp
+  name: orcacompute-user-role
+  namespace: orcacompute
 rules:
   - apiGroups: [""]
     resources: ["pods", "services", "endpoints", "configmaps"]
@@ -31,8 +31,8 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: atonixcorp-admin-role
-  namespace: atonixcorp
+  name: orcacompute-admin-role
+  namespace: orcacompute
 rules:
   - apiGroups: [""]
     resources: ["pods", "services", "endpoints", "configmaps", "persistentvolumeclaims"]
@@ -48,35 +48,35 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: bind-app-user-sa
-  namespace: atonixcorp
+  namespace: orcacompute
 subjects:
   - kind: ServiceAccount
     name: app-user-sa
-    namespace: atonixcorp
+    namespace: orcacompute
 roleRef:
   kind: Role
-  name: atonixcorp-user-role
+  name: orcacompute-user-role
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: bind-app-admin-sa
-  namespace: atonixcorp
+  namespace: orcacompute
 subjects:
   - kind: ServiceAccount
     name: app-admin-sa
-    namespace: atonixcorp
+    namespace: orcacompute
 roleRef:
   kind: Role
-  name: atonixcorp-admin-role
+  name: orcacompute-admin-role
   apiGroup: rbac.authorization.k8s.io
 ---
 # Cluster-level admin role (use carefully)
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: atonixcorp-cluster-admin
+  name: orcacompute-cluster-admin
 rules:
   - apiGroups: ["*"]
     resources: ["*"]
@@ -85,12 +85,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: atonixcorp-admins-binding
+  name: orcacompute-admins-binding
 subjects:
   - kind: Group
-    name: atonixcorp-admins
+    name: orcacompute-admins
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: atonixcorp-cluster-admin
+  name: orcacompute-cluster-admin
   apiGroup: rbac.authorization.k8s.io

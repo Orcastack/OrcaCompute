@@ -1,41 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atonixcorp
-  namespace: atonixcorp
+  name: orcacompute
+  namespace: orcacompute
   labels:
-    app: atonixcorp
+    app: orcacompute
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: atonixcorp
+      app: orcacompute
   template:
     metadata:
       labels:
-        app: atonixcorp
+        app: orcacompute
     spec:
       imagePullSecrets:
         - name: ghcr-regcred
       containers:
         - name: platform
-          image: ghcr.io/atonixdev/atonixcorp:1.0.0
+          image: ghcr.io/atonixdev/orcacompute:1.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
             - containerPort: 80
           envFrom:
             - secretRef:
-                name: atonixcorp-secrets
+                name: orcacompute-secrets
           env:
             - name: ENVIRONMENT
               value: "production"
             - name: DEBUG
               value: "False"
             - name: REDIS_URL
-              value: "redis://atonixcorp-redis:6379/0"
+              value: "redis://orcacompute-redis:6379/0"
             - name: DATABASE_URL
-              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@atonixcorp-db:5432/$(POSTGRES_DB)"
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@orcacompute-db:5432/$(POSTGRES_DB)"
           readinessProbe:
             httpGet:
               path: /health/
@@ -57,6 +57,6 @@ spec:
       volumes:
         - name: app-media
           persistentVolumeClaim:
-            claimName: atonixcorp-media-pvc
+            claimName: orcacompute-media-pvc
         - name: app-logs
           emptyDir: {}

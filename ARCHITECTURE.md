@@ -1,4 +1,4 @@
-# AtonixCorp Platform — Architecture Guide
+# OrcaCompute Platform — Architecture Guide
 
 > **Target audience:** backend engineers, frontend engineers, DevOps.
 > **Last updated:** 2025
@@ -22,7 +22,7 @@
 
 ## Overview
 
-AtonixCorp is a sovereign cloud platform. Every resource the platform creates
+OrcaCompute is a sovereign cloud platform. Every resource the platform creates
 (VMs, volumes, networks, Kubernetes clusters) is backed by an OpenStack tenant.
 The **workspace binding** system guarantees that each team's resources land in
 the correct OpenStack project, in the correct region, subject to the correct
@@ -131,7 +131,7 @@ WorkspaceService.register_resource(
 
 ```
 backend/
-├── atonixcorp/
+├── orcacompute/
 │   └── settings.py          # INSTALLED_APPS includes services.workspace
 ├── infrastructure/
 │   ├── openstack_conn.py    # get_connection() — global fallback only
@@ -220,8 +220,8 @@ frontend/src/
 ### apiClient base URL
 
 ```
-REACT_APP_API_URL=https://api.atonixcorp.com
-→ calls go to: https://api.atonixcorp.com/api/services/provision/compute/vm/
+REACT_APP_API_URL=https://api.orcacompute.com
+→ calls go to: https://api.orcacompute.com/api/services/provision/compute/vm/
 ```
 
 ---
@@ -458,14 +458,14 @@ OS_CLOUD=atonix          # used when above are not set
 # Django
 SECRET_KEY=<secret>
 DEBUG=false
-ALLOWED_HOSTS=api.atonixcorp.com
+ALLOWED_HOSTS=api.orcacompute.com
 DATABASE_URL=postgres://user:pass@host/db
 ```
 
 ### Frontend (`frontend/.env`)
 
 ```bash
-REACT_APP_API_URL=https://api.atonixcorp.com
+REACT_APP_API_URL=https://api.orcacompute.com
 ```
 
 ---

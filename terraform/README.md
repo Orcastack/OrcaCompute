@@ -1,6 +1,6 @@
 # Terraform Modules
 
-Every AtonixCorp infrastructure resource **must** be created through a Terraform module. No manual creation via the OpenStack dashboard or CLI.
+Every OrcaCompute infrastructure resource **must** be created through a Terraform module. No manual creation via the OpenStack dashboard or CLI.
 
 ## Module Catalogue
 
@@ -46,7 +46,7 @@ terraform {
     bucket                      = "ax-terraform-state"
     key                         = "production/networking/terraform.tfstate"
     region                      = "us-east-1"
-    endpoint                    = "https://s3.atonixcorp.internal"
+    endpoint                    = "https://s3.orcacompute.internal"
     skip_credentials_validation = true
     skip_metadata_api_check     = true
     force_path_style            = true

@@ -128,7 +128,7 @@ resource "kubernetes_deployment" "celery_worker" {
           command = [
             "celery",
             "-A",
-            "atonixcorp",
+            "orcacompute",
             "worker",
             "--loglevel=${var.worker_log_level}",
             "--concurrency=${var.worker_concurrency}",
@@ -187,7 +187,7 @@ resource "kubernetes_deployment" "celery_worker" {
               command = [
                 "celery",
                 "-A",
-                "atonixcorp",
+                "orcacompute",
                 "inspect",
                 "ping"
               ]
@@ -203,7 +203,7 @@ resource "kubernetes_deployment" "celery_worker" {
               command = [
                 "celery",
                 "-A",
-                "atonixcorp",
+                "orcacompute",
                 "inspect",
                 "ping"
               ]
@@ -319,7 +319,7 @@ resource "kubernetes_deployment" "celery_beat" {
           command = [
             "celery",
             "-A",
-            "atonixcorp",
+            "orcacompute",
             "beat",
             "--loglevel=INFO",
             "--scheduler=django_celery_beat.schedulers:DatabaseScheduler"

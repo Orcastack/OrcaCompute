@@ -1,5 +1,5 @@
 ---
-# Standard AtonixCorp Compute Flavors
+# Standard OrcaCompute Compute Flavors
 # Apply with: openstack flavor create (or via Terraform module)
 
 flavors:

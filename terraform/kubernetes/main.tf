@@ -1,23 +1,23 @@
-# AtonixCorp - Kubernetes Infrastructure
+# OrcaCompute - Kubernetes Infrastructure
 terraform {
 <<<<<<< HEAD
   required_version = ">= 1.0"
   
   cloud {
-    organization = "AtonixCorp-Platform"
+    organization = "OrcaCompute-Platform"
 
     workspaces {
-      name = "atonixcorp-developers"
+      name = "orcacompute-developers"
     }
   }
   
 =======
   cloud {
 
-    organization = "AtonixCorp-Platform"
+    organization = "OrcaCompute-Platform"
 
     workspaces {
-      name = "atonixcorp"
+      name = "orcacompute"
     }
   }
   required_version = ">= 1.0"
@@ -58,9 +58,9 @@ locals {
     "app.kubernetes.io/version"    = var.app_version
     "app.kubernetes.io/component"  = "platform"
 <<<<<<< HEAD
-    "app.kubernetes.io/part-of"    = "atonixcorp"
+    "app.kubernetes.io/part-of"    = "orcacompute"
 =======
-    "app.kubernetes.io/part-of"    = "atonixcorp"
+    "app.kubernetes.io/part-of"    = "orcacompute"
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb
     "app.kubernetes.io/managed-by" = "terraform"
     "environment"                  = var.environment
@@ -69,10 +69,10 @@ locals {
 
   annotations = {
     "terraform.io/managed"          = "true"
-    "atonixcorp.com/environment"    = var.environment
-    "atonixcorp.com/version"        = var.app_version
-    "atonixcorp.com/deployed-by"    = "terraform"
-    "atonixcorp.com/deployed-at"    = timestamp()
+    "orcacompute.com/environment"    = var.environment
+    "orcacompute.com/version"        = var.app_version
+    "orcacompute.com/deployed-by"    = "terraform"
+    "orcacompute.com/deployed-at"    = timestamp()
   }
 }
 

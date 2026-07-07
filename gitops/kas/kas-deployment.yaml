@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: agent-server
 data:
   kas.yaml: |
-  # KAS (Kubernetes Agent Server) Configuration for AtonixCorp GitOps
+  # KAS (Kubernetes Agent Server) Configuration for OrcaCompute GitOps
     server:
       port: 8080
       host: 0.0.0.0
@@ -218,7 +218,7 @@ spec:
       - name: kas-registry-secret
       containers:
       - name: kas
-        image: ghcr.io/atonixcorp/atonixcorp-kas:1.0.0
+        image: ghcr.io/orcacompute/orcacompute-kas:1.0.0
         ports:
         - containerPort: 8080
           name: http
@@ -334,10 +334,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - kas.atonixcorp.com
+    - kas.orcacompute.com
     secretName: kas-tls
   rules:
-  - host: kas.atonixcorp.com
+  - host: kas.orcacompute.com
     http:
       paths:
       - path: /

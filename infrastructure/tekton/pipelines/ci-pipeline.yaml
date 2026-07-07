@@ -1,18 +1,18 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: atonixcorp-ci-pipeline
-  namespace: atonixcorp-tekton
+  name: orcacompute-ci-pipeline
+  namespace: orcacompute-tekton
   labels:
     app.kubernetes.io/version: "0.1"
   annotations:
     tekton.dev/pipelines.minVersion: "0.29.0"
     tekton.dev/categories: CI/CD
     tekton.dev/tags: ci, build, test
-    tekton.dev/displayName: "AtonixCorp CI Pipeline"
+    tekton.dev/displayName: "OrcaCompute CI Pipeline"
 spec:
   description: |
-    Continuous Integration pipeline for AtonixCorp platform that:
+    Continuous Integration pipeline for OrcaCompute platform that:
     1. Clones the source code
     2. Runs comprehensive tests
     3. Performs security scanning

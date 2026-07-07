@@ -1,15 +1,15 @@
-# AtonixCorp Cloud Platform
+# OrcaCompute Cloud Platform
 
 **Sovereign. Scalable. Enterprise-Grade.**
 
-AtonixCorp is a full-stack cloud platform built on open-source infrastructure components — designed to match the architecture of AWS, Google Cloud, and OVH, but operated as a private, auditable, and self-sovereign system.
+OrcaCompute is a full-stack cloud platform built on open-source infrastructure components — designed to match the architecture of AWS, Google Cloud, and OVH, but operated as a private, auditable, and self-sovereign system.
 
 ---
 
 ## Architecture Overview
 
 ```
-AtonixCorp Cloud
+OrcaCompute Cloud
 │
 ├── Identity & Governance          identity/
 │   ├── Keystone (IAM)             identity/keystone/
@@ -79,7 +79,7 @@ AtonixCorp Cloud
 │   └── Developer Dashboard        frontend/
 │
 ├── Application Services           backend/
-│   ├── Django REST API            backend/atonixcorp/
+│   ├── Django REST API            backend/orcacompute/
 │   ├── Platform services          backend/services/
 │   └── Infrastructure integration backend/infrastructure/
 │
@@ -88,7 +88,7 @@ AtonixCorp Cloud
 │   └── KAS                        gitops/kas/
 │
 ├── Helm Charts                    helm/
-│   └── atonixcorp/                helm/atonixcorp/
+│   └── orcacompute/                helm/orcacompute/
 │
 ├── Security                       security/
 ├── Infrastructure tooling         infrastructure/
@@ -248,7 +248,7 @@ Service accounts: every automated service has its own scoped account.
 
 ### 9. Developer Experience
 
-AtonixCorp provides a complete developer experience layer:
+OrcaCompute provides a complete developer experience layer:
 
 | Component | Location |
 |-----------|----------|
@@ -312,7 +312,7 @@ gunzip argo-linux-amd64.gz && chmod +x argo-linux-amd64 && sudo mv argo-linux-am
 cp backend/clouds.yaml.example backend/clouds.yaml
 
 # Set active cloud
-export OS_CLOUD=atonixcorp
+export OS_CLOUD=orcacompute
 
 # Verify OpenStack connectivity
 openstack token issue
@@ -359,7 +359,7 @@ kubectl apply -f observability/grafana/provisioning/datasources.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.13.0/serving-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.13.0/serving-core.yaml
 
-# Apply AtonixCorp Knative configuration
+# Apply OrcaCompute Knative configuration
 kubectl apply -f serverless/knative/config.yaml
 
 # Deploy your first function
@@ -411,12 +411,12 @@ kubectl apply -f serverless/functions/templates/knative-service.yaml -n your-nam
 
 All security standards are documented in `security/` and `docs/SECURITY_STANDARDS.md`.
 
-Vulnerability disclosure: `security-team@atonixcorp.com`
+Vulnerability disclosure: `security-team@orcacompute.com`
 
 ---
 
 ## License
 
-Copyright © 2026 AtonixCorp. All rights reserved.
+Copyright © 2026 OrcaCompute. All rights reserved.
 
-For licensing inquiries: `legal@atonixcorp.com`
+For licensing inquiries: `legal@orcacompute.com`

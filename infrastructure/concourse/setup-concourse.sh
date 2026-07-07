@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# AtonixCorp - Concourse CI Setup Script
-# This script sets up Concourse CI for the AtonixCorp platform
+# OrcaCompute - Concourse CI Setup Script
+# This script sets up Concourse CI for the OrcaCompute platform
 
 set -euo pipefail
 
@@ -40,7 +40,7 @@ log_error() {
 # Usage function
 usage() {
     cat << EOF
-AtonixCorp Concourse Setup Script
+OrcaCompute Concourse Setup Script
 
 Usage: $0 [OPTIONS]
 
@@ -176,7 +176,7 @@ login_to_concourse() {
     log_info "Logging into Concourse..."
     
     # Login with fly CLI
-    fly -t atonixcorp login \
+    fly -t orcacompute login \
         -c "$CONCOURSE_URL" \
         -u "$USERNAME" \
         -p "$PASSWORD" \
@@ -187,13 +187,13 @@ login_to_concourse() {
 
 # Set pipeline
 set_pipeline() {
-    log_info "Setting up AtonixCorp pipeline..."
+    log_info "Setting up OrcaCompute pipeline..."
     
     # Create secrets file
     cat > /tmp/concourse-secrets.yml << EOF
 git-private-key: |
   # Add your Git private key here
-  # Generate with: ssh-keygen -t rsa -b 4096 -C "concourse@atonixcorp.com"
+  # Generate with: ssh-keygen -t rsa -b 4096 -C "concourse@orcacompute.com"
   
 docker-registry-username: "your-registry-username"
 docker-registry-password: "your-registry-password"
@@ -204,13 +204,13 @@ EOF
     log_warning "Please update /tmp/concourse-secrets.yml with your actual secrets"
     
     # Set the pipeline
-    fly -t atonixcorp set-pipeline \
-        -p atonixcorp \
-        -c "$CONCOURSE_DIR/pipelines/atonixcorp.yml" \
+    fly -t orcacompute set-pipeline \
+        -p orcacompute \
+        -c "$CONCOURSE_DIR/pipelines/orcacompute.yml" \
         -l /tmp/concourse-secrets.yml
     
     # Unpause the pipeline
-    fly -t atonixcorp unpause-pipeline -p atonixcorp
+    fly -t orcacompute unpause-pipeline -p orcacompute
     
     log_success "Pipeline set up successfully"
 }
@@ -250,11 +250,11 @@ jobs:
                 # Add comprehensive security scanning logic here
 EOF
 
-    fly -t atonixcorp set-pipeline \
+    fly -t orcacompute set-pipeline \
         -p security-scans \
         -c "$CONCOURSE_DIR/pipelines/security-pipeline.yml"
     
-    fly -t atonixcorp unpause-pipeline -p security-scans
+    fly -t orcacompute unpause-pipeline -p security-scans
     
     log_success "Additional pipelines created"
 }
@@ -333,14 +333,14 @@ print_access_info() {
     echo ""
     echo "  Fly CLI Commands:"
     echo "====================="
-    echo " List pipelines:     fly -t atonixcorp pipelines"
-    echo "  Trigger build:      fly -t atonixcorp trigger-job -j atonixcorp/ci-pipeline"
-    echo " Watch build:        fly -t atonixcorp watch -j atonixcorp/ci-pipeline"
-    echo " Get pipeline:       fly -t atonixcorp get-pipeline -p atonixcorp"
+    echo " List pipelines:     fly -t orcacompute pipelines"
+    echo "  Trigger build:      fly -t orcacompute trigger-job -j orcacompute/ci-pipeline"
+    echo " Watch build:        fly -t orcacompute watch -j orcacompute/ci-pipeline"
+    echo " Get pipeline:       fly -t orcacompute get-pipeline -p orcacompute"
     echo ""
     echo " Pipeline Files:"
     echo "=================="
-    echo "  Main pipeline:     $CONCOURSE_DIR/pipelines/atonixcorp.yml"
+    echo "  Main pipeline:     $CONCOURSE_DIR/pipelines/orcacompute.yml"
     echo " Security pipeline:  $CONCOURSE_DIR/pipelines/security-pipeline.yml"
     echo " Task definitions:   $CONCOURSE_DIR/tasks/"
     echo ""
@@ -350,7 +350,7 @@ print_access_info() {
     echo "2. Configure Git repository webhooks pointing to Concourse"
     echo "3. Set up Slack notifications (update webhook URL)"
     echo "4. Configure Docker registry credentials"
-    echo "5. Test pipeline: fly -t atonixcorp trigger-job -j atonixcorp/ci-pipeline"
+    echo "5. Test pipeline: fly -t orcacompute trigger-job -j orcacompute/ci-pipeline"
     echo ""
     echo " Integration:"
     echo "==============="
@@ -368,7 +368,7 @@ print_access_info() {
 
 # Main execution
 main() {
-    echo " AtonixCorp Concourse CI Setup"
+    echo " OrcaCompute Concourse CI Setup"
     echo "================================="
     echo ""
     

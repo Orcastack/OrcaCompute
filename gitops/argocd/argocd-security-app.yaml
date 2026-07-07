@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: atonixcorp-security
+  name: orcacompute-security
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/atonixcorp/atonixcorp'
+    repoURL: 'https://github.com/orcacompute/orcacompute'
     targetRevision: HEAD
     path: k8s/overlays/security
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: atonixcorp
+    namespace: orcacompute
   syncPolicy:
     automated:
       prune: true

@@ -27,7 +27,7 @@ variable "image_registry" {
 variable "image_repository" {
   description = "Docker repository for the Ruby service image"
   type        = string
-  default     = "atonixcorp/atonixcorp-ruby-service"
+  default     = "orcacompute/orcacompute-ruby-service"
 }
 
 variable "image_tag" {

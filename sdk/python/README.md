@@ -1,4 +1,4 @@
-# AtonixCorp Official Python SDK + CLI
+# OrcaCompute Official Python SDK + CLI
 
 Install locally:
 

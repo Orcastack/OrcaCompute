@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atonixcorp-db
-  namespace: atonixcorp
+  name: orcacompute-db
+  namespace: orcacompute
   labels:
-    app: atonixcorp-db
+    app: orcacompute-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: atonixcorp-db
+      app: orcacompute-db
   template:
     metadata:
       labels:
-        app: atonixcorp-db
+        app: orcacompute-db
     spec:
       containers:
         - name: postgres
@@ -22,22 +22,22 @@ spec:
             - containerPort: 5432
           envFrom:
             - secretRef:
-                name: atonixcorp-secrets
+                name: orcacompute-secrets
           env:
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-secrets
+                  name: orcacompute-secrets
                   key: POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-secrets
+                  name: orcacompute-secrets
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-secrets
+                  name: orcacompute-secrets
                   key: POSTGRES_PASSWORD
           volumeMounts:
             - name: postgres-data
@@ -50,11 +50,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: atonixcorp-db
-  namespace: atonixcorp
+  name: orcacompute-db
+  namespace: orcacompute
 spec:
   selector:
-    app: atonixcorp-db
+    app: orcacompute-db
   ports:
     - protocol: TCP
       port: 5432

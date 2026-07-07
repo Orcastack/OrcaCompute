@@ -1,18 +1,18 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: atonixcorp-full-pipeline
-  namespace: atonixcorp-tekton
+  name: orcacompute-full-pipeline
+  namespace: orcacompute-tekton
   labels:
     app.kubernetes.io/version: "0.1"
   annotations:
     tekton.dev/pipelines.minVersion: "0.29.0"
     tekton.dev/categories: CI/CD
     tekton.dev/tags: ci, cd, full-pipeline
-    tekton.dev/displayName: "AtonixCorp Full CI/CD Pipeline"
+    tekton.dev/displayName: "OrcaCompute Full CI/CD Pipeline"
 spec:
   description: |
-    Complete CI/CD pipeline for AtonixCorp platform that combines build, test, security, and deployment:
+    Complete CI/CD pipeline for OrcaCompute platform that combines build, test, security, and deployment:
     1. Source code checkout
     2. Comprehensive testing (unit, integration, security)
     3. Build and security scan container image
@@ -39,11 +39,11 @@ spec:
   - name: staging-namespace
     type: string
     description: Kubernetes namespace for staging deployment.
-    default: atonixcorp-staging
+    default: orcacompute-staging
   - name: production-namespace
     type: string
     description: Kubernetes namespace for production deployment.
-    default: atonixcorp-production
+    default: orcacompute-production
   - name: skip-production
     type: string
     description: Skip production deployment (true/false).
@@ -170,7 +170,7 @@ spec:
       workspace: shared-data
     params:
     - name: BASE_URL
-      value: "http://atonixcorp-staging.$(params.staging-namespace).svc.cluster.local:8080"
+      value: "http://orcacompute-staging.$(params.staging-namespace).svc.cluster.local:8080"
     - name: ENVIRONMENT
       value: "staging"
 
@@ -225,7 +225,7 @@ spec:
       workspace: shared-data
     params:
     - name: BASE_URL
-      value: "http://atonixcorp-production.$(params.production-namespace).svc.cluster.local:8080"
+      value: "http://orcacompute-production.$(params.production-namespace).svc.cluster.local:8080"
     - name: ENVIRONMENT
       value: "production"
 
@@ -239,7 +239,7 @@ spec:
       values: ["false"]
     params:
     - name: message
-      value: " AtonixCorp platform successfully deployed to PRODUCTION!"
+      value: " OrcaCompute platform successfully deployed to PRODUCTION!"
     - name: environment
       value: "production"
     - name: image
@@ -267,7 +267,7 @@ spec:
       values: ["Failed"]
     params:
     - name: message
-      value: " AtonixCorp pipeline failed. Check logs for details."
+      value: " OrcaCompute pipeline failed. Check logs for details."
     - name: environment
       value: "pipeline"
     - name: image

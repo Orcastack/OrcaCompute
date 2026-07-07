@@ -1,5 +1,5 @@
 /**
- * AtonixCorp Platform Manual – PIN Protection
+ * OrcaCompute Platform Manual – PIN Protection
  *
  * PIN is configured via <meta name="manual-pin" content="XXXX"> in each page.
  * To change the PIN: update MANUAL_DOWNLOAD_PIN in .env, then update each
@@ -9,8 +9,8 @@
   'use strict';
 
   var PIN      = (document.querySelector('meta[name="manual-pin"]') || {}).content || '8414';
-  var PDF_PATH = 'assets/AtonixCorp_Manual.pdf';
-  var FILENAME = 'AtonixCorp_Manual.pdf';
+  var PDF_PATH = 'assets/OrcaCompute_Manual.pdf';
+  var FILENAME = 'OrcaCompute_Manual.pdf';
 
   /* ── Styles ─────────────────────────────────────────── */
   function injectStyles() {

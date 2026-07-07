@@ -3,20 +3,20 @@
 
 # Core Configuration
 <<<<<<< HEAD
-project_name = "atonixcorp-platform"
+project_name = "orcacompute-platform"
 environment  = "prod"
 app_version  = "1.0.0"
-namespace    = "atonixcorp-platform"
+namespace    = "orcacompute-platform"
 =======
-project_name = "atonixcorp"
+project_name = "orcacompute"
 environment  = "prod"
 app_version  = "1.0.0"
-namespace    = "atonixcorp"
+namespace    = "orcacompute"
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb
 
 # Domain and TLS
-domain_name     = "atonixcorp.org"
-tls_secret_name = "atonixcorp-tls"
+domain_name     = "orcacompute.org"
+tls_secret_name = "orcacompute-tls"
 ingress_class   = "nginx"
 
 # Storage
@@ -38,19 +38,19 @@ zookeeper_enable_jmx                    = true
 zookeeper_jmx_port                      = 9999
 
 # Database
-database_name     = "atonixcorp_prod"
+database_name     = "orcacompute_prod"
 database_username = "atonixuser"
 
 # Container Images
 image_registry            = "ghcr.io"
-backend_image_repository  = "atonixcorp/platform-backend"
+backend_image_repository  = "orcacompute/platform-backend"
 <<<<<<< HEAD
 backend_image_tag         = "latest"
-frontend_image_repository = "atonixcorp/platform-frontend"
+frontend_image_repository = "orcacompute/platform-frontend"
 frontend_image_tag        = "latest"
 =======
 backend_image_tag         = "1.0.0"
-frontend_image_repository = "atonixcorp/atonixcorp-frontend"
+frontend_image_repository = "orcacompute/orcacompute-frontend"
 frontend_image_tag        = "1.0.0"
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb
 
@@ -68,15 +68,15 @@ celery_worker_min_replicas = 2
 celery_worker_max_replicas = 15
 
 # Application Configuration
-allowed_hosts = ["atonixcorp.org", "www.atonixcorp.org", "api.atonixcorp.org"]
+allowed_hosts = ["orcacompute.org", "www.orcacompute.org", "api.orcacompute.org"]
 cors_allowed_origins = [
-  "https://atonixcorp.org",
-  "https://www.atonixcorp.org"
+  "https://orcacompute.org",
+  "https://www.orcacompute.org"
 ]
 <<<<<<< HEAD
-api_url = "http://atonixcorp-platform-backend:8000"
+api_url = "http://orcacompute-platform-backend:8000"
 =======
-api_url = "http://atonixcorp-backend:8000"
+api_url = "http://orcacompute-backend:8000"
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb
 
 # Feature Toggles

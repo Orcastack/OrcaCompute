@@ -1,6 +1,6 @@
 # Networking – OVN + Calico
 
-The AtonixCorp networking layer implements a two-tier SDN fabric:
+The OrcaCompute networking layer implements a two-tier SDN fabric:
 
 | Component | Scope | Role |
 |-----------|-------|------|

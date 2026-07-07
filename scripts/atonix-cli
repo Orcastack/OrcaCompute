@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AtonixCorp CLI - Platform Management Tool
+OrcaCompute CLI - Platform Management Tool
 Manages services, deployments, and platform operations
 """
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class AtonixCLI:
-    """Main CLI interface for AtonixCorp Platform."""
+    """Main CLI interface for OrcaCompute Platform."""
     
     def __init__(self):
         self.config_file = Path.cwd() / "atonix.yaml"
@@ -44,7 +44,7 @@ class AtonixCLI:
             return None
     
     def init(self, args):
-        """Initialize a new AtonixCorp service."""
+        """Initialize a new OrcaCompute service."""
         service_name = args.name or input("Enter service name: ").strip()
         runtime = args.runtime or "container"
         
@@ -148,7 +148,7 @@ CMD ["python", "-m", "app.main"]
         # Create README template
         readme_content = f"""# {service_name}
 
-{service_name} service for AtonixCorp Platform.
+{service_name} service for OrcaCompute Platform.
 
 ## Quick Start
 
@@ -175,7 +175,7 @@ See `atonix.yaml` for configuration options.
         with open("README.md", "w") as f:
             f.write(readme_content)
         
-        logger.info(f"OK Initialized AtonixCorp service: {service_name}")
+        logger.info(f"OK Initialized OrcaCompute service: {service_name}")
         logger.info("OK Created atonix.yaml, Dockerfile, README.md")
         logger.info(f"OK Created directories: {', '.join(directories)}")
     
@@ -355,8 +355,8 @@ See `atonix.yaml` for configuration options.
         )
     
     def login(self, args):
-        """Authenticate with AtonixCorp."""
-        logger.info("Authenticating with AtonixCorp...")
+        """Authenticate with OrcaCompute."""
+        logger.info("Authenticating with OrcaCompute...")
         
         # This would integrate with actual auth system
         # For now, just create a token file
@@ -375,7 +375,7 @@ See `atonix.yaml` for configuration options.
     
     def status(self, args):
         """Check platform and service status."""
-        logger.info("Checking AtonixCorp Platform status...")
+        logger.info("Checking OrcaCompute Platform status...")
         
         # Check Kubernetes
         result = subprocess.run(
@@ -403,7 +403,7 @@ See `atonix.yaml` for configuration options.
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="AtonixCorp Platform CLI"
+        description="OrcaCompute Platform CLI"
     )
     
     subparsers = parser.add_subparsers(dest="command", help="Command to run")

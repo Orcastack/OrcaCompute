@@ -5,7 +5,7 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: admin@atonixcorp.com
+    email: admin@orcacompute.com
     privateKeySecretRef:
       name: letsencrypt-dns-route53-staging-key
     solvers:

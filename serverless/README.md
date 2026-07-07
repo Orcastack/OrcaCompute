@@ -1,6 +1,6 @@
 # Serverless – Knative + OpenFaaS
 
-The AtonixCorp serverless layer runs on top of **Kubernetes**, not directly on OpenStack. Equivalent to AWS Lambda / GCP Cloud Run.
+The OrcaCompute serverless layer runs on top of **Kubernetes**, not directly on OpenStack. Equivalent to AWS Lambda / GCP Cloud Run.
 
 ## Architecture
 

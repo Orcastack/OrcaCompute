@@ -1,9 +1,9 @@
-# Default deny all ingress and egress in atonixcorp namespace
+# Default deny all ingress and egress in orcacompute namespace
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny-all
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   podSelector: {}
   policyTypes:
@@ -15,7 +15,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-frontend-to-backend
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   podSelector:
     matchLabels:
@@ -37,7 +37,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-backend-to-postgres
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   podSelector:
     matchLabels:
@@ -58,7 +58,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-redis-access
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   podSelector:
     matchLabels:
@@ -83,7 +83,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-prometheus-scrape
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   podSelector: {}
   policyTypes:
@@ -108,7 +108,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-dns-and-egress
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   podSelector: {}
   policyTypes:

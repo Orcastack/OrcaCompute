@@ -7,13 +7,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: atonixcorp-frontend-config
-  namespace: atonixcorp
+  name: orcacompute-frontend-config
+  namespace: orcacompute
 data:
-  REACT_APP_API_URL: "https://atonixcorp.com/api"
-  REACT_APP_WS_URL: "wss://atonixcorp.com/ws"
+  REACT_APP_API_URL: "https://orcacompute.com/api"
+  REACT_APP_WS_URL: "wss://orcacompute.com/ws"
   REACT_APP_ENVIRONMENT: "production"
-  REACT_APP_APP_NAME: "AtonixCorp"
+  REACT_APP_APP_NAME: "OrcaCompute"
   REACT_APP_ENABLE_WEBSOCKETS: "true"
   REACT_APP_ENABLE_MONITORING: "true"
   REACT_APP_ENABLE_BILLING: "true"
@@ -22,16 +22,16 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atonixcorp-frontend
-  namespace: atonixcorp
+  name: orcacompute-frontend
+  namespace: orcacompute
   labels:
-    app: atonixcorp-frontend
+    app: orcacompute-frontend
     ax/component: web
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: atonixcorp-frontend
+      app: orcacompute-frontend
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -40,7 +40,7 @@ spec:
   template:
     metadata:
       labels:
-        app: atonixcorp-frontend
+        app: orcacompute-frontend
         ax/component: web
     spec:
       securityContext:
@@ -49,7 +49,7 @@ spec:
         fsGroup: 101
       containers:
         - name: frontend
-          image: ghcr.io/atonixcorp/atonixcorp-frontend:latest
+          image: ghcr.io/orcacompute/orcacompute-frontend:latest
           imagePullPolicy: Always
           ports:
             - name: http
@@ -58,37 +58,37 @@ spec:
             - name: REACT_APP_API_URL
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-frontend-config
+                  name: orcacompute-frontend-config
                   key: REACT_APP_API_URL
             - name: REACT_APP_WS_URL
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-frontend-config
+                  name: orcacompute-frontend-config
                   key: REACT_APP_WS_URL
             - name: REACT_APP_ENVIRONMENT
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-frontend-config
+                  name: orcacompute-frontend-config
                   key: REACT_APP_ENVIRONMENT
             - name: REACT_APP_APP_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-frontend-config
+                  name: orcacompute-frontend-config
                   key: REACT_APP_APP_NAME
             - name: REACT_APP_ENABLE_WEBSOCKETS
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-frontend-config
+                  name: orcacompute-frontend-config
                   key: REACT_APP_ENABLE_WEBSOCKETS
             - name: REACT_APP_ENABLE_MONITORING
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-frontend-config
+                  name: orcacompute-frontend-config
                   key: REACT_APP_ENABLE_MONITORING
             - name: REACT_APP_ENABLE_BILLING
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-frontend-config
+                  name: orcacompute-frontend-config
                   key: REACT_APP_ENABLE_BILLING
           resources:
             requests:
@@ -116,13 +116,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: atonixcorp-frontend
-  namespace: atonixcorp
+  name: orcacompute-frontend
+  namespace: orcacompute
   labels:
-    app: atonixcorp-frontend
+    app: orcacompute-frontend
 spec:
   selector:
-    app: atonixcorp-frontend
+    app: orcacompute-frontend
   ports:
     - name: http
       port: 80

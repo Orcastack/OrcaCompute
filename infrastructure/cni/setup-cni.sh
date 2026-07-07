@@ -1,5 +1,5 @@
 #!/bin/bash
-# CNI Setup Script for AtonixCorp
+# CNI Setup Script for OrcaCompute
 
 set -euo pipefail
 
@@ -92,8 +92,8 @@ install_cni_configs() {
     log "Installing CNI configuration files..."
     
     # Copy configuration files
-    cp "$(dirname "$0")/10-atonixcorp-network.conflist" "${CNI_CONFIG_DIR}/"
-    cp "$(dirname "$0")/20-atonixcorp-production.conflist" "${CNI_CONFIG_DIR}/"
+    cp "$(dirname "$0")/10-orcacompute-network.conflist" "${CNI_CONFIG_DIR}/"
+    cp "$(dirname "$0")/20-orcacompute-production.conflist" "${CNI_CONFIG_DIR}/"
     
     # Set appropriate permissions
     chmod 644 "${CNI_CONFIG_DIR}"/*.conflist
@@ -105,9 +105,9 @@ install_cni_configs() {
 create_management_script() {
     log "Creating CNI management script..."
     
-    cat > /usr/local/bin/atonixcorp-cni-manage << 'EOF'
+    cat > /usr/local/bin/orcacompute-cni-manage << 'EOF'
 #!/bin/bash
-# AtonixCorp CNI Management Script
+# OrcaCompute CNI Management Script
 
 CNI_DIR="/opt/cni/bin"
 CNI_CONFIG_DIR="/etc/cni/net.d"
@@ -154,17 +154,17 @@ case "$1" in
 esac
 EOF
 
-    chmod +x /usr/local/bin/atonixcorp-cni-manage
-    log "CNI management script created at /usr/local/bin/atonixcorp-cni-manage"
+    chmod +x /usr/local/bin/orcacompute-cni-manage
+    log "CNI management script created at /usr/local/bin/orcacompute-cni-manage"
 }
 
 # Setup systemd service for persistent networking
 create_systemd_service() {
     log "Creating systemd service for CNI networking..."
     
-    cat > /etc/systemd/system/atonixcorp-cni.service << EOF
+    cat > /etc/systemd/system/orcacompute-cni.service << EOF
 [Unit]
-Description=AtonixCorp CNI Network Setup
+Description=OrcaCompute CNI Network Setup
 After=network.target
 Before=containerd.service docker.service
 
@@ -179,8 +179,8 @@ WantedBy=multi-user.target
 EOF
 
     systemctl daemon-reload
-    systemctl enable atonixcorp-cni.service
-    systemctl start atonixcorp-cni.service
+    systemctl enable orcacompute-cni.service
+    systemctl start orcacompute-cni.service
     
     log "Systemd service created and started"
 }
@@ -209,7 +209,7 @@ validate_installation() {
 
 # Main installation function
 main() {
-    log "Starting AtonixCorp CNI setup..."
+    log "Starting OrcaCompute CNI setup..."
     
     check_root
     install_cni_plugins
@@ -219,9 +219,9 @@ main() {
     create_systemd_service
     validate_installation
     
-    log "AtonixCorp CNI setup completed successfully!"
-    log "Use 'atonixcorp-cni-manage status' to check CNI status"
-    log "Use 'atonixcorp-cni-manage restart' to restart CNI networking"
+    log "OrcaCompute CNI setup completed successfully!"
+    log "Use 'orcacompute-cni-manage status' to check CNI status"
+    log "Use 'orcacompute-cni-manage restart' to restart CNI networking"
 }
 
 # Run main function if script is executed directly

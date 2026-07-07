@@ -1,8 +1,8 @@
-# AtonixCorp Cloud Enablement — Implementation Playbook
+# OrcaCompute Cloud Enablement — Implementation Playbook
 
 ## 1) Purpose and Scope
 
-This playbook operationalizes AtonixCorp’s target cloud model in this repository:
+This playbook operationalizes OrcaCompute’s target cloud model in this repository:
 
 - Public cloud (multi-tenant shared infrastructure)
 - Private cloud (isolated enterprise environments)

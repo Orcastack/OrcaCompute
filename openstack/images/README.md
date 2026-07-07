@@ -1,6 +1,6 @@
 # Glance – Image Registry
 
-All VM images used across AtonixCorp are versioned and published through Glance.
+All VM images used across OrcaCompute are versioned and published through Glance.
 
 ## Naming Convention
 

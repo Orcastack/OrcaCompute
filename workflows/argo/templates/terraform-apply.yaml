@@ -42,7 +42,7 @@ spec:
             mountPath: /workspace
         env:
           - name: OS_CLOUD
-            value: atonixcorp
+            value: orcacompute
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:

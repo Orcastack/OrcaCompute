@@ -136,7 +136,7 @@ data:
             },
             "namespace": {
               "type": "string",
-              "default": "atonixcorp-quantum"
+              "default": "orcacompute-quantum"
             },
             "crd": {
               "type": "object",
@@ -186,7 +186,7 @@ data:
             },
             "namespace": {
               "type": "string",
-              "default": "atonixcorp-quantum"
+              "default": "orcacompute-quantum"
             },
             "crd": {
               "type": "object",
@@ -223,10 +223,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - kas-webhooks.atonixcorp.com
+    - kas-webhooks.orcacompute.com
     secretName: kas-webhook-tls
   rules:
-  - host: kas-webhooks.atonixcorp.com
+  - host: kas-webhooks.orcacompute.com
     http:
       paths:
       - path: /

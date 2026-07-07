@@ -10,7 +10,7 @@ services:
     environment:
       - RACK_ENV=development
       - PORT=3000
-      - DATABASE_URL=postgres://ruby_user:ruby_password@postgres:5432/atonixcorp_ruby
+      - DATABASE_URL=postgres://ruby_user:ruby_password@postgres:5432/orcacompute_ruby
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY_BASE=development-secret-key
       - SIDEKIQ_USERNAME=admin
@@ -25,7 +25,7 @@ services:
       - /app/tmp
       - /app/log
     networks:
-      - atonixcorp
+      - orcacompute
 
   sidekiq:
     build:
@@ -34,7 +34,7 @@ services:
     command: bundle exec sidekiq
     environment:
       - RACK_ENV=development
-      - DATABASE_URL=postgres://ruby_user:ruby_password@postgres:5432/atonixcorp_ruby
+      - DATABASE_URL=postgres://ruby_user:ruby_password@postgres:5432/orcacompute_ruby
       - REDIS_URL=redis://redis:6379/0
       - SECRET_KEY_BASE=development-secret-key
       - LOG_LEVEL=debug
@@ -47,12 +47,12 @@ services:
       - /app/tmp
       - /app/log
     networks:
-      - atonixcorp
+      - orcacompute
 
   postgres:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=atonixcorp_ruby
+      - POSTGRES_DB=orcacompute_ruby
       - POSTGRES_USER=ruby_user
       - POSTGRES_PASSWORD=ruby_password
     ports:
@@ -61,7 +61,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - atonixcorp
+      - orcacompute
 
   redis:
     image: redis:7-alpine
@@ -70,7 +70,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - atonixcorp
+      - orcacompute
 
   # Optional: Redis Commander for Redis management
   redis-commander:
@@ -82,12 +82,12 @@ services:
     depends_on:
       - redis
     networks:
-      - atonixcorp
+      - orcacompute
 
 volumes:
   postgres_data:
   redis_data:
 
 networks:
-  atonixcorp:
+  orcacompute:
     driver: bridge

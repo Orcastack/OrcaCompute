@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# AtonixCorp - Tekton CI/CD Setup Script
-# This script installs and configures Tekton for the AtonixCorp platform
+# OrcaCompute - Tekton CI/CD Setup Script
+# This script installs and configures Tekton for the OrcaCompute platform
 
 set -euo pipefail
 
@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 TEKTON_VERSION="v0.50.5"
 TEKTON_TRIGGERS_VERSION="v0.25.3"
 TEKTON_DASHBOARD_VERSION="v0.40.1"
-NAMESPACE="atonixcorp-tekton"
+NAMESPACE="orcacompute-tekton"
 KUBERNETES_CONTEXT=""
 DRY_RUN=false
 SKIP_DEPS=false
@@ -41,12 +41,12 @@ log_error() {
 # Usage function
 usage() {
     cat << EOF
-AtonixCorp Tekton Setup Script
+OrcaCompute Tekton Setup Script
 
 Usage: $0 [OPTIONS]
 
 Options:
-    -n, --namespace NAMESPACE       Kubernetes namespace (default: atonixcorp-tekton)
+    -n, --namespace NAMESPACE       Kubernetes namespace (default: orcacompute-tekton)
     -c, --context CONTEXT          Kubernetes context to use
     -d, --dry-run                   Perform a dry run without making changes
     -s, --skip-deps                 Skip dependency checks
@@ -204,12 +204,12 @@ install_tekton_dashboard() {
     log_success "Tekton Dashboard installed successfully"
 }
 
-# Install AtonixCorp Tekton Resources
-install_atonixcorp_resources() {
-    log_info "Installing AtonixCorp Tekton resources..."
+# Install OrcaCompute Tekton Resources
+install_orcacompute_resources() {
+    log_info "Installing OrcaCompute Tekton resources..."
     
     if [[ "$DRY_RUN" == true ]]; then
-        log_info "[DRY RUN] Would install AtonixCorp Tekton resources"
+        log_info "[DRY RUN] Would install OrcaCompute Tekton resources"
         return
     fi
     
@@ -226,7 +226,7 @@ install_atonixcorp_resources() {
     log_info "Installing Configuration..."
     kubectl apply -f infrastructure/tekton/config/ -n "$NAMESPACE"
     
-    log_success "AtonixCorp Tekton resources installed successfully"
+    log_success "OrcaCompute Tekton resources installed successfully"
 }
 
 # Create RBAC and Service Accounts
@@ -276,13 +276,13 @@ roleRef:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: atonixcorp-pipeline-sa
+  name: orcacompute-pipeline-sa
   namespace: $NAMESPACE
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: atonixcorp-pipeline-clusterrole
+  name: orcacompute-pipeline-clusterrole
 rules:
 - apiGroups: [""]
   resources: ["pods", "services", "endpoints", "persistentvolumeclaims", "events", "configmaps", "secrets"]
@@ -297,15 +297,15 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: atonixcorp-pipeline-binding
+  name: orcacompute-pipeline-binding
 subjects:
 - kind: ServiceAccount
-  name: atonixcorp-pipeline-sa
+  name: orcacompute-pipeline-sa
   namespace: $NAMESPACE
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: atonixcorp-pipeline-clusterrole
+  name: orcacompute-pipeline-clusterrole
 EOF
     
     log_success "RBAC and Service Accounts created successfully"
@@ -377,7 +377,7 @@ verify_installation() {
         log_error " Tekton Dashboard is not running properly"
     fi
     
-    # Check AtonixCorp resources
+    # Check OrcaCompute resources
     local task_count=$(kubectl get tasks -n "$NAMESPACE" --no-headers | wc -l)
     local pipeline_count=$(kubectl get pipelines -n "$NAMESPACE" --no-headers | wc -l)
     local trigger_count=$(kubectl get eventlisteners -n "$NAMESPACE" --no-headers | wc -l)
@@ -429,7 +429,7 @@ print_access_info() {
 
 # Main execution
 main() {
-    echo " AtonixCorp Tekton CI/CD Setup"
+    echo " OrcaCompute Tekton CI/CD Setup"
     echo "================================="
     echo ""
     
@@ -447,13 +447,13 @@ main() {
     install_tekton_triggers
     install_tekton_dashboard
     create_rbac
-    install_atonixcorp_resources
+    install_orcacompute_resources
     setup_secrets
     verify_installation
     print_access_info
     
     echo ""
-    log_success " AtonixCorp Tekton setup completed successfully!"
+    log_success " OrcaCompute Tekton setup completed successfully!"
 }
 
 # Run main function

@@ -1,5 +1,5 @@
 // ============================================================
-//  AtonixCorp – Multibranch CI/CD Pipeline
+//  OrcaCompute – Multibranch CI/CD Pipeline
 //
 //  Branch behaviour:
 //    • Every branch / PR  → Checkout → Install → Build → Test
@@ -21,7 +21,7 @@ pipeline {
 
     // ── Global environment ─────────────────────────────────────────
     environment {
-        APP_NAME          = 'atonixcorp'
+        APP_NAME          = 'orcacompute'
         IMAGE_REGISTRY    = 'atonixdev'
         IMAGE_TAG         = "${env.GIT_COMMIT?.take(7) ?: 'latest'}"
 
@@ -183,7 +183,7 @@ pipeline {
         // ── 9. Operator (Go) Tests ────────────────────────────────
         stage('Operator: Go Tests') {
             steps {
-                dir('atonixcorp-operator') {
+                dir('orcacompute-operator') {
                     sh '''
                         go mod download
                         go test $(go list ./... | grep -v /e2e) \
@@ -219,7 +219,7 @@ pipeline {
                 branch 'main'
             }
             steps {
-                echo "Deploying AtonixCorp to production..."
+                echo "Deploying OrcaCompute to production..."
 
                 // Push versioned + latest image tags
                 sh '''
@@ -245,21 +245,21 @@ pipeline {
                         kubectl apply -f k8s/frontend-service.yaml
                         kubectl apply -f k8s/ingress.yaml
 
-                        kubectl set image deployment/atonixcorp-backend \
+                        kubectl set image deployment/orcacompute-backend \
                             backend=${IMAGE_REGISTRY}/${APP_NAME}-backend:${IMAGE_TAG} \
-                            -n atonixcorp
-                        kubectl set image deployment/atonixcorp-frontend \
+                            -n orcacompute
+                        kubectl set image deployment/orcacompute-frontend \
                             frontend=${IMAGE_REGISTRY}/${APP_NAME}-frontend:${IMAGE_TAG} \
-                            -n atonixcorp
+                            -n orcacompute
 
-                        kubectl rollout status deployment/atonixcorp-backend \
-                            -n atonixcorp --timeout=120s
-                        kubectl rollout status deployment/atonixcorp-frontend \
-                            -n atonixcorp --timeout=120s
+                        kubectl rollout status deployment/orcacompute-backend \
+                            -n orcacompute --timeout=120s
+                        kubectl rollout status deployment/orcacompute-frontend \
+                            -n orcacompute --timeout=120s
                     '''
                 }
 
-                echo "Deployment complete – platform live at https://atonixcorp.com"
+                echo "Deployment complete – platform live at https://orcacompute.com"
             }
         }
 
@@ -292,7 +292,7 @@ pipeline {
                     "passed on `${env.BRANCH_NAME}`\n<${env.BUILD_URL}|View build>")
                 if (env.BRANCH_NAME == 'main') {
                     emailNotify(
-                        subject: "[AtonixCorp CI] Build #${env.BUILD_NUMBER} – ${env.BRANCH_NAME} PASSED",
+                        subject: "[OrcaCompute CI] Build #${env.BUILD_NUMBER} – ${env.BRANCH_NAME} PASSED",
                         body:    "Build <b>#${env.BUILD_NUMBER}</b> on branch <b>${env.BRANCH_NAME}</b> " +
                                  "succeeded and was deployed to production.<br>" +
                                  "<a href='${env.BUILD_URL}'>Open in Jenkins</a>"
@@ -308,7 +308,7 @@ pipeline {
                     ":x: *${APP_NAME}* – Build *#${env.BUILD_NUMBER}* " +
                     "FAILED on `${env.BRANCH_NAME}`\n<${env.BUILD_URL}console|View logs>")
                 emailNotify(
-                    subject: "[AtonixCorp CI] Build #${env.BUILD_NUMBER} – ${env.BRANCH_NAME} FAILED",
+                    subject: "[OrcaCompute CI] Build #${env.BUILD_NUMBER} – ${env.BRANCH_NAME} FAILED",
                     body:    "Build <b>#${env.BUILD_NUMBER}</b> on branch <b>${env.BRANCH_NAME}</b> " +
                              "<b>FAILED</b>.<br>" +
                              "Please review the <a href='${env.BUILD_URL}console'>console output</a>."

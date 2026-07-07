@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Kube-OVN Installation Script for AtonixCorp
+# Kube-OVN Installation Script for OrcaCompute
 # This script installs Kube-OVN networking plugin
 
 set -e

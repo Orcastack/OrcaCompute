@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: atonixcorp
-  namespace: atonixcorp
+  name: orcacompute
+  namespace: orcacompute
   labels:
-    app: atonixcorp
+    app: orcacompute
 spec:
   selector:
-    app: atonixcorp
+    app: orcacompute
   ports:
     - protocol: TCP
       port: 8000
