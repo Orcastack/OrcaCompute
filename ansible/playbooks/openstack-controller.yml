@@ -1,5 +1,5 @@
 ---
-# AtonixCorp – OpenStack Controller Node Deployment
+# OrcaCompute – OpenStack Controller Node Deployment
 #
 # Installs and configures Keystone, Glance, Nova API/Scheduler,
 # Neutron Server/L3/DHCP, Cinder API/Scheduler, Octavia API,
@@ -11,7 +11,7 @@
 #   ansible-playbook -i inventory/production.ini playbooks/openstack-controller.yml \
 #     --tags keystone --limit region-a-controller
 
-- name: AtonixCorp OpenStack Controller Deployment
+- name: OrcaCompute OpenStack Controller Deployment
   hosts: openstack_controllers
   become: true
   gather_facts: true

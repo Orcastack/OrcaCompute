@@ -1,4 +1,4 @@
-# Puma configuration file for AtonixCorp Ruby Service
+# Puma configuration file for OrcaCompute Ruby Service
 # frozen_string_literal: true
 
 # Environment

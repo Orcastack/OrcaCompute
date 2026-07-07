@@ -2,21 +2,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: atonixcorp
+  name: orcacompute
   namespace: argocd
   labels:
-    project: atonixcorp
+    project: orcacompute
 spec:
-  description: AtonixCorp Project
+  description: OrcaCompute Project
 
   sourceRepos:
-    - 'https://github.com/atonixcorp/atonixcorp.git'
+    - 'https://github.com/orcacompute/orcacompute.git'
     - 'https://charts.bitnami.com/bitnami'
     - 'https://kubernetes-sigs.github.io/external-dns'
     - 'https://prometheus-community.github.io/helm-charts'
 
   destinations:
-    - namespace: 'atonixcorp*'
+    - namespace: 'orcacompute*'
       server: https://kubernetes.default.svc
     - namespace: 'monitoring'
       server: https://kubernetes.default.svc
@@ -61,28 +61,28 @@ spec:
     - name: developer
       description: Developer role with read access
       policies:
-        - p, proj:atonixcorp:developer, applications, get, atonixcorp/*, allow
-        - p, proj:atonixcorp:developer, applications, sync, atonixcorp/*-dev, allow
-        - p, proj:atonixcorp:developer, logs, get, atonixcorp/*, allow
-        - p, proj:atonixcorp:developer, exec, create, atonixcorp/*-dev, allow
+        - p, proj:orcacompute:developer, applications, get, orcacompute/*, allow
+        - p, proj:orcacompute:developer, applications, sync, orcacompute/*-dev, allow
+        - p, proj:orcacompute:developer, logs, get, orcacompute/*, allow
+        - p, proj:orcacompute:developer, exec, create, orcacompute/*-dev, allow
       groups:
-        - atonixcorp:developers
+        - orcacompute:developers
 
     - name: devops
       description: DevOps role with full access
       policies:
-        - p, proj:atonixcorp:devops, applications, *, atonixcorp/*, allow
-        - p, proj:atonixcorp:devops, logs, *, atonixcorp/*, allow
-        - p, proj:atonixcorp:devops, exec, *, atonixcorp/*, allow
+        - p, proj:orcacompute:devops, applications, *, orcacompute/*, allow
+        - p, proj:orcacompute:devops, logs, *, orcacompute/*, allow
+        - p, proj:orcacompute:devops, exec, *, orcacompute/*, allow
       groups:
-        - atonixcorp:devops
+        - orcacompute:devops
 
     - name: admin
       description: Admin role with cluster-wide access
       policies:
-        - p, proj:atonixcorp:admin, *, *, */*, allow
+        - p, proj:orcacompute:admin, *, *, */*, allow
       groups:
-        - atonixcorp:admins
+        - orcacompute:admins
 
   syncWindows:
     - kind: allow
@@ -112,11 +112,11 @@ spec:
   description: Production Environment Project
 
   sourceRepos:
-    - 'https://github.com/atonixcorp/platform.git'
+    - 'https://github.com/orcacompute/platform.git'
     - 'https://charts.bitnami.com/bitnami'
 
   destinations:
-    - namespace: 'atonixcorp'
+    - namespace: 'orcacompute'
       server: https://kubernetes.default.svc
     - namespace: 'monitoring'
       server: https://kubernetes.default.svc
@@ -149,14 +149,14 @@ spec:
         - p, proj:production:production-deployer, applications, sync, production/*, allow
         - p, proj:production:production-deployer, applications, override, production/*, deny
       groups:
-        - atonixcorp:production-deployers
+        - orcacompute:production-deployers
 
     - name: production-admin
       description: Production admin role
       policies:
         - p, proj:production:production-admin, *, *, production/*, allow
       groups:
-        - atonixcorp:production-admins
+        - orcacompute:production-admins
 
   syncWindows:
     - kind: allow

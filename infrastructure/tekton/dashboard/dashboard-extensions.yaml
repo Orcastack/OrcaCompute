@@ -8,16 +8,16 @@ metadata:
     app.kubernetes.io/version: v0.40.1
     dashboard.tekton.dev/extension: "true"
 data:
-  atonixcorp-extension.yaml: |
+  orcacompute-extension.yaml: |
     apiVersion: dashboard.tekton.dev/v1alpha1
     kind: Extension
     metadata:
-      name: atonixcorp-extension
+      name: orcacompute-extension
     spec:
       apiVersion: dashboard.tekton.dev/v1alpha1
-      name: atonixcorp
-      displayname: AtonixCorp
-      bundlelocation: ./static/extensions/atonixcorp/
+      name: orcacompute
+      displayname: OrcaCompute
+      bundlelocation: ./static/extensions/orcacompute/
       source: |
         import React from 'react';
         import { 
@@ -30,11 +30,11 @@ data:
           Button
         } from '@material-ui/core';
         
-        function AtonixCorpDashboard() {
+        function OrcaComputeDashboard() {
           return (
             <Box p={3}>
               <Typography variant="h4" gutterBottom>
-                 AtonixCorp Dashboard
+                 OrcaCompute Dashboard
               </Typography>
               
               <Grid container spacing={3}>
@@ -109,7 +109,7 @@ data:
           );
         }
         
-        export default AtonixCorpDashboard;
+        export default OrcaComputeDashboard;
 
 ---
 apiVersion: v1
@@ -157,7 +157,7 @@ data:
       - role: pod
         namespaces:
           names:
-          - atonixcorp-tekton
+          - orcacompute-tekton
       relabel_configs:
       - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
         action: keep
@@ -168,7 +168,7 @@ data:
       - role: pod
         namespaces:
           names:
-          - atonixcorp-tekton
+          - orcacompute-tekton
       relabel_configs:
       - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
         action: keep
@@ -178,8 +178,8 @@ data:
     {
       "dashboard": {
         "id": null,
-        "title": "AtonixCorp Tekton Dashboard",
-        "tags": ["tekton", "atonixcorp", "ci-cd"],
+        "title": "OrcaCompute Tekton Dashboard",
+        "tags": ["tekton", "orcacompute", "ci-cd"],
         "timezone": "browser",
         "panels": [
           {

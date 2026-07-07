@@ -11,11 +11,11 @@ resources:
 - ingress.yaml
 =======
   - namespace.yaml
-  - atonixcorp-postgres.yaml
+  - orcacompute-postgres.yaml
   - fast-ssd-postgres-pv.yaml
-  - atonixcorp-redis.yaml
-  - atonixcorp-backend.yaml
-  - atonixcorp-frontend.yaml
-  - atonixcorp-celery.yaml
-  - atonixcorp-ingress.yaml
+  - orcacompute-redis.yaml
+  - orcacompute-backend.yaml
+  - orcacompute-frontend.yaml
+  - orcacompute-celery.yaml
+  - orcacompute-ingress.yaml
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb

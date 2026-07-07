@@ -1,8 +1,8 @@
-# AtonixCorp Payments Architecture
+# OrcaCompute Payments Architecture
 
 ## Overview
 
-AtonixCorp Payments is a sovereign, vertically-integrated payment processing platform designed to power all financial transactions across the AtonixCorp ecosystem. Built with sovereignty, composability, and regulatory readiness as core principles.
+OrcaCompute Payments is a sovereign, vertically-integrated payment processing platform designed to power all financial transactions across the OrcaCompute ecosystem. Built with sovereignty, composability, and regulatory readiness as core principles.
 
 ## Core Architecture Layers
 
@@ -177,7 +177,7 @@ Mission control interface for payment operations with four specialized views:
 - Full data residency compliance
 
 ### Vertical Integration
-- Unified payment brain across all AtonixCorp products
+- Unified payment brain across all OrcaCompute products
 - Consistent API and data models
 - Shared risk and compliance frameworks
 

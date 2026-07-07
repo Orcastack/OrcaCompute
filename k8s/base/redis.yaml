@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: redis-secret
-  namespace: atonixcorp
+  namespace: orcacompute
 type: Opaque
 data:
   # redis_password (base64)
@@ -12,7 +12,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-pvc
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   accessModes:
     - ReadWriteOnce
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
-  namespace: atonixcorp
+  namespace: orcacompute
   labels:
     app: redis
     component: cache
@@ -92,7 +92,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis
-  namespace: atonixcorp
+  namespace: orcacompute
   labels:
     app: redis
     component: cache

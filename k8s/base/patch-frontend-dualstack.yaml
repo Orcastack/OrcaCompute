@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
-  namespace: atonixcorp
+  namespace: orcacompute
   labels:
     app: frontend
     component: ui

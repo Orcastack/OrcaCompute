@@ -1,16 +1,16 @@
-# Zuul Configuration for AtonixCorp CI/CD
+# Zuul Configuration for OrcaCompute CI/CD
 
 - tenant:
-    name: atonixcorp
+    name: orcacompute
     source:
       gerrit:
         config-projects:
-          - atonixcorp-config
+          - orcacompute-config
         untrusted-projects:
-          - atonixcorp
-          - atonixcorp-frontend
-          - atonixcorp-backend
-          - atonixcorp-infrastructure
+          - orcacompute
+          - orcacompute-frontend
+          - orcacompute-backend
+          - orcacompute-infrastructure
 
 - connection:
     driver: gerrit
@@ -32,11 +32,11 @@
     server: localhost
     port: 25
 <<<<<<< HEAD
-    default_from: zuul@atonixcorp.com
-    default_to: dev@atonixcorp.com
+    default_from: zuul@orcacompute.com
+    default_to: dev@orcacompute.com
 =======
-    default_from: zuul@atonixcorp.com
-    default_to: dev@atonixcorp.com
+    default_from: zuul@orcacompute.com
+    default_to: dev@orcacompute.com
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb
 
 # Pipeline definitions
@@ -133,11 +133,11 @@
 - job:
     name: base
     parent: null
-    description: The base job for all AtonixCorp jobs
+    description: The base job for all OrcaCompute jobs
     pre-run: playbooks/base/pre.yaml
     post-run: playbooks/base/post.yaml
     roles:
-      - zuul: atonixcorp-config
+      - zuul: orcacompute-config
     timeout: 1800
     attempts: 3
     secrets:
@@ -145,70 +145,70 @@
         secret: npm-registry-credentials
 
 - job:
-    name: atonixcorp-lint
+    name: orcacompute-lint
     parent: base
-    description: Lint check for AtonixCorp platform
+    description: Lint check for OrcaCompute platform
     run: playbooks/lint/run.yaml
 
 - job:
-    name: atonixcorp-test-unit
+    name: orcacompute-test-unit
     parent: base
-    description: Unit tests for AtonixCorp platform
+    description: Unit tests for OrcaCompute platform
     run: playbooks/test/unit.yaml
 
 - job:
-    name: atonixcorp-test-integration
+    name: orcacompute-test-integration
     parent: base
-    description: Integration tests for AtonixCorp platform
+    description: Integration tests for OrcaCompute platform
     run: playbooks/test/integration.yaml
 
 - job:
-    name: atonixcorp-security-scan
+    name: orcacompute-security-scan
     parent: base
-    description: Security scanning for AtonixCorp platform
+    description: Security scanning for OrcaCompute platform
     run: playbooks/security/scan.yaml
 
 - job:
-    name: atonixcorp-build-image
+    name: orcacompute-build-image
     parent: base
-    description: Build container image for AtonixCorp platform
+    description: Build container image for OrcaCompute platform
     run: playbooks/build/image.yaml
 
 - job:
-    name: atonixcorp-deploy-staging
+    name: orcacompute-deploy-staging
     parent: base
     description: Deploy to staging environment
     run: playbooks/deploy/staging.yaml
 
 - job:
-    name: atonixcorp-deploy-production
+    name: orcacompute-deploy-production
     parent: base
     description: Deploy to production environment
     run: playbooks/deploy/production.yaml
 
 # Project configurations
 - project:
-    name: atonixcorp
+    name: orcacompute
     check:
       jobs:
-        - atonixcorp-lint
-        - atonixcorp-test-unit
-        - atonixcorp-security-scan
-        - atonixcorp-build-image
+        - orcacompute-lint
+        - orcacompute-test-unit
+        - orcacompute-security-scan
+        - orcacompute-build-image
     gate:
       jobs:
-        - atonixcorp-lint
-        - atonixcorp-test-unit
-        - atonixcorp-test-integration
-        - atonixcorp-security-scan
-        - atonixcorp-build-image
+        - orcacompute-lint
+        - orcacompute-test-unit
+        - orcacompute-test-integration
+        - orcacompute-security-scan
+        - orcacompute-build-image
     post:
       jobs:
-        - atonixcorp-deploy-staging
+        - orcacompute-deploy-staging
     release:
       jobs:
 <<<<<<< HEAD
-        - atonixcorp-deploy-production
+        - orcacompute-deploy-production
 =======
-        - atonixcorp-deploy-production
+        - orcacompute-deploy-production
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb

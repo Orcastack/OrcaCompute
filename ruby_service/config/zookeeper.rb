@@ -4,14 +4,14 @@
 require 'zookeeper'
 require 'json'
 
-module AtonixCorp
+module OrcaCompute
   module Zookeeper
     class Client
       attr_reader :zk, :connected
 
       def initialize
         @zk_hosts = ENV.fetch('ZOOKEEPER_URL', 'zookeeper:2181')
-        @app_namespace = "/atonixcorp/#{ENV.fetch('RACK_ENV', 'development')}"
+        @app_namespace = "/orcacompute/#{ENV.fetch('RACK_ENV', 'development')}"
         @zk = nil
         @connected = false
         connect
@@ -201,5 +201,5 @@ end
 
 # Initialize Zookeeper connection
 at_exit do
-  AtonixCorp::Zookeeper.disconnect
+  OrcaCompute::Zookeeper.disconnect
 end

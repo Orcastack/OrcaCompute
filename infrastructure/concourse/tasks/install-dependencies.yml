@@ -8,7 +8,7 @@ image_resource:
     tag: 3.11-slim
 
 inputs:
-  - name: atonixcorp-source
+  - name: orcacompute-source
 
 run:
   path: bash
@@ -28,7 +28,7 @@ run:
         npm
       
       echo "Installing backend dependencies..."
-      cd atonixcorp-source/backend
+      cd orcacompute-source/backend
       pip install --upgrade pip
       pip install -r requirements.txt
       pip install -r requirements-opentelemetry.txt

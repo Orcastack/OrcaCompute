@@ -1,7 +1,7 @@
 heat_template_version: wallaby
 
 description: |
-  AtonixCorp Public Cloud – VM Stack
+  OrcaCompute Public Cloud – VM Stack
   Provisions a Nova instance in Region A (Public) with:
     - a Neutron network and subnet
     - a security group allowing SSH + HTTPS

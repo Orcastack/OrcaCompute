@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Starting AtonixCorp in standalone mode..."
+echo "Starting OrcaCompute in standalone mode..."
 
 # Create required directories
 mkdir -p /app/logs /app/static /app/media
@@ -17,7 +17,7 @@ export DATABASE_URL="sqlite:///app/db.sqlite3"
 export REDIS_URL="redis://127.0.0.1:6379"
 
 # Create minimal Django settings for standalone mode
-export DJANGO_SETTINGS_MODULE="atonixcorp.settings"
+export DJANGO_SETTINGS_MODULE="orcacompute.settings"
 
 echo "Starting supervisor..."
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

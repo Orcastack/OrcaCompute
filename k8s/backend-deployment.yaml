@@ -3,20 +3,20 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: atonixcorp-backend-config
-  namespace: atonixcorp
+  name: orcacompute-backend-config
+  namespace: orcacompute
 data:
-  DJANGO_SETTINGS_MODULE: "atonixcorp.settings"
-  ALLOWED_HOSTS: "atonixcorp.com,api.atonixcorp.com,atonixcorp-backend"
+  DJANGO_SETTINGS_MODULE: "orcacompute.settings"
+  ALLOWED_HOSTS: "orcacompute.com,api.orcacompute.com,orcacompute-backend"
   DEBUG: "false"
-  DATABASE_URL: "postgresql://atonixcorp:changeme@atonixcorp-postgres:5432/atonixcorp"
-  REDIS_URL: "redis://atonixcorp-redis:6379/0"
-  RABBITMQ_URL: "amqp://admin:changeme@atonixcorp-rabbitmq:5672/"
-  KAFKA_BOOTSTRAP_SERVERS: "atonixcorp-kafka:9092"
+  DATABASE_URL: "postgresql://orcacompute:changeme@orcacompute-postgres:5432/orcacompute"
+  REDIS_URL: "redis://orcacompute-redis:6379/0"
+  RABBITMQ_URL: "amqp://admin:changeme@orcacompute-rabbitmq:5672/"
+  KAFKA_BOOTSTRAP_SERVERS: "orcacompute-kafka:9092"
   KAFKA_ENABLED: "true"
-  PROMETHEUS_PUSHGATEWAY_URL: "http://atonixcorp-pushgateway:9091"
-  CORS_ALLOWED_ORIGINS: "https://atonixcorp.com,https://app.atonixcorp.com"
-  OS_CLOUD: "atonixcorp"
+  PROMETHEUS_PUSHGATEWAY_URL: "http://orcacompute-pushgateway:9091"
+  CORS_ALLOWED_ORIGINS: "https://orcacompute.com,https://app.orcacompute.com"
+  OS_CLOUD: "orcacompute"
   OS_REGION_NAME: "RegionOne"
 
 ---
@@ -24,8 +24,8 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: atonixcorp-backend-secret
-  namespace: atonixcorp
+  name: orcacompute-backend-secret
+  namespace: orcacompute
 type: Opaque
 stringData:
   SECRET_KEY: "change-me-in-production"
@@ -38,16 +38,16 @@ stringData:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atonixcorp-backend
-  namespace: atonixcorp
+  name: orcacompute-backend
+  namespace: orcacompute
   labels:
-    app: atonixcorp-backend
+    app: orcacompute-backend
     ax/component: api
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: atonixcorp-backend
+      app: orcacompute-backend
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -56,7 +56,7 @@ spec:
   template:
     metadata:
       labels:
-        app: atonixcorp-backend
+        app: orcacompute-backend
         ax/component: api
     spec:
       securityContext:
@@ -65,7 +65,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: backend
-          image: ghcr.io/atonixcorp/atonixcorp-backend:latest
+          image: ghcr.io/orcacompute/orcacompute-backend:latest
           imagePullPolicy: Always
           ports:
             - name: http
@@ -74,90 +74,90 @@ spec:
             - name: DJANGO_SETTINGS_MODULE
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: DJANGO_SETTINGS_MODULE
             - name: ALLOWED_HOSTS
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: ALLOWED_HOSTS
             - name: DEBUG
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: DEBUG
             - name: DATABASE_URL
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: DATABASE_URL
             - name: REDIS_URL
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: REDIS_URL
             - name: RABBITMQ_URL
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: RABBITMQ_URL
             - name: KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: KAFKA_BOOTSTRAP_SERVERS
             - name: KAFKA_ENABLED
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: KAFKA_ENABLED
             - name: PROMETHEUS_PUSHGATEWAY_URL
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: PROMETHEUS_PUSHGATEWAY_URL
             - name: CORS_ALLOWED_ORIGINS
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: CORS_ALLOWED_ORIGINS
             - name: OS_CLOUD
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: OS_CLOUD
             - name: OS_REGION_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: atonixcorp-backend-config
+                  name: orcacompute-backend-config
                   key: OS_REGION_NAME
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-backend-secret
+                  name: orcacompute-backend-secret
                   key: SECRET_KEY
             - name: OS_AUTH_URL
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-backend-secret
+                  name: orcacompute-backend-secret
                   key: OS_AUTH_URL
                   optional: true
             - name: OS_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-backend-secret
+                  name: orcacompute-backend-secret
                   key: OS_USERNAME
                   optional: true
             - name: OS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-backend-secret
+                  name: orcacompute-backend-secret
                   key: OS_PASSWORD
                   optional: true
             - name: OS_PROJECT_NAME
               valueFrom:
                 secretKeyRef:
-                  name: atonixcorp-backend-secret
+                  name: orcacompute-backend-secret
                   key: OS_PROJECT_NAME
                   optional: true
           resources:
@@ -189,22 +189,22 @@ spec:
       volumes:
         - name: static-files
           persistentVolumeClaim:
-            claimName: atonixcorp-static-pvc
+            claimName: orcacompute-static-pvc
         - name: media-files
           persistentVolumeClaim:
-            claimName: atonixcorp-media-pvc
+            claimName: orcacompute-media-pvc
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: atonixcorp-backend
-  namespace: atonixcorp
+  name: orcacompute-backend
+  namespace: orcacompute
   labels:
-    app: atonixcorp-backend
+    app: orcacompute-backend
 spec:
   selector:
-    app: atonixcorp-backend
+    app: orcacompute-backend
   ports:
     - name: http
       port: 8000

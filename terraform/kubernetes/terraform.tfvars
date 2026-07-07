@@ -1,16 +1,16 @@
-# Terraform variables for AtonixCorp Platform on single-node Kubernetes
+# Terraform variables for OrcaCompute Platform on single-node Kubernetes
 
 # Core Configuration
 <<<<<<< HEAD
-project_name = "atonixcorp-platform"
+project_name = "orcacompute-platform"
 environment = "dev"
 app_version = "1.0.0"
-namespace = "atonixcorp-platform"
+namespace = "orcacompute-platform"
 =======
-project_name = "atonixcorp"
+project_name = "orcacompute"
 environment = "dev"
 app_version = "1.0.0"
-namespace = "atonixcorp"
+namespace = "orcacompute"
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb
 
 # Kubernetes Configuration
@@ -25,8 +25,8 @@ kafka_storage_size = "3Gi"
 media_storage_size = "2Gi"
 
 # Database Configuration
-database_name = "atonixcorp"
-database_username = "atonixcorp"
+database_name = "orcacompute"
+database_username = "orcacompute"
 
 # Image Configuration
 image_registry = "docker.io"
@@ -55,20 +55,20 @@ kafka_min_isr = 1
 
 # Network Configuration
 <<<<<<< HEAD
-allowed_hosts = ["localhost", "127.0.0.1", "atonixcorp.org", "api.atonixcorp.org"]
-cors_allowed_origins = ["https://atonixcorp.org", "https://www.atonixcorp.org", "http://localhost:3000"]
-api_url = "http://api.atonixcorp.org"
-allowed_hosts = ["localhost", "127.0.0.1", "atonixcorp.org", "api.atonixcorp.org", "www.atonixcorp.org"]
-cors_allowed_origins = ["http://atonixcorp.org", "http://www.atonixcorp.org", "http://localhost:3000"]
+allowed_hosts = ["localhost", "127.0.0.1", "orcacompute.org", "api.orcacompute.org"]
+cors_allowed_origins = ["https://orcacompute.org", "https://www.orcacompute.org", "http://localhost:3000"]
+api_url = "http://api.orcacompute.org"
+allowed_hosts = ["localhost", "127.0.0.1", "orcacompute.org", "api.orcacompute.org", "www.orcacompute.org"]
+cors_allowed_origins = ["http://orcacompute.org", "http://www.orcacompute.org", "http://localhost:3000"]
 =======
 # Consolidated allowed hosts and CORS origins (deduplicated). Keep both https origins and http localhost for dev.
-allowed_hosts = ["localhost", "127.0.0.1", "atonixcorp.org", "api.atonixcorp.org", "www.atonixcorp.org"]
-cors_allowed_origins = ["https://atonixcorp.org", "https://www.atonixcorp.org", "http://atonixcorp.org", "http://www.atonixcorp.org", "http://localhost:3000"]
-api_url = "http://api.atonixcorp.org"
+allowed_hosts = ["localhost", "127.0.0.1", "orcacompute.org", "api.orcacompute.org", "www.orcacompute.org"]
+cors_allowed_origins = ["https://orcacompute.org", "https://www.orcacompute.org", "http://orcacompute.org", "http://www.orcacompute.org", "http://localhost:3000"]
+api_url = "http://api.orcacompute.org"
 >>>>>>> 12bd998bda7cee255affa733e542706dbab8dcfb
 
 # Domain Configuration
-domain_name = "atonixcorp.org"
+domain_name = "orcacompute.org"
 ingress_class = "nginx"
 
 # Disable TLS/cert-manager for now

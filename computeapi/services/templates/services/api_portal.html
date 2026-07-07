@@ -1,0 +1,454 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OrcaCompute APIs</title>
+    <meta name="description" content="Unified APIs for Compute, Storage, Networking, Identity, Automation, and Billing." />
+    <link rel="stylesheet" href="{% static 'services/css/api_portal.css' %}">
+</head>
+<body>
+<header class="topbar">
+    <div class="container topbar-inner">
+        <a class="brand" href="/">OrcaCompute API</a>
+        <nav class="topnav" id="topnav">
+            <a href="#categories">APIs</a>
+            <a href="#quickstart">Quickstart</a>
+            <a href="#console">Try It Now</a>
+            <a href="#reference">Reference</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#security">Security</a>
+            <a href="#dx">DX Standards</a>
+        </nav>
+        <div class="topbar-actions">
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark and light mode">Dark Dark</button>
+
+            <!-- Get Started dropdown -->
+            <div class="gs-dropdown" id="gsDropdown">
+                <button class="btn btn-primary gs-trigger"
+                        id="gsTrigger"
+                        type="button"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="gsCard">Get Started ▾</button>
+
+                <div class="gs-card" id="gsCard" role="dialog" aria-label="Get started options" hidden>
+
+                    <!-- Language selector -->
+                    <div class="gs-section gs-language">
+                        <label class="gs-label" for="gsLang">Language</label>
+                        <select id="gsLang" class="gs-select" aria-label="Select language">
+                            <option value="en" selected>English</option>
+                            <option value="fr">Français</option>
+                            <option value="es">Español</option>
+                            <option value="de">Deutsch</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+
+                    <hr class="gs-divider" />
+
+                    <!-- Login / auth actions -->
+                    <div class="gs-section gs-actions">
+                        <a class="gs-btn gs-btn-primary" href="/api/auth/signup/">Register</a>
+                        <a class="gs-btn gs-btn-secondary" href="/admin/">Go to Portal</a>
+                        <a class="gs-link-tertiary" href="/api/auth/login/">Forgot Username / Password?</a>
+                    </div>
+
+                    <hr class="gs-divider" />
+
+                    <!-- Support -->
+                    <div class="gs-section gs-support">
+                        <a class="gs-support-link" href="/api/health/" target="_blank" rel="noopener">Support Portal</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Get Started dropdown -->
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container hero-inner">
+            <p class="eyebrow">api.orcacompute.com</p>
+            <h1>OrcaCompute APIs</h1>
+            <p class="subtitle">Unified APIs for Compute, Storage, Networking, Identity, Billing, Monitoring, and Automation.</p>
+            <p class="description">Designed for enterprise-grade reliability with clear onboarding, predictable resource models, strict versioning, and secure multi-tenant operations.</p>
+            <div class="hero-actions">
+                <a class="btn btn-secondary" href="/api/services/">Browse Endpoints</a>
+            </div>
+            <div class="hero-code">
+<pre><code>curl -X GET "http://127.0.0.1:8000/api/services/instances/?limit=20&cursor=abc123&sort=created_at&order=desc" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "X-Region: us-east"</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="categories" class="section">
+        <div class="container">
+            <h2>API Categories</h2>
+            <p class="section-text">Resource-oriented services with consistent request and response conventions.</p>
+            <div class="grid cards-3">
+                <article class="card"><h3>Compute</h3><p>Instances, flavors, resizing, lifecycle management.</p><a href="/api/services/instances/">Explore Compute</a></article>
+                <article class="card"><h3>Network</h3><p>VPCs, subnets, routers, floating IPs, security groups.</p><a href="/api/services/vpcs/">Explore Network</a></article>
+                <article class="card"><h3>Storage</h3><p>Block, object, snapshots, backups, encryption.</p><a href="/api/services/volumes/">Explore Storage</a></article>
+                <article class="card"><h3>IAM</h3><p>Users, roles, policies, token and API key access.</p><a href="/api/auth/me/">Explore IAM</a></article>
+                <article class="card"><h3>Billing</h3><p>Usage records, invoices, credits, cost breakdown.</p><a href="/api/services/billing/overview/">Explore Billing</a></article>
+                <article class="card"><h3>Automation</h3><p>Workflows, orchestration, webhooks, deployments.</p><a href="/api/services/orchestration/">Explore Automation</a></article>
+                <article class="card"><h3>Monitoring</h3><p>Metrics, alerts, incidents, logs, observability.</p><a href="/api/services/monitoring/overview/">Explore Monitoring</a></article>
+                <article class="card"><h3>Webhooks</h3><p>Lifecycle event delivery for automation pipelines.</p><a href="#architecture">View Webhook Model</a></article>
+                <article class="card"><h3>SDKs</h3><p>JavaScript, Python, Go, and PHP-ready integration patterns.</p><a href="#dx">View SDK Standards</a></article>
+            </div>
+        </div>
+    </section>
+
+    <section id="quickstart" class="section alt">
+        <div class="container">
+            <h2>Quickstart</h2>
+            <div class="grid cards-2">
+                <article class="panel">
+                    <h3>Developer Onboarding Flow</h3>
+                    <ol>
+                        <li>Sign up for a developer account</li>
+                        <li>Verify email</li>
+                        <li>Log in</li>
+                        <li>Generate API key</li>
+                        <li>Read quickstart for your service</li>
+                        <li>Test endpoint in API console</li>
+                        <li>Integrate SDK into your app</li>
+                    </ol>
+                </article>
+                <article class="panel">
+                                        <h3>Code Examples</h3>
+                                        <div class="code-tabs" data-code-tabs>
+                                                <div class="tab-list" role="tablist" aria-label="Language examples">
+                                                        <button class="tab-button is-active" type="button" data-lang="curl">cURL</button>
+                                                        <button class="tab-button" type="button" data-lang="javascript">JavaScript</button>
+                                                        <button class="tab-button" type="button" data-lang="python">Python</button>
+                                                        <button class="tab-button" type="button" data-lang="go">Go</button>
+                                                </div>
+
+<pre class="code-panel is-active" data-lang-panel="curl"><code>curl -X GET "http://127.0.0.1:8000/api/services/flavors/" \
+    -H "Authorization: Bearer YOUR_TOKEN"</code></pre>
+
+<pre class="code-panel" data-lang-panel="javascript"><code>const res = await fetch("http://127.0.0.1:8000/api/services/flavors/", {
+    headers: { Authorization: "Bearer YOUR_TOKEN" }
+});
+const data = await res.json();
+console.log(data);</code></pre>
+
+<pre class="code-panel" data-lang-panel="python"><code>import requests
+
+res = requests.get(
+        "http://127.0.0.1:8000/api/services/flavors/",
+        headers={"Authorization": "Bearer YOUR_TOKEN"},
+        timeout=30,
+)
+print(res.json())</code></pre>
+
+<pre class="code-panel" data-lang-panel="go"><code>package main
+
+import (
+        "fmt"
+        "net/http"
+)
+
+func main() {
+        req, _ := http.NewRequest("GET", "http://127.0.0.1:8000/api/services/flavors/", nil)
+        req.Header.Set("Authorization", "Bearer YOUR_TOKEN")
+        resp, _ := http.DefaultClient.Do(req)
+        fmt.Println(resp.Status)
+}</code></pre>
+                                        </div>
+
+                    <h4>Consistent Error Format</h4>
+<pre><code>{
+  "error": "INVALID_PARAMETER",
+  "message": "The 'flavor' field is required.",
+  "status": 400,
+  "request_id": "abc-123"
+}</code></pre>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="console" class="section">
+        <div class="container">
+            <h2>Try It Now Console</h2>
+            <p class="section-text">Test live endpoints directly from this page with your API token and inspect the response immediately.</p>
+            <article class="panel console-panel">
+                <div class="console-grid">
+                    <label>
+                        Method
+                        <select id="apiMethod">
+                            <option value="GET" selected>GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </label>
+                    <label>
+                        Endpoint
+                        <input id="apiEndpoint" type="text" value="/api/health/" placeholder="/api/services/flavors/" />
+                    </label>
+                    <label>
+                        API Token (optional)
+                        <input id="apiToken" type="password" placeholder="Bearer token" />
+                    </label>
+                </div>
+                <label class="body-label" for="apiBody">JSON Body (for POST/PUT/PATCH)</label>
+                <textarea id="apiBody" rows="7" placeholder='{"name":"example"}'></textarea>
+                <div class="console-actions">
+                    <button id="runConsoleRequest" class="btn btn-primary" type="button">Send Request</button>
+                    <span id="consoleStatus" class="console-status">Ready</span>
+                </div>
+                <pre class="console-output"><code id="consoleResponse">{
+  "message": "Response output will appear here"
+}</code></pre>
+            </article>
+        </div>
+    </section>
+
+    <section id="reference" class="section alt">
+        <div class="container">
+            <h2>Live API Reference</h2>
+            <p class="section-text">Generated from active backend routes, grouped by API family for predictable navigation.</p>
+
+            <article class="panel reference-filters" data-reference-filters>
+                <div class="reference-filters-grid">
+                    <label>
+                        Search endpoint
+                        <input id="referenceSearch" type="text" placeholder="Search path, name, or keyword" />
+                    </label>
+                    <label>
+                        Method
+                        <select id="referenceMethod">
+                            <option value="all" selected>All methods</option>
+                            <option value="get">GET</option>
+                            <option value="post">POST</option>
+                            <option value="put">PUT</option>
+                            <option value="patch">PATCH</option>
+                            <option value="delete">DELETE</option>
+                        </select>
+                    </label>
+                    <label>
+                        Category
+                        <select id="referenceCategory">
+                            <option value="all" selected>All categories</option>
+                            {% for group in api_reference_groups %}
+                            <option value="{{ group.slug }}">{{ group.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+                <p class="reference-filter-status">Showing <span id="referenceVisibleCount">0</span> endpoints</p>
+            </article>
+
+            <div class="reference-layout">
+                <aside class="reference-sidebar">
+                    <h3>Sections</h3>
+                    <ul class="reference-sections" data-reference-sections>
+                        {% for group in api_reference_groups %}
+                        <li><a href="#ref-{{ group.slug }}" data-reference-section-link="ref-{{ group.slug }}">{{ group.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+
+                <div class="reference-content">
+                    {% for group in api_reference_groups %}
+                    <section id="ref-{{ group.slug }}" class="reference-group" data-reference-group data-category="{{ group.slug }}">
+                        <h3>{{ group.name }}</h3>
+                        <div class="reference-list">
+                            {% for endpoint in group.endpoints %}
+                            <article class="reference-item" id="ep-{{ endpoint.anchor }}" data-reference-item data-category="{{ group.slug }}" data-methods="{{ endpoint.methods|join:','|lower }}" data-path="{{ endpoint.path|lower }}" data-name="{{ endpoint.name|lower }}">
+                                <div class="reference-main">
+                                    <div class="reference-methods">
+                                        {% for method in endpoint.methods %}
+                                        <span class="method method-{{ method|lower }}">{{ method }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="reference-meta">
+                                        <p class="reference-path">{{ endpoint.path }}</p>
+                                        <p class="reference-name">{{ endpoint.name }}</p>
+                                    </div>
+                                </div>
+                                <div class="reference-actions">
+                                    <a class="reference-link" href="#ep-{{ endpoint.anchor }}">Permalink</a>
+                                    <button class="reference-toggle" type="button" data-reference-toggle aria-expanded="false">Show Details</button>
+                                </div>
+
+                                <div class="reference-details" data-reference-details hidden>
+                                    <div class="reference-details-grid">
+                                        <div>
+                                            <h4>Request Example</h4>
+<pre><code>curl -X {{ endpoint.methods.0|default:'GET' }} "http://127.0.0.1:8000{{ endpoint.path }}" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json"</code></pre>
+                                        </div>
+                                        <div>
+                                            <h4>Response Example</h4>
+<pre><code>{
+  "request_id": "req-123",
+  "status": "success",
+  "endpoint": "{{ endpoint.path }}"
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <h4>Error Example</h4>
+<pre><code>{
+  "error": "INVALID_PARAMETER",
+  "message": "One or more request parameters are invalid.",
+  "status": 400,
+  "request_id": "req-123"
+}</code></pre>
+                                </div>
+                            </article>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    {% endfor %}
+                    <p id="referenceNoResults" class="reference-no-results" hidden>No endpoints match the current filters.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="section">
+        <div class="container">
+            <h2>API Architecture Principles</h2>
+            <div class="grid cards-2">
+                <article class="panel">
+                    <ul class="checklist">
+                        <li>Resource-oriented endpoints</li>
+                        <li>HTTP methods: GET, POST, PUT, PATCH, DELETE</li>
+                        <li>URL versioning with /v1 and /v2</li>
+                        <li>Region-aware routing patterns</li>
+                        <li>Idempotent write operations</li>
+                    </ul>
+                </article>
+                <article class="panel">
+<pre><code>/v1/compute/instances
+/v1/network/vpcs
+/v1/storage/volumes
+/v1/regions/us-east/compute/instances
+?limit=20&cursor=abc123
+?status=active&region=us-east
+?sort=created_at&order=desc</code></pre>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="security" class="section alt">
+        <div class="container">
+            <h2>Security & Governance</h2>
+            <div class="grid cards-3">
+                <article class="card"><h3>Authentication</h3><p>API keys for developers, OAuth2/JWT for enterprise integrations.</p></article>
+                <article class="card"><h3>Authorization</h3><p>Role-based access control and strict tenant isolation for all requests.</p></article>
+                <article class="card"><h3>Transport Security</h3><p>HTTPS only, HSTS, TLS 1.2+, and secure key rotation practices.</p></article>
+                <article class="card"><h3>Audit Logging</h3><p>Every API action logged with timestamp, actor, tenant, endpoint, status.</p></article>
+                <article class="card"><h3>Rate Limits</h3><p>1000 req/min default, burst controls, transparent 429 responses.</p></article>
+                <article class="card"><h3>Observability</h3><p>Latency, throughput, error rates, and distributed tracing by region.</p></article>
+            </div>
+        </div>
+    </section>
+
+    <section id="dx" class="section">
+        <div class="container">
+            <h2>Developer Experience Standards</h2>
+            <div class="grid cards-2">
+                <article class="panel">
+                    <h3>Documentation Contract</h3>
+                    <ol>
+                        <li>Overview</li>
+                        <li>Authentication</li>
+                        <li>Base URL</li>
+                        <li>Endpoints</li>
+                        <li>Request Examples</li>
+                        <li>Response Examples</li>
+                        <li>Error Codes</li>
+                        <li>Rate Limits</li>
+                        <li>SDK Usage</li>
+                        <li>Changelog</li>
+                    </ol>
+                </article>
+                <article class="panel">
+                    <h3>SDK & Console Readiness</h3>
+                    <ul class="checklist">
+                        <li>Copy-ready examples in cURL, JavaScript, Python, Go</li>
+                        <li>Try-it-now interactive API console</li>
+                        <li>Consistent client method naming across SDKs</li>
+                        <li>Clear and machine-parseable errors</li>
+                        <li>Migration guides and deprecation notices</li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="status" class="section alt">
+        <div class="container">
+            <h2>Platform Status</h2>
+            <p class="section-text">Health, runtime checks, and API service availability for your current environment.</p>
+            <div class="grid cards-2">
+                <article class="panel">
+                    <h3>Health Endpoint</h3>
+                    <p>Use the backend health endpoint to confirm service readiness.</p>
+                    <a href="/api/health/" target="_blank" rel="noopener">Open /api/health/</a>
+                </article>
+                <article class="panel">
+                    <h3>Quick Verify</h3>
+<pre><code>curl -X GET "http://127.0.0.1:8000/api/health/"</code></pre>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="graphql" class="section">
+        <div class="container">
+            <h2>GraphQL Access</h2>
+            <p class="section-text">Access the GraphQL endpoint from a dark-themed section here, then open the endpoint when needed.</p>
+            <div class="grid cards-2">
+                <article class="panel">
+                    <h3>Endpoint</h3>
+                    <p>The GraphQL endpoint is available at:</p>
+<pre><code>/api/graphql/</code></pre>
+                    <a href="/api/graphql/" target="_blank" rel="noopener">Open GraphQL Endpoint</a>
+                </article>
+                <article class="panel">
+                    <h3>Sample Query</h3>
+<pre><code>{
+  instances {
+    resourceId
+    name
+    status
+  }
+}</code></pre>
+                </article>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <div>
+            <strong>OrcaCompute </strong>
+            <p>Engineering excellence, sovereign cloud identity, and global ambition.</p>
+        </div>
+        <div class="footer-links">
+            <a href="#status">Status</a>
+            <a href="#reference">API Reference</a>
+            <a href="#graphql">GraphQL</a>
+            <a href="/admin/">Admin</a>
+        </div>
+    </div>
+</footer>
+<script src="{% static 'services/js/api_portal.js' %}"></script>
+</body>
+</html>

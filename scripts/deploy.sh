@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# AtonixCorp Deployment Script
+# OrcaCompute Deployment Script
 # Usage: ./deploy.sh [environment]
 
 set -e
 
 ENVIRONMENT=${1:-production}
-PROJECT_DIR="/home/atonixdev/atonixcorp"
+PROJECT_DIR="/home/atonixdev/orcacompute"
 
-echo "[DEPLOY] Deploying AtonixCorp to $ENVIRONMENT environment..."
+echo "[DEPLOY] Deploying OrcaCompute to $ENVIRONMENT environment..."
 
 # Change to project directory
 cd $PROJECT_DIR
@@ -125,7 +125,7 @@ post_deployment() {
         docker-compose -f docker-compose.yml -f docker-compose.prod.yml exec -T backend python manage.py shell -c "
 from django.contrib.auth.models import User
 if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@atonixcorp.com', 'admin123')
+    User.objects.create_superuser('admin', 'admin@orcacompute.com', 'admin123')
     print('Superuser created')
 else:
     print('Superuser already exists')

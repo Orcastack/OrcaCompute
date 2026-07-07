@@ -1,11 +1,11 @@
-title: AtonixCorp
+title: OrcaCompute
 description: Intelligent Infrastructure for the Future – Compute, Storage, Networking, Automation, and AI Unified.
-url: "https://atonixcorp.github.io"
-baseurl: "/atonixcorp"
+url: "https://orcacompute.github.io"
+baseurl: "/orcacompute"
 
 author:
-  name: AtonixCorp Engineering
-  email: platform-team@atonixcorp.com
+  name: OrcaCompute Engineering
+  email: platform-team@orcacompute.com
 
 # Disable Jekyll theme (using custom HTML/CSS)
 theme: null

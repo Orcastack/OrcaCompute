@@ -1,6 +1,6 @@
 ---
-# AtonixCorp Alerting Rules
-# File: observability/prometheus/rules/atonixcorp-alerts.yaml
+# OrcaCompute Alerting Rules
+# File: observability/prometheus/rules/orcacompute-alerts.yaml
 
 groups:
   - name: infrastructure

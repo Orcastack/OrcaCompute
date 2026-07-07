@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atonixcorp-redis
-  namespace: atonixcorp
+  name: orcacompute-redis
+  namespace: orcacompute
   labels:
-    app: atonixcorp-redis
+    app: orcacompute-redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: atonixcorp-redis
+      app: orcacompute-redis
   template:
     metadata:
       labels:
-        app: atonixcorp-redis
+        app: orcacompute-redis
     spec:
       containers:
         - name: redis
@@ -32,11 +32,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: atonixcorp-redis
-  namespace: atonixcorp
+  name: orcacompute-redis
+  namespace: orcacompute
 spec:
   selector:
-    app: atonixcorp-redis
+    app: orcacompute-redis
   ports:
     - protocol: TCP
       port: 6379

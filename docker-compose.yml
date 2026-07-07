@@ -1,6 +1,6 @@
 
 # ============================================================
-#  AtonixCorp – unified docker-compose
+#  OrcaCompute – unified docker-compose
 #
 #  Profiles
 #  --------
@@ -18,7 +18,7 @@
 # ============================================================
 
 networks:
-  atonixcorp-net:
+  orcacompute-net:
     driver: bridge
 
 volumes:
@@ -41,33 +41,33 @@ services:
 
   db:
     image: postgres:15-alpine
-    container_name: atonixcorp_db
+    container_name: orcacompute_db
     environment:
-      POSTGRES_DB: atonixcorp
-      POSTGRES_USER: atonixcorp_user
+      POSTGRES_DB: orcacompute
+      POSTGRES_USER: orcacompute_user
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   redis:
     image: redis:7-alpine
-    container_name: atonixcorp_redis
+    container_name: orcacompute_redis
     volumes:
       - redis_data:/data
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   rabbitmq:
     image: rabbitmq:3.12-management-alpine
-    container_name: atonixcorp_rabbitmq
+    container_name: orcacompute_rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-changeme}
-      RABBITMQ_DEFAULT_VHOST: atonixcorp
+      RABBITMQ_DEFAULT_VHOST: orcacompute
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
@@ -77,12 +77,12 @@ services:
       - "15672:15672"
       - "15692:15692"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   zookeeper:
     image: zookeeper:3.8
-    container_name: atonixcorp_zookeeper
+    container_name: orcacompute_zookeeper
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zookeeper:2888:3888
@@ -93,12 +93,12 @@ services:
       - "2181:2181"
       - "8080:8080"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
-    container_name: atonixcorp_kafka
+    container_name: orcacompute_kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -112,7 +112,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
 # ── Production services (--profile prod) ──────────────────────────────────────
@@ -122,18 +122,18 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: atonixcorp_backend
+    container_name: orcacompute_backend
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
-             gunicorn atonixcorp.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+             gunicorn orcacompute.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     environment:
       ENVIRONMENT: production
       DEBUG: "False"
-      DATABASE_URL: postgresql://atonixcorp_user:${POSTGRES_PASSWORD:-changeme}@db:5432/atonixcorp
+      DATABASE_URL: postgresql://orcacompute_user:${POSTGRES_PASSWORD:-changeme}@db:5432/orcacompute
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-replace-with-production-secret}
-      ALLOWED_HOSTS: atonixcorp.com,api.atonixcorp.com,www.atonixcorp.com
+      ALLOWED_HOSTS: orcacompute.com,api.orcacompute.com,www.orcacompute.com
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-changeme}@rabbitmq:5672/
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     volumes:
@@ -145,7 +145,7 @@ services:
       - rabbitmq
       - kafka
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health/ || exit 1"]
@@ -159,18 +159,18 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_URL: ${REACT_APP_API_URL:-https://atonixcorp.com/api}
-        REACT_APP_WS_URL: ${REACT_APP_WS_URL:-wss://atonixcorp.com/ws}
+        REACT_APP_API_URL: ${REACT_APP_API_URL:-https://orcacompute.com/api}
+        REACT_APP_WS_URL: ${REACT_APP_WS_URL:-wss://orcacompute.com/ws}
         REACT_APP_ENVIRONMENT: ${REACT_APP_ENVIRONMENT:-production}
-        REACT_APP_APP_NAME: AtonixCorp
+        REACT_APP_APP_NAME: OrcaCompute
         REACT_APP_ENABLE_WEBSOCKETS: "true"
         REACT_APP_ENABLE_MONITORING: "true"
         REACT_APP_ENABLE_BILLING: "true"
-    container_name: atonixcorp_frontend
+    container_name: orcacompute_frontend
     expose:
       - "80"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: always
 
   nginx:
@@ -178,7 +178,7 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
-    container_name: atonixcorp_nginx
+    container_name: orcacompute_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -192,7 +192,7 @@ services:
       - backend
       - frontend
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: always
 
 # ── Development services (--profile dev) ──────────────────────────────────────
@@ -203,7 +203,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: atonixcorp_backend
+    container_name: orcacompute_backend
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py runserver 0.0.0.0:8000"
@@ -214,10 +214,10 @@ services:
     environment:
       ENVIRONMENT: development
       DEBUG: "True"
-      DATABASE_URL: postgresql://atonixcorp_user:${POSTGRES_PASSWORD:-postgres}@db:5432/atonixcorp
+      DATABASE_URL: postgresql://orcacompute_user:${POSTGRES_PASSWORD:-postgres}@db:5432/orcacompute
       REDIS_URL: redis://redis:6379
       SECRET_KEY: ${SECRET_KEY:-development-secret-do-not-use-in-prod}
-      ALLOWED_HOSTS: localhost,127.0.0.1,backend,nginx,api.atonixcorp.com,atonixcorp.com,www.atonixcorp.com
+      ALLOWED_HOSTS: localhost,127.0.0.1,backend,nginx,api.orcacompute.com,orcacompute.com,www.orcacompute.com
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-changeme}@rabbitmq:5672/
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_ENABLED: "true"
@@ -230,13 +230,13 @@ services:
       - rabbitmq
       - kafka
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   frontend-dev:
     profiles: [dev]
     image: node:18-alpine
-    container_name: atonixcorp_frontend
+    container_name: orcacompute_frontend
     working_dir: /app
     volumes:
       - ./frontend:/app
@@ -254,7 +254,7 @@ services:
     depends_on:
       - backend-dev
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
 # ── Monitoring (--profile monitoring) ─────────────────────────────────────────
@@ -262,17 +262,17 @@ services:
   pushgateway:
     profiles: [dev, monitoring]
     image: prom/pushgateway:latest
-    container_name: atonixcorp_pushgateway
+    container_name: orcacompute_pushgateway
     ports:
       - "9091:9091"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   prometheus:
     profiles: [monitoring]
     image: prom/prometheus:latest
-    container_name: atonixcorp_prometheus
+    container_name: orcacompute_prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -284,13 +284,13 @@ services:
       - "--storage.tsdb.path=/prometheus"
       - "--web.enable-lifecycle"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   grafana:
     profiles: [monitoring]
     image: grafana/grafana:latest
-    container_name: atonixcorp_grafana
+    container_name: orcacompute_grafana
     ports:
       - "3002:3000"
     volumes:
@@ -303,13 +303,13 @@ services:
     depends_on:
       - prometheus
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   alertmanager:
     profiles: [monitoring]
     image: prom/alertmanager:latest
-    container_name: atonixcorp_alertmanager
+    container_name: orcacompute_alertmanager
     ports:
       - "9093:9093"
     volumes:
@@ -318,13 +318,13 @@ services:
       - "--config.file=/etc/alertmanager/alertmanager.yml"
       - "--storage.path=/alertmanager"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   kafka-ui:
     profiles: [monitoring]
     image: provectuslabs/kafka-ui:latest
-    container_name: atonixcorp_kafka_ui
+    container_name: orcacompute_kafka_ui
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
@@ -334,7 +334,7 @@ services:
     depends_on:
       - kafka
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
 # ── Logging / ELK (--profile logging) ─────────────────────────────────────────
@@ -342,7 +342,7 @@ services:
   elasticsearch:
     profiles: [logging]
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
-    container_name: atonixcorp_elasticsearch
+    container_name: orcacompute_elasticsearch
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m
@@ -352,18 +352,18 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   logstash:
     profiles: [logging]
     image: docker.elastic.co/logstash/logstash:8.8.0
-    container_name: atonixcorp_logstash
+    container_name: orcacompute_logstash
     volumes:
       - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./monitoring/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     depends_on:
       - elasticsearch
     restart: unless-stopped
@@ -371,7 +371,7 @@ services:
   kibana:
     profiles: [logging]
     image: docker.elastic.co/kibana/kibana:8.8.0
-    container_name: atonixcorp_kibana
+    container_name: orcacompute_kibana
     ports:
       - "5601:5601"
     environment:
@@ -379,16 +379,16 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped
 
   jaeger:
     profiles: [logging]
     image: jaegertracing/all-in-one:latest
-    container_name: atonixcorp_jaeger
+    container_name: orcacompute_jaeger
     ports:
       - "16686:16686"
       - "14268:14268"
     networks:
-      - atonixcorp-net
+      - orcacompute-net
     restart: unless-stopped

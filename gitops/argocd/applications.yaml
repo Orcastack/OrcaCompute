@@ -1,19 +1,19 @@
-# ArgoCD Application for AtonixCorp - Development
+# ArgoCD Application for OrcaCompute - Development
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: atonixcorp-dev
+  name: orcacompute-dev
   namespace: argocd
   labels:
-    app: atonixcorp
+    app: orcacompute
     environment: development
 spec:
   project: default
   
   source:
-    repoURL: https://github.com/atonixcorp/atonixcorp.git
+    repoURL: https://github.com/orcacompute/orcacompute.git
     targetRevision: develop
-    path: helm/atonixcorp
+    path: helm/orcacompute
     helm:
       valueFiles:
         - values.yaml
@@ -26,7 +26,7 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: atonixcorp-dev
+    namespace: orcacompute-dev
   
   syncPolicy:
     automated:
@@ -57,22 +57,22 @@ spec:
       jsonPointers:
         - /data
 ---
-# ArgoCD Application for AtonixCorp - Staging
+# ArgoCD Application for OrcaCompute - Staging
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: atonixcorp-staging
+  name: orcacompute-staging
   namespace: argocd
   labels:
-    app: atonixcorp
+    app: orcacompute
     environment: staging
 spec:
   project: default
   
   source:
-    repoURL: https://github.com/atonixcorp/atonixcorp.git
+    repoURL: https://github.com/orcacompute/orcacompute.git
     targetRevision: main
-    path: helm/atonixcorp
+    path: helm/orcacompute
     helm:
       valueFiles:
         - values.yaml
@@ -85,7 +85,7 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: atonixcorp-staging
+    namespace: orcacompute-staging
   
   syncPolicy:
     automated:
@@ -105,14 +105,14 @@ spec:
   
   revisionHistoryLimit: 10
 ---
-# ArgoCD Application for AtonixCorp - Production
+# ArgoCD Application for OrcaCompute - Production
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: atonixcorp-prod
+  name: orcacompute-prod
   namespace: argocd
   labels:
-    app: atonixcorp
+    app: orcacompute
     environment: production
   annotations:
     argocd.argoproj.io/sync-wave: "10"  # Deploy after infrastructure
@@ -120,9 +120,9 @@ spec:
   project: production
   
   source:
-    repoURL: https://github.com/atonixcorp/atonixcorp.git
+    repoURL: https://github.com/orcacompute/orcacompute.git
     targetRevision: main
-    path: helm/atonixcorp
+    path: helm/orcacompute
     helm:
       valueFiles:
         - values.yaml
@@ -135,7 +135,7 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: atonixcorp
+    namespace: orcacompute
   
   syncPolicy:
     automated:

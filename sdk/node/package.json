@@ -1,7 +1,7 @@
 {
-  "name": "@atonixcorp/sdk",
+  "name": "@orcacompute/sdk",
   "version": "0.1.0",
-  "description": "Official Node.js SDK for AtonixCorp",
+  "description": "Official Node.js SDK for OrcaCompute",
   "main": "dist/client.js",
   "types": "dist/client.d.ts",
   "scripts": {

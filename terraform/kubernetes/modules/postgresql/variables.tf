@@ -11,7 +11,7 @@ variable "name_prefix" {
 variable "database_name" {
   description = "PostgreSQL database name"
   type        = string
-  default     = "atonixcorp_db"
+  default     = "orcacompute_db"
 }
 
 variable "username" {

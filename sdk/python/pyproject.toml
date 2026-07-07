@@ -3,17 +3,17 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "atonixcorp-sdk"
+name = "orcacompute-sdk"
 version = "0.1.0"
-description = "Official Python SDK and CLI for AtonixCorp"
+description = "Official Python SDK and CLI for OrcaCompute"
 requires-python = ">=3.10"
 dependencies = [
   "requests>=2.31.0",
 ]
 
 [project.scripts]
-atonixctl = "atonixcorp_sdk.cli:main"
+atonixctl = "orcacompute_sdk.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["atonixcorp_sdk*"]
+include = ["orcacompute_sdk*"]

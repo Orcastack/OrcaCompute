@@ -2,10 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: atonixcorp
+  namespace: orcacompute
 spec:
   template:
     spec:
       containers:
       - name: backend
-        image: atonixdev/atonixcorp-backend:1.0.1
+        image: atonixdev/orcacompute-backend:1.0.1

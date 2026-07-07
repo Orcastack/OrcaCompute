@@ -1,5 +1,5 @@
 ---
-# AtonixCorp – OpenStack Compute Node Role
+# OrcaCompute – OpenStack Compute Node Role
 # tasks/main.yml
 
 - name: Add Ubuntu Cloud Archive (UCA) for {{ openstack_release }}

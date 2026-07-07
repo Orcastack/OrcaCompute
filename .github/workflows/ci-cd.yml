@@ -89,7 +89,7 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           SECRET_KEY: test-secret-key
           DEBUG: 'True'
-          DJANGO_SETTINGS_MODULE: atonixcorp.settings
+          DJANGO_SETTINGS_MODULE: orcacompute.settings
         run: |
           cd backend
           python manage.py migrate --noinput
@@ -247,11 +247,11 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          sed -i "s|image: atonixcorp/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
-          sed -i "s|image: atonixcorp/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
+          sed -i "s|image: orcacompute/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
+          sed -i "s|image: orcacompute/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
           kubectl apply -k k8s/overlays/development/
-          kubectl rollout status deployment/backend -n atonixcorp-dev
-          kubectl rollout status deployment/frontend -n atonixcorp-dev
+          kubectl rollout status deployment/backend -n orcacompute-dev
+          kubectl rollout status deployment/frontend -n orcacompute-dev
 
   # ── Deploy to Production ────────────────────────────────────────────────────
   deploy-prod:
@@ -277,17 +277,17 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          sed -i "s|image: atonixcorp/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
-          sed -i "s|image: atonixcorp/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
+          sed -i "s|image: orcacompute/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
+          sed -i "s|image: orcacompute/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
           kubectl apply -k k8s/overlays/production/
-          kubectl rollout status deployment/backend -n atonixcorp
-          kubectl rollout status deployment/frontend -n atonixcorp
+          kubectl rollout status deployment/backend -n orcacompute
+          kubectl rollout status deployment/frontend -n orcacompute
 
       - name: Run smoke tests
         run: |
           sleep 30
-          curl -f https://api.atonixcorp.com/api/health/ || exit 1
-          curl -f https://atonixcorp.com/ || exit 1
+          curl -f https://api.orcacompute.com/api/health/ || exit 1
+          curl -f https://orcacompute.com/ || exit 1
           echo "Deployment successful and smoke tests passed"
 
   # ── Notify ──────────────────────────────────────────────────────────────────

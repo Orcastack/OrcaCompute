@@ -1,6 +1,6 @@
-# AtonixCorp Cloud – Tenant Onboarding Runbook
+# OrcaCompute Cloud – Tenant Onboarding Runbook
 
-**Scope:** Onboarding a new enterprise tenant to the AtonixCorp cloud platform.
+**Scope:** Onboarding a new enterprise tenant to the OrcaCompute cloud platform.
 **Applies to:** Public, Private, and Hybrid cloud tiers.
 **Owner:** Platform Operations team
 
@@ -18,11 +18,11 @@ Before starting, confirm these items are in place:
 
 ---
 
-## 2. Step 1 — Create the AtonixCorp Workspace
+## 2. Step 1 — Create the OrcaCompute Workspace
 
 ```bash
-# Via AtonixCorp API
-curl -X POST https://api.atonixcorp.com/api/services/workspaces/ \
+# Via OrcaCompute API
+curl -X POST https://api.orcacompute.com/api/services/workspaces/ \
   -H "Authorization: Token $ADMIN_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -41,7 +41,7 @@ Record the returned `workspace_id`.
 Bind the workspace to the correct OpenStack project and cloud type:
 
 ```bash
-curl -X POST https://api.atonixcorp.com/api/services/workspaces/<workspace_id>/bindings/ \
+curl -X POST https://api.orcacompute.com/api/services/workspaces/<workspace_id>/bindings/ \
   -H "Authorization: Token $ADMIN_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -132,10 +132,10 @@ For **Hybrid cloud** tenants: create the subnet then provision a VPNaaS connecti
 
 ## 6. Step 5 — Provision Initial Resources (Optional)
 
-Use the AtonixCorp provisioning endpoint to kick off initial VM provisioning:
+Use the OrcaCompute provisioning endpoint to kick off initial VM provisioning:
 
 ```bash
-curl -X POST https://api.atonixcorp.com/api/services/provision/compute/vm/ \
+curl -X POST https://api.orcacompute.com/api/services/provision/compute/vm/ \
   -H "Authorization: Token $TENANT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -156,19 +156,19 @@ curl -X POST https://api.atonixcorp.com/api/services/provision/compute/vm/ \
 ```bash
 # Generate tenant credentials summary
 cat <<EOF > /tmp/<tenant>-credentials.txt
-AtonixCorp Cloud – Tenant Credentials
+OrcaCompute Cloud – Tenant Credentials
 Workspace ID:      <tenant-slug>
 Cloud Type:        <public|private|hybrid>
 Region:            <RegionA|RegionB|RegionC>
-Keystone Auth URL: https://keystone.<region>.cloud.atonixcorp.com/v3
+Keystone Auth URL: https://keystone.<region>.cloud.orcacompute.com/v3
 Project Name:      <os-project-name>
 Admin User:        <tenant-admin-username>
-Dashboard URL:     https://dashboard.atonixcorp.com/developer/Dashboard/projects
-API Base URL:      https://api.atonixcorp.com/api/services/
+Dashboard URL:     https://dashboard.orcacompute.com/developer/Dashboard/projects
+API Base URL:      https://api.orcacompute.com/api/services/
 EOF
 
 # Email securely via platform email service
-curl -X POST https://api.atonixcorp.com/api/services/email-domains/send/ \
+curl -X POST https://api.orcacompute.com/api/services/email-domains/send/ \
   -H "Authorization: Token $ADMIN_TOKEN" \
   -d "{ \"to\": \"<contact-email>\", \"template\": \"onboarding-welcome\", \"context\": { \"workspace_id\": \"<tenant-slug>\" } }"
 ```
@@ -179,11 +179,11 @@ curl -X POST https://api.atonixcorp.com/api/services/email-domains/send/ \
 
 ```bash
 # Confirm workspace binding:
-curl https://api.atonixcorp.com/api/services/workspaces/<workspace_id>/ \
+curl https://api.orcacompute.com/api/services/workspaces/<workspace_id>/ \
   -H "Authorization: Token $ADMIN_TOKEN" | python3 -m json.tool
 
 # Confirm service catalog for workspace:
-curl "https://api.atonixcorp.com/api/services/catalog/for_workspace/<workspace_id>/" \
+curl "https://api.orcacompute.com/api/services/catalog/for_workspace/<workspace_id>/" \
   -H "Authorization: Token $ADMIN_TOKEN" | python3 -m json.tool
 
 # Confirm Keystone project:
@@ -216,7 +216,7 @@ If onboarding fails mid-way:
 openstack user delete <tenant-admin-username>
 openstack project delete <os-project-name>
 
-# Remove AtonixCorp workspace
-curl -X DELETE https://api.atonixcorp.com/api/services/workspaces/<workspace_id>/ \
+# Remove OrcaCompute workspace
+curl -X DELETE https://api.orcacompute.com/api/services/workspaces/<workspace_id>/ \
   -H "Authorization: Token $ADMIN_TOKEN"
 ```

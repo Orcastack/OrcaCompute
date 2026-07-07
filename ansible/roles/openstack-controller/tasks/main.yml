@@ -1,5 +1,5 @@
 ---
-# AtonixCorp – OpenStack Controller Role
+# OrcaCompute – OpenStack Controller Role
 # tasks/main.yml
 #
 # Installs and configures the full OpenStack controller service stack

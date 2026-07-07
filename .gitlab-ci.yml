@@ -4,7 +4,7 @@
 # - DOCKER_USERNAME (e.g. atonixdev)
 # - DOCKER_PASSWORD (token or password)
 # - KUBE_CONFIG (base64-encoded kubeconfig) [optional for deploy]
-# - K8S_NAMESPACE (defaults to atonixcorp)
+# - K8S_NAMESPACE (defaults to orcacompute)
 
 stages:
   - test
@@ -13,10 +13,10 @@ stages:
   - deploy
 
 variables:
-  IMAGE_REPO_FRONTEND: "atonixdev/atonixcorp-frontend"
-  IMAGE_REPO_BACKEND: "atonixdev/atonixcorp-backend"
+  IMAGE_REPO_FRONTEND: "atonixdev/orcacompute-frontend"
+  IMAGE_REPO_BACKEND: "atonixdev/orcacompute-backend"
   TAG: "${CI_COMMIT_SHORT_SHA}"
-  K8S_NAMESPACE: "${K8S_NAMESPACE:-atonixcorp}"
+  K8S_NAMESPACE: "${K8S_NAMESPACE:-orcacompute}"
 
 # Test backend using Python image
 test-backend:

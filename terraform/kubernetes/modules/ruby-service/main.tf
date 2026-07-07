@@ -1,5 +1,5 @@
 # Ruby Service Module
-# Deploys the AtonixCorp Ruby service with Sidekiq workers
+# Deploys the OrcaCompute Ruby service with Sidekiq workers
 
 terraform {
   required_providers {
