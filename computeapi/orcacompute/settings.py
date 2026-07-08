@@ -7,7 +7,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production-1234567890abcdef')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'MOVrc6WdlfmO+Kuev1soPXr+8peVrEPNgpkKawjk+hyI7F79I6Bh3KSmFLRngXvG')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 
@@ -178,12 +178,12 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://orcacompute.com',
-    'https://www.orcacompute.com',
-    'https://api.orcacompute.com',
+    'https://orcastack.org',
+    'https://www.orcastack.org',
+    'https://api.orcastack.org',
 ] + [o for o in _CSRF_EXTRA if o not in [
     'http://localhost:3000', 'http://127.0.0.1:3000',
-    'https://orcacompute.com', 'https://www.orcacompute.com',
+    'https://orcastack.org', 'https://www.orcastack.org',
 ]]
 
 # CORS — driven by env in production, permissive in dev
@@ -199,7 +199,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # In dev allow all origins for convenience
 
 # ── Message Broker (RabbitMQ) ────────────────────────────────────────────────
-RABBITMQ_URL = os.environ.get('RABBITMQ_URL', 'amqp://admin:changeme@localhost:5672/')
+RABBITMQ_URL = os.environ.get('RABBITMQ_URL', 'amqp://admin:MOVrc6WdlfmO+Kuev1soPXr+8peVrEPNgpkKawjk+hyI7F79I6Bh3KSmFL@localhost:5672/')
 
 # ── Kafka ────────────────────────────────────────────────────────────────────
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
