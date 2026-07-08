@@ -10,14 +10,14 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME_BACKEND: ${{ github.repository }}/backend
-  IMAGE_NAME_FRONTEND: ${{ github.repository }}/frontend
+  IMAGE_NAME_BACKEND: ${{ github.repository }}/computeapi
+  IMAGE_NAME_FRONTEND: ${{ github.repository }}/webapp
 
 jobs:
 
   # ── Test Backend ────────────────────────────────────────────────────────────
   test-backend:
-    name: Test Backend
+    name: Test computeapi
     runs-on: ubuntu-latest
 
     services:
@@ -57,20 +57,20 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('computeapi/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
-          cd backend
+          cd computeapi
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-django pytest-cov
 
       - name: Run linting
         run: |
-          cd backend
+          cd computeapi
           pip install flake8 black isort
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
           black --check . || true
@@ -78,7 +78,7 @@ jobs:
 
       - name: Run security checks
         run: |
-          cd backend
+          cd computeapi
           pip install bandit safety
           bandit -r . -x tests || true
           safety check || true
@@ -91,7 +91,7 @@ jobs:
           DEBUG: 'True'
           DJANGO_SETTINGS_MODULE: orcacompute.settings
         run: |
-          cd backend
+          cd computeapi
           python manage.py migrate --noinput
           python manage.py collectstatic --noinput
           pytest --cov=. --cov-report=xml --cov-report=html
@@ -100,13 +100,13 @@ jobs:
         if: always()
         uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457
         with:
-          files: ./backend/coverage.xml
-          flags: backend
-          name: backend-coverage
+          files: ./computeapi/coverage.xml
+          flags: computeapi
+          name: computeapi-coverage
 
   # ── Test Frontend ───────────────────────────────────────────────────────────
   test-frontend:
-    name: Test Frontend
+    name: Test webapp
     runs-on: ubuntu-latest
 
     steps:
@@ -127,26 +127,26 @@ jobs:
 
       - name: Run linting
         run: |
-          cd frontend
+          cd webapp
           npm run lint || true
 
       - name: Run type checking
         run: |
-          cd frontend
+          cd webapp
           npm run type-check || true
 
       - name: Run tests
         run: |
-          cd frontend
+          cd webapp
           npm run test:coverage
 
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457
         with:
-          file: ./frontend/coverage/lcov.info
-          flags: frontend
-          name: frontend-coverage
+          file: ./webapp/coverage/lcov.info
+          flags: webapp
+          name: webapp-coverage
 
   # ── Security Scan ───────────────────────────────────────────────────────────
   security-scan:
@@ -179,14 +179,14 @@ jobs:
   build-and-push:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
-    needs: [test-backend, test-frontend]
+    needs: [test-computeapi, test-webapp]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
-        component: [backend, frontend]
+        component: [computeapi, webapp]
 
     steps:
       - name: Checkout code
@@ -247,11 +247,11 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          sed -i "s|image: orcacompute/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
-          sed -i "s|image: orcacompute/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
+          sed -i "s|image: orcastack/computeapi:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
+          sed -i "s|image: orcastack/webapp:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:develop-${{ github.sha }}|g" k8s/overlays/development/kustomization.yaml || true
           kubectl apply -k k8s/overlays/development/
-          kubectl rollout status deployment/backend -n orcacompute-dev
-          kubectl rollout status deployment/frontend -n orcacompute-dev
+          kubectl rollout status deployment/computeapi -n orcacompute-dev
+          kubectl rollout status deployment/webapp -n orcacompute-dev
 
   # ── Deploy to Production ────────────────────────────────────────────────────
   deploy-prod:
@@ -277,17 +277,17 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          sed -i "s|image: orcacompute/backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
-          sed -i "s|image: orcacompute/frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
+          sed -i "s|image: orcastack/computeapi:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
+          sed -i "s|image: orcastack/webapp:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:main-${{ github.sha }}|g" k8s/overlays/production/kustomization.yaml || true
           kubectl apply -k k8s/overlays/production/
-          kubectl rollout status deployment/backend -n orcacompute
-          kubectl rollout status deployment/frontend -n orcacompute
+          kubectl rollout status deployment/computeapi -n OrcaStack
+          kubectl rollout status deployment/webapp -n OrcaStack
 
       - name: Run smoke tests
         run: |
           sleep 30
-          curl -f https://api.orcacompute.com/api/health/ || exit 1
-          curl -f https://orcacompute.com/ || exit 1
+          curl -f https://api.orcastack.org/api/health/ || exit 1
+          curl -f https://orcastack.org/ || exit 1
           echo "Deployment successful and smoke tests passed"
 
   # ── Notify ──────────────────────────────────────────────────────────────────
