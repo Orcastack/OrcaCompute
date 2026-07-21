@@ -10,126 +10,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='brandasset',
-            name='branding_profile',
-        ),
-        migrations.RemoveField(
-            model_name='brandingprofile',
-            name='organization',
-        ),
-        migrations.AlterUniqueTogether(
-            name='department',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='department',
-            name='organization',
-        ),
-        migrations.RemoveField(
-            model_name='department',
-            name='parent',
-        ),
-        migrations.RemoveField(
-            model_name='orgteam',
-            name='department',
-        ),
-        migrations.RemoveField(
-            model_name='departmentsidebaritem',
-            name='department',
-        ),
-        migrations.RemoveIndex(
-            model_name='emaillog',
-            name='services_em_organiz_98a845_idx',
-        ),
-        migrations.AlterUniqueTogether(
-            name='emailsenderidentity',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='emailsenderidentity',
-            name='organization',
-        ),
-        migrations.RemoveIndex(
-            model_name='enterpriseauditlog',
-            name='services_en_organiz_53707f_idx',
-        ),
-        migrations.RemoveIndex(
-            model_name='enterpriseauditlog',
-            name='services_en_organiz_c20b32_idx',
-        ),
-        migrations.AlterUniqueTogether(
-            name='enterpriseemailtemplate',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='enterpriseemailtemplate',
-            name='created_by',
-        ),
-        migrations.RemoveField(
-            model_name='enterpriseemailtemplate',
-            name='organization',
-        ),
-        migrations.RemoveField(
-            model_name='enterpriseinvoice',
-            name='organization',
-        ),
-        migrations.RemoveField(
-            model_name='subscription',
-            name='plan',
-        ),
-        migrations.AlterUniqueTogether(
-            name='enterprisesenddomain',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='enterprisesenddomain',
-            name='organization',
-        ),
-        migrations.RemoveField(
-            model_name='organization',
-            name='owner',
-        ),
-        migrations.RemoveField(
-            model_name='organizationmember',
-            name='organization',
-        ),
-        migrations.RemoveField(
-            model_name='subscription',
-            name='organization',
-        ),
-        migrations.RemoveField(
-            model_name='orgdomain',
-            name='organization',
-        ),
-        migrations.AlterUniqueTogether(
-            name='organizationmember',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='organizationmember',
-            name='user',
-        ),
-        migrations.AlterUniqueTogether(
-            name='orgdomain',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='orgdomainrecord',
-            name='domain',
-        ),
-        migrations.AlterUniqueTogether(
-            name='orggroup',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='orggroup',
-            name='team',
-        ),
-        migrations.AlterUniqueTogether(
-            name='orgteam',
-            unique_together=None,
-        ),
         migrations.DeleteModel(
             name='BrandAsset',
         ),
@@ -142,20 +22,8 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(
             name='DepartmentSidebarItem',
         ),
-        migrations.RemoveField(
-            model_name='emaillog',
-            name='organization',
-        ),
         migrations.DeleteModel(
             name='EmailSenderIdentity',
-        ),
-        migrations.RemoveField(
-            model_name='enterpriseauditlog',
-            name='actor_member',
-        ),
-        migrations.RemoveField(
-            model_name='enterpriseauditlog',
-            name='organization',
         ),
         migrations.DeleteModel(
             name='EnterpriseEmailTemplate',
