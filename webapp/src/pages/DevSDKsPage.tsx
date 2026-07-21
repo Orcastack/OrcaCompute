@@ -20,14 +20,14 @@ const SDKS = [
 ];
 
 const CLI_COMMANDS = [
-  { cmd: 'atonix login', desc: 'Authenticate with OrcaCompute Cloud' },
-  { cmd: 'atonix compute list', desc: 'List all VM instances' },
-  { cmd: 'atonix compute create --name web-01 --type vcpu4.cpu --region us-east-1', desc: 'Create a new VM instance' },
-  { cmd: 'atonix storage buckets list', desc: 'List all storage buckets' },
-  { cmd: 'atonix k8s clusters', desc: 'List Kubernetes clusters' },
-  { cmd: 'atonix iam users list', desc: 'List all IAM users' },
-  { cmd: 'atonix billing usage --period 2026-02', desc: 'Get billing usage report' },
-  { cmd: 'atonix monitor alerts', desc: 'View active alerts' },
+  { cmd: 'orcacompute login', desc: 'Authenticate with OrcaCompute Cloud' },
+  { cmd: 'orcacompute compute list', desc: 'List all VM instances' },
+  { cmd: 'orcacompute compute create --name web-01 --type vcpu4.cpu --region us-east-1', desc: 'Create a new VM instance' },
+  { cmd: 'orcacompute storage buckets list', desc: 'List all storage buckets' },
+  { cmd: 'orcacompute k8s clusters', desc: 'List Kubernetes clusters' },
+  { cmd: 'orcacompute iam users list', desc: 'List all IAM users' },
+  { cmd: 'orcacompute billing usage --period 2026-02', desc: 'Get billing usage report' },
+  { cmd: 'orcacompute monitor alerts', desc: 'View active alerts' },
 ];
 
 const CODE_EXAMPLES: Record<string, string> = {

@@ -183,10 +183,13 @@ interface OnboardingProviderProps {
 }
 
 export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => {
+  const ONBOARDING_STATE_KEY = 'orcacompute-onboarding-state';
+  const LEGACY_ONBOARDING_STATE_KEY = 'atonix-onboarding-state';
+
   // Initialise state synchronously from localStorage to avoid redirect flicker
   const [state, dispatch] = useReducer(onboardingReducer, initialState, (init) => {
     try {
-      const saved = localStorage.getItem('atonix-onboarding-state');
+      const saved = localStorage.getItem(ONBOARDING_STATE_KEY) || localStorage.getItem(LEGACY_ONBOARDING_STATE_KEY);
       if (saved) {
         const p = JSON.parse(saved);
         return {
@@ -209,7 +212,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
 
   // Save to localStorage whenever state changes
   useEffect(() => {
-    localStorage.setItem('atonix-onboarding-state', JSON.stringify({
+    const serialized = JSON.stringify({
       currentPhase: state.currentPhase,
       completedPhases: state.completedPhases,
       accountData: state.accountData,
@@ -218,7 +221,9 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
       checklistProgress: state.checklistProgress,
       isCompleted: state.isCompleted,
       userPlan: state.userPlan,
-    }));
+    });
+    localStorage.setItem(ONBOARDING_STATE_KEY, serialized);
+    localStorage.setItem(LEGACY_ONBOARDING_STATE_KEY, serialized);
   }, [state]);
 
   const actions: OnboardingActions = {

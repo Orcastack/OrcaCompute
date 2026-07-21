@@ -8,11 +8,12 @@ export interface EnterpriseRecord {
   createdAt: string;
 }
 
-const ____STORAGE_KEY = 'atonix_enterprises_v1';
+const ____STORAGE_KEY = 'orcacompute_enterprises_v1';
+const ____LEGACY_STORAGE_KEY = 'atonix_enterprises_v1';
 
 function readAll(): EnterpriseRecord[] {
   try {
-    const raw = localStorage.getItem(____STORAGE_KEY);
+    const raw = localStorage.getItem(____STORAGE_KEY) || localStorage.getItem(____LEGACY_STORAGE_KEY);
     if (!raw) return [];
     return JSON.parse(raw) as EnterpriseRecord[];
   } catch {
@@ -21,7 +22,9 @@ function readAll(): EnterpriseRecord[] {
 }
 
 function writeAll(records: EnterpriseRecord[]) {
-  localStorage.setItem(____STORAGE_KEY, JSON.stringify(records));
+  const serialized = JSON.stringify(records);
+  localStorage.setItem(____STORAGE_KEY, serialized);
+  localStorage.setItem(____LEGACY_STORAGE_KEY, serialized);
 }
 
 export function createEnterprise(payload: Omit<EnterpriseRecord, 'id' | 'createdAt'>) {

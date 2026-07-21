@@ -451,7 +451,7 @@ export const ____mockFocusAreas: FocusArea[] = [
 export const ____mockProjects: Project[] = [
   {
     id: 1,
-    name: 'OrcaCompute-Platform',
+    name: 'OrcaCompute Platform',
     slug: 'orcacompute',
     overview: 'The backbone of OrcaCompute\'s infrastructure strategy.',
     description: 'This modular stack powers scalable services, persistent data layers, and distributed orchestration across domains like medicine, agriculture, security, and advanced analytics. It\'s not just a system—it\'s the foundation of our technical sovereignty.',

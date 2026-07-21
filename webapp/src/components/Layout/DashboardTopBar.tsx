@@ -160,7 +160,7 @@ const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
             <Typography fontWeight={700} fontSize=".9rem">Notifications</Typography>
           </Box>
           {[
-            { title: 'VM atonix-prod-01 is running', time: '2 min ago',  dot: '#22C55E' },
+            { title: 'VM orcacompute-prod-01 is running', time: '2 min ago',  dot: '#22C55E' },
             { title: 'Snapshot backup completed',    time: '1 hr ago',   dot: '#153d75' },
             { title: 'Billing invoice available',    time: '2 days ago', dot: '#F59E0B' },
           ].map((n, i) => (

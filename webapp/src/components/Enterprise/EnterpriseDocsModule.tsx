@@ -256,7 +256,7 @@ const SAMPLE_PAGE: DocPage = {
     { id: 'b6', type: 'numberedList', content: 'Create an organization\nInvite team members\nCreate your first project\nDeploy your application', order: 5 },
     { id: 'b7', type: 'callout', content: '💡 Tip: Start with a small pilot project to familiarize yourself with the platform', order: 6 },
     { id: 'b8', type: 'heading2', content: 'Code Example', order: 7 },
-    { id: 'b9', type: 'code', content: '# Deploy your application\natonix deploy --project my-app --env production', order: 8 },
+    { id: 'b9', type: 'code', content: '# Deploy your application\norcacompute deploy --project my-app --env production', order: 8 },
   ],
   status: 'published',
   createdBy: 'user-1',

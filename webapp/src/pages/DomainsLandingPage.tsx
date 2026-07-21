@@ -106,12 +106,12 @@ const DomainsLandingPage: React.FC = () => {
       >
         <Container maxWidth="lg">
           <Stack spacing={3}>
-            <Chip label="Atonix Domains" sx={{ alignSelf: 'flex-start', bgcolor: 'rgba(21,61,117,.12)', color: '#153d75', borderRadius: '2px' }} />
+            <Chip label="OrcaCompute Domains" sx={{ alignSelf: 'flex-start', bgcolor: 'rgba(21,61,117,.12)', color: '#153d75', borderRadius: '2px' }} />
             <Typography component="h1" sx={{ fontWeight: 700, fontSize: { xs: '2rem', md: '3rem' }, lineHeight: 1.05, letterSpacing: '-.03em', maxWidth: 900 }}>
               Domain platform with full lifecycle, DNS, SSL, billing, and operational dashboards.
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,.82)', maxWidth: 860, fontSize: { xs: '1rem', md: '1.08rem' } }}>
-              Search, buy, and manage domains from one modern control surface. Atonix Domains runs as a complete product area under your OrcaCompute platform.
+              Search, buy, and manage domains from one modern control surface. OrcaCompute Domains runs as a complete product area under your OrcaCompute platform.
             </Typography>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 1 }}>
@@ -184,7 +184,7 @@ const DomainsLandingPage: React.FC = () => {
               Product definition
             </Typography>
             <Typography sx={{ mt: 1.5, color: dashboardTokens.colors.textSecondary }}>
-              Atonix Domains is a full self-service domain platform: availability search, registration, renewals, DNS management, SSL lifecycle, billing, notifications, and role-based operations in a dedicated dashboard.
+              OrcaCompute Domains is a full self-service domain platform: availability search, registration, renewals, DNS management, SSL lifecycle, billing, notifications, and role-based operations in a dedicated dashboard.
             </Typography>
           </Box>
 
@@ -310,7 +310,7 @@ const DomainsLandingPage: React.FC = () => {
               {[
                 {
                   q: 'Can I run this in MVP mode without a real registrar?',
-                  a: 'Yes. Atonix Domains supports internal simulation mode for demo/testing and can later switch to real registrar integration via service abstraction.',
+                  a: 'Yes. OrcaCompute Domains supports internal simulation mode for demo/testing and can later switch to real registrar integration via service abstraction.',
                 },
                 {
                   q: 'Do users manage only their own domains?',

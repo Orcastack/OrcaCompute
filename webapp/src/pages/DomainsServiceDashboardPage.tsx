@@ -292,7 +292,7 @@ const DomainsServiceDashboardPage: React.FC = () => {
     <Box sx={{ bgcolor: dashboardTokens.colors.background, minHeight: '100%', p: { xs: 1.5, md: 2.5 } }}>
       <Box sx={{ mb: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 800, color: dashboardTokens.colors.textPrimary }}>
-          Atonix Domains Service Dashboard
+          OrcaCompute Domains Service Dashboard
         </Typography>
         <Typography sx={{ color: dashboardTokens.colors.textSecondary, mt: 0.5 }}>
           Full domain operations inside your cloud: lifecycle, DNS, SSL, billing posture, and admin controls.

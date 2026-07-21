@@ -30,7 +30,8 @@ import { createProject as createProjectApi } from '../services/projectsApi';
 
 const FONT = '"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 const t = dashboardTokens.colors;
-const STORAGE_KEY = 'atonix:project-create:v2';
+const STORAGE_KEY = 'orcacompute:project-create:v2';
+const LEGACY_STORAGE_KEY = 'atonix:project-create:v2';
 
 type Visibility = 'private' | 'team' | 'public';
 type WorkspaceMode = 'skip' | 'existing' | 'new';
@@ -172,7 +173,7 @@ const ProjectCreateWizardPage: React.FC = () => {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (saved) {
         setState({ ...defaultState, ...(JSON.parse(saved) as Partial<WizardState>) });
       }
@@ -182,7 +183,9 @@ const ProjectCreateWizardPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const serialized = JSON.stringify(state);
+    localStorage.setItem(STORAGE_KEY, serialized);
+    localStorage.setItem(LEGACY_STORAGE_KEY, serialized);
   }, [state]);
 
   const patch = (partial: Partial<WizardState>) => setState((prev) => ({ ...prev, ...partial }));
@@ -190,7 +193,7 @@ const ProjectCreateWizardPage: React.FC = () => {
   const derived = useMemo(() => {
     const key = state.projectKey || slugify(state.projectName);
     const projectId = `proj-${key || 'new'}-${Math.abs((state.projectName || 'project').length * 37).toString(16)}`;
-    const namespace = `atonix-${key || 'project'}`;
+    const namespace = `orcacompute-${key || 'project'}`;
     return { key, projectId, namespace };
   }, [state.projectName, state.projectKey]);
 
@@ -257,7 +260,11 @@ const ProjectCreateWizardPage: React.FC = () => {
         createdAt: new Date().toISOString(),
       };
       try {
-        localStorage.setItem(`atonix:pipeline-config:${derived.projectId}`, JSON.stringify(pipelineConfig));
+        const newPipelineKey = `orcacompute:pipeline-config:${derived.projectId}`;
+        const legacyPipelineKey = `atonix:pipeline-config:${derived.projectId}`;
+        const serialized = JSON.stringify(pipelineConfig);
+        localStorage.setItem(newPipelineKey, serialized);
+        localStorage.setItem(legacyPipelineKey, serialized);
       } catch {
         // non-critical
       }
@@ -278,6 +285,7 @@ const ProjectCreateWizardPage: React.FC = () => {
       };
 
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
       setSnack('Project created successfully. You can attach workspace/environments/groups/containers anytime.');
       navigate('/developer/Dashboard/projects', {
         state: { snack: `Project "${createdProject.name}" created successfully.` },
@@ -491,7 +499,7 @@ const ProjectCreateWizardPage: React.FC = () => {
                 {([
                   { id: 'new', label: 'Create new repository' },
                   { id: 'import', label: 'Import from Git provider' },
-                  { id: 'attach', label: 'Attach existing Atonix repo' },
+                    { id: 'attach', label: 'Attach existing OrcaCompute repo' },
                 ] as Array<{ id: RepoMode; label: string }>).map((mode) => (
                   <Button
                     key={mode.id}
@@ -560,7 +568,7 @@ const ProjectCreateWizardPage: React.FC = () => {
 
               <Divider sx={{ borderColor: t.border }} />
               <Alert severity="info" sx={{ bgcolor: 'rgba(21,61,117,0.08)', border: `1px solid ${dashboardTokens.colors.brandPrimary}33` }}>
-                On creation the system will initialize/clone repository, auto-detect language, generate <strong>.atonix/pipeline.yaml</strong>, initialize CI/CD, and connect repository to workspace when a workspace exists.
+                On creation the system will initialize/clone repository, auto-detect language, generate <strong>.orcacompute/pipeline.yaml</strong> (legacy <strong>.atonix/pipeline.yaml</strong> is still recognized), initialize CI/CD, and connect repository to workspace when a workspace exists.
               </Alert>
             </Stack>
           )}
@@ -790,7 +798,7 @@ const ProjectCreateWizardPage: React.FC = () => {
 
                   <Divider sx={{ borderColor: t.border }} />
                   <Alert severity="success" sx={{ bgcolor: 'rgba(34,197,94,.1)', border: '1px solid rgba(34,197,94,.3)' }}>
-                    <strong>Pipeline Ready:</strong> System will generate <code>.atonix/pipeline.yaml</code> with {state.pipelineTemplate} template, configure {state.pipelineTriggers.join(', ')} triggers, and set up {state.deploymentStrategy} deployment strategy.
+                    <strong>Pipeline Ready:</strong> System will generate <code>.orcacompute/pipeline.yaml</code> (legacy <code>.atonix/pipeline.yaml</code> supported) with {state.pipelineTemplate} template, configure {state.pipelineTriggers.join(', ')} triggers, and set up {state.deploymentStrategy} deployment strategy.
                   </Alert>
                 </Stack>
               )}

@@ -30,7 +30,7 @@ interface ProjectStory {
 const ___projectStories: ProjectStory[] = [
   {
     id: 1,
-    title: 'OrcaCompute-Platform',
+    title: 'OrcaCompute Platform',
     subtitle: 'The Digital Backbone',
     description: 'Infrastructure that powers the future',
     story: [

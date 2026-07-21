@@ -91,6 +91,9 @@ const severityColor = (severity: 'Low' | 'Medium' | 'High' | 'Critical') => {
   return 'error';
 };
 
+const NEW_DEPLOY_KEY = 'ORCACOMPUTE_NEW_DEPLOY';
+const LEGACY_NEW_DEPLOY_KEY = 'ATONIX_NEW_DEPLOY';
+
 const DevDeploymentsPage: React.FC = () => {
   const navigate = useNavigate();
   const [selected,    setSelected]   = useState<DeploymentItem | null>(null);
@@ -116,11 +119,12 @@ const DevDeploymentsPage: React.FC = () => {
   }, [fetchDeployments]);
 
   useEffect(() => {
-    const raw = localStorage.getItem('ATONIX_NEW_DEPLOY');
+    const raw = localStorage.getItem(NEW_DEPLOY_KEY) || localStorage.getItem(LEGACY_NEW_DEPLOY_KEY);
     if (!raw) return;
     try {
       const payload: NewDeploymentPayload = JSON.parse(raw);
-      localStorage.removeItem('ATONIX_NEW_DEPLOY');
+      localStorage.removeItem(NEW_DEPLOY_KEY);
+      localStorage.removeItem(LEGACY_NEW_DEPLOY_KEY);
       const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
       const newItem: DeploymentItem = {
         id:           `dep-${Date.now()}`,

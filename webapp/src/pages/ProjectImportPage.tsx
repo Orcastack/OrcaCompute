@@ -34,6 +34,10 @@ import { createProject } from '../services/projectsApi';
 
 const FONT = dashboardTokens.typography.fontFamily;
 const t = dashboardTokens.colors;
+const PROJECT_LIST_KEY = 'orcacompute:projects:list:v1';
+const LEGACY_PROJECT_LIST_KEY = 'atonix:projects:list:v1';
+const PROJECT_SNACK_KEY = 'orcacompute:projects:snack:v1';
+const LEGACY_PROJECT_SNACK_KEY = 'atonix:projects:snack:v1';
 
 type Provider = 'github' | 'gitlab' | 'bitbucket';
 
@@ -231,8 +235,7 @@ const ProjectImportPage: React.FC = () => {
         description: projectDesc.trim(),
       });
       // Persist to localStorage so DevProjectsPage can pick it up
-      const lsKey = 'atonix:projects:list:v1';
-      const existing = JSON.parse(localStorage.getItem(lsKey) || '[]');
+      const existing = JSON.parse(localStorage.getItem(PROJECT_LIST_KEY) || localStorage.getItem(LEGACY_PROJECT_LIST_KEY) || '[]');
       const merged = [
         ...existing.filter((p: { id: string }) => p.id !== project.id),
         {
@@ -252,8 +255,12 @@ const ProjectImportPage: React.FC = () => {
           importedFrom: selectedRepo?.fullName || '',
         },
       ];
-      localStorage.setItem(lsKey, JSON.stringify(merged));
-      localStorage.setItem('atonix:projects:snack:v1', `Project "${project.name}" imported successfully!`);
+      const serialized = JSON.stringify(merged);
+      localStorage.setItem(PROJECT_LIST_KEY, serialized);
+      localStorage.setItem(LEGACY_PROJECT_LIST_KEY, serialized);
+      const snack = `Project "${project.name}" imported successfully!`;
+      localStorage.setItem(PROJECT_SNACK_KEY, snack);
+      localStorage.setItem(LEGACY_PROJECT_SNACK_KEY, snack);
       navigate(`/developer/Dashboard/projects/${project.id}`);
     } catch {
       setImportError('Failed to create project. Make sure the backend is running.');

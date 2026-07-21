@@ -10,6 +10,13 @@ pip install -e .
 Set auth:
 
 ```bash
+export ORCACOMPUTE_BASE_URL=http://localhost:8000
+export ORCACOMPUTE_TOKEN=<your-token>
+```
+
+Legacy env vars are still supported:
+
+```bash
 export ATONIX_BASE_URL=http://localhost:8000
 export ATONIX_TOKEN=<your-token>
 ```

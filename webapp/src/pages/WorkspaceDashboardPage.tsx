@@ -181,9 +181,9 @@ function simulateCommand(cmd: string, cwd: string, workspaceId: string, image: s
 
     case 'whoami': return { output: [{ type: 'output', text: workspaceId }], newCwd: cwd };
 
-    case 'hostname': return { output: [{ type: 'output', text: `${workspaceId}.atonix-workspace` }], newCwd: cwd };
+    case 'hostname': return { output: [{ type: 'output', text: `${workspaceId}.orcacompute-workspace` }], newCwd: cwd };
 
-    case 'uname': return { output: [{ type: 'output', text: 'Linux atonix-workspace 6.6.0-atonix #1 SMP x86_64 GNU/Linux' }], newCwd: cwd };
+    case 'uname': return { output: [{ type: 'output', text: 'Linux orcacompute-workspace 6.6.0-orcacompute #1 SMP x86_64 GNU/Linux' }], newCwd: cwd };
 
     case 'echo': return { output: [{ type: 'output', text: args.join(' ').replace(/^"|"$/g, '').replace(/^'|'$/g, '') }], newCwd: cwd };
 
@@ -324,7 +324,7 @@ function InteractiveTerminal({ workspaceId, image, ide, region, isRunning, onSta
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const cmd = input.trim();
-      const promptLine: TermLine = { type: 'prompt', text: `${workspaceId}@atonix:${cwd}$ ${cmd}` };
+      const promptLine: TermLine = { type: 'prompt', text: `${workspaceId}@orcacompute:${cwd}$ ${cmd}` };
       if (cmd === '') { setLines((l) => [...l, promptLine]); setInput(''); return; }
 
       const result = simulateCommand(cmd, cwd, workspaceId, image, ide, region);
@@ -356,7 +356,7 @@ function InteractiveTerminal({ workspaceId, image, ide, region, isRunning, onSta
         return next;
       });
     } else if (e.key === 'c' && e.ctrlKey) {
-      setLines((l) => [...l, { type: 'prompt', text: `${workspaceId}@atonix:${cwd}$ ${input}^C` }]);
+      setLines((l) => [...l, { type: 'prompt', text: `${workspaceId}@orcacompute:${cwd}$ ${input}^C` }]);
       setInput('');
       setHistIdx(-1);
     } else if (e.key === 'l' && e.ctrlKey) {
@@ -365,7 +365,7 @@ function InteractiveTerminal({ workspaceId, image, ide, region, isRunning, onSta
     }
   };
 
-  const prompt = `${workspaceId}@atonix:${cwd}$`;
+  const prompt = `${workspaceId}@orcacompute:${cwd}$`;
 
   if (!isRunning) {
     return (
@@ -390,7 +390,7 @@ function InteractiveTerminal({ workspaceId, image, ide, region, isRunning, onSta
           <Box key={c} sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: c }} />
         ))}
         <Typography sx={{ fontSize: '.72rem', color: '#6c7086', ml: 1, fontFamily: 'monospace', flex: 1 }}>
-          bash — {workspaceId}@atonix-workspace
+          bash — {workspaceId}@orcacompute-workspace
         </Typography>
         <Tooltip title="Clear terminal (Ctrl+L)">
           <IconButton size="small" onClick={(e) => { e.stopPropagation(); setLines([]); }}
@@ -477,7 +477,7 @@ interface RunningPipeline {
   startedAt: string;
 }
 
-const PIPELINE_FILES = ['atonix.yml', '.gitlab-ci.yml', 'pipeline.yaml', 'Jenkinsfile', '.github/workflows/ci.yml'];
+const PIPELINE_FILES = ['orcacompute.yml', 'atonix.yml', '.gitlab-ci.yml', 'pipeline.yaml', 'Jenkinsfile', '.github/workflows/ci.yml'];
 
 // ── Project selection modal ───────────────────────────────────────────────────
 function ProjectSelectModal({

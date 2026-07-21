@@ -13,12 +13,12 @@ const T = dashboardTokens.colors;
 const S = dashboardSemanticColors;
 
 const TERRAFORM_MODULES = [
-  { name: 'atonix-compute-cluster', desc: 'Auto-scaled compute cluster with load balancer', version: '2.3.1', downloads: '12.4k', provider: 'Terraform', tags: ['compute', 'autoscaling'] },
-  { name: 'atonix-k8s-cluster', desc: 'Managed Kubernetes cluster with node auto-provisioning', version: '3.1.0', downloads: '8.9k', provider: 'Terraform', tags: ['k8s', 'compute'] },
-  { name: 'atonix-vpc-network', desc: 'VPC with public/private subnets, NAT, firewall', version: '1.8.2', downloads: '15.2k', provider: 'Terraform', tags: ['networking'] },
-  { name: 'atonix-postgres-cluster', desc: 'Managed PostgreSQL with read replicas and backups', version: '1.5.0', downloads: '7.1k', provider: 'Terraform', tags: ['database'] },
-  { name: 'atonix-cdn-distribution', desc: 'Global CDN with SSL and origin failover', version: '1.2.0', downloads: '4.3k', provider: 'Pulumi', tags: ['cdn', 'networking'] },
-  { name: 'atonix-serverless-app', desc: 'Function deployment with API gateway and auth', version: '2.0.1', downloads: '6.7k', provider: 'Pulumi', tags: ['serverless', 'api'] },
+  { name: 'orcacompute-compute-cluster', desc: 'Auto-scaled compute cluster with load balancer', version: '2.3.1', downloads: '12.4k', provider: 'Terraform', tags: ['compute', 'autoscaling'] },
+  { name: 'orcacompute-k8s-cluster', desc: 'Managed Kubernetes cluster with node auto-provisioning', version: '3.1.0', downloads: '8.9k', provider: 'Terraform', tags: ['k8s', 'compute'] },
+  { name: 'orcacompute-vpc-network', desc: 'VPC with public/private subnets, NAT, firewall', version: '1.8.2', downloads: '15.2k', provider: 'Terraform', tags: ['networking'] },
+  { name: 'orcacompute-postgres-cluster', desc: 'Managed PostgreSQL with read replicas and backups', version: '1.5.0', downloads: '7.1k', provider: 'Terraform', tags: ['database'] },
+  { name: 'orcacompute-cdn-distribution', desc: 'Global CDN with SSL and origin failover', version: '1.2.0', downloads: '4.3k', provider: 'Pulumi', tags: ['cdn', 'networking'] },
+  { name: 'orcacompute-serverless-app', desc: 'Function deployment with API gateway and auth', version: '2.0.1', downloads: '6.7k', provider: 'Pulumi', tags: ['serverless', 'api'] },
 ];
 
 const BLUEPRINTS = [
@@ -128,9 +128,9 @@ export default function DevIaCPage() {
             <TableBody>
               {[
                 { name: '3-Tier Web Application', by: 'James Liu', env: 'production', resources: 18, status: 'active', at: '2026-01-15 10:00' },
-                { name: 'atonix-k8s-cluster', by: 'Sarah Chen', env: 'production', resources: 7, status: 'active', at: '2025-11-20 14:30' },
+                { name: 'orcacompute-k8s-cluster', by: 'Sarah Chen', env: 'production', resources: 7, status: 'active', at: '2025-11-20 14:30' },
                 { name: 'Serverless API', by: 'Dev Team', env: 'staging', resources: 5, status: 'active', at: '2026-02-10 09:00' },
-                { name: 'atonix-vpc-network', by: 'Platform Team', env: 'production', resources: 12, status: 'active', at: '2025-09-01 08:00' },
+                { name: 'orcacompute-vpc-network', by: 'Platform Team', env: 'production', resources: 12, status: 'active', at: '2025-09-01 08:00' },
               ].map((dep, i) => (
                 <TableRow key={i} hover sx={{ '&:hover': { bgcolor: T.surfaceHover } }}>
                   <TableCell sx={{ color: T.textPrimary, fontWeight: 600 }}>{dep.name}</TableCell>

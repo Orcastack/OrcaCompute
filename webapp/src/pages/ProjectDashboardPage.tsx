@@ -48,6 +48,19 @@ import FileBrowserPanel from '../components/FileBrowserPanel';
 
 const FONT = dashboardTokens.typography.fontFamily;
 const t = dashboardTokens.colors;
+const PROJECT_LIST_KEY = 'orcacompute:projects:list:v1';
+const LEGACY_PROJECT_LIST_KEY = 'atonix:projects:list:v1';
+
+function readProjectListCache<T = any>(): T[] {
+  const raw = localStorage.getItem(PROJECT_LIST_KEY) || localStorage.getItem(LEGACY_PROJECT_LIST_KEY) || '[]';
+  return JSON.parse(raw) as T[];
+}
+
+function writeProjectListCache<T = any>(records: T[]): void {
+  const serialized = JSON.stringify(records);
+  localStorage.setItem(PROJECT_LIST_KEY, serialized);
+  localStorage.setItem(LEGACY_PROJECT_LIST_KEY, serialized);
+}
 
 // ─── Service sidebar links
 
@@ -382,8 +395,7 @@ const ProjectDashboardPage: React.FC = () => {
       return;
     }
 
-    const lsKey = 'atonix:projects:list:v1';
-    const cached = JSON.parse(localStorage.getItem(lsKey) || '[]');
+    const cached = readProjectListCache();
     const local = cached.find((p: { id: string }) => p.id === id);
 
     const fallback = (src: { id: string; name: string; description?: string }): BackendProject => ({
@@ -600,20 +612,18 @@ const ProjectDashboardPage: React.FC = () => {
               onSaved={(updated) => {
                 setProject(updated);
                 // Keep the project list cache in sync
-                const lsKey = 'atonix:projects:list:v1';
                 try {
-                  const cached: BackendProject[] = JSON.parse(localStorage.getItem(lsKey) || '[]');
+                  const cached: BackendProject[] = readProjectListCache<BackendProject>();
                   const idx = cached.findIndex(p => p.id === updated.id);
                   if (idx !== -1) cached[idx] = updated; else cached.unshift(updated);
-                  localStorage.setItem(lsKey, JSON.stringify(cached));
+                  writeProjectListCache(cached);
                 } catch { /* ignore */ }
               }}
               onClose={() => setActivePanel('files')}
               onDeleted={() => {
-                const lsKey = 'atonix:projects:list:v1';
                 try {
-                  const cached: BackendProject[] = JSON.parse(localStorage.getItem(lsKey) || '[]');
-                  localStorage.setItem(lsKey, JSON.stringify(cached.filter(p => p.id !== id)));
+                  const cached: BackendProject[] = readProjectListCache<BackendProject>();
+                  writeProjectListCache(cached.filter(p => p.id !== id));
                 } catch { /* ignore */ }
                 navigate('/developer/Dashboard/projects');
               }}
@@ -634,11 +644,13 @@ const ProjectDashboardPage: React.FC = () => {
                 setProject(p => p ? { ...p, has_repo: false, last_activity: new Date().toISOString() } : p);
                 setActivePanel('files');
                 // Evict stale has_repo from LS so project list refreshes on next visit
-                const lsKey = 'atonix:projects:list:v1';
                 try {
-                  const cached: BackendProject[] = JSON.parse(localStorage.getItem(lsKey) || '[]');
+                  const cached: BackendProject[] = readProjectListCache<BackendProject>();
                   const idx = cached.findIndex(p => p.id === id);
-                  if (idx !== -1) { cached[idx] = { ...cached[idx], has_repo: false }; localStorage.setItem(lsKey, JSON.stringify(cached)); }
+                  if (idx !== -1) {
+                    cached[idx] = { ...cached[idx], has_repo: false };
+                    writeProjectListCache(cached);
+                  }
                 } catch { /* ignore */ }
               }}
             />

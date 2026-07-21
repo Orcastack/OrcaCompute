@@ -218,7 +218,7 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
         { label: 'Updates',      value: 2,  color: dashboardSemanticColors.warning },
       ],
       items: [
-        { id: '1', label: 'atonix-cli v2.4.1',  sub: 'Up to date',       status: 'success' },
+        { id: '1', label: 'orcacompute-cli v2.4.1',  sub: 'Up to date',       status: 'success' },
         { id: '2', label: 'go-sdk v1.3.0',       sub: 'Update available', status: 'warning', meta: 'v1.4.0' },
         { id: '3', label: 'python-sdk v3.0.1',   sub: 'Up to date',       status: 'success' },
         { id: '4', label: 'terraform-provider',  sub: 'Installing…',      status: 'running' },
