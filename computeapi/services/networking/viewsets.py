@@ -34,13 +34,14 @@ from .serializers import (
     InternetGatewayListSerializer, InternetGatewayCreateSerializer,
     NATGatewayListSerializer, NATGatewayDetailSerializer, NATGatewayCreateSerializer
 )
+from ..core.tenant import TenantScopedViewSetMixin
 
 
 # ============================================================================
 # VPC VIEWSET
 # ============================================================================
 
-class VPCViewSet(viewsets.ModelViewSet):
+class VPCViewSet(TenantScopedViewSetMixin, viewsets.ModelViewSet):
     """
     Viewset for Virtual Private Clouds.
     Full CRUD operations for managing VPCs and their configuration.
@@ -55,7 +56,7 @@ class VPCViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Filter VPCs by owner."""
-        return VPC.objects.filter(owner=self.request.user)
+        return self.filter_queryset_by_tenant(VPC.objects.all())
 
     def get_serializer_class(self):
         """Use different serializers for different actions."""
@@ -68,7 +69,7 @@ class VPCViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create VPC with generated ID and default networking controls."""
         vpc = serializer.save(
-            owner=self.request.user,
+            **self.build_tenant_create_kwargs(VPC),
             vpc_id=f"vpc-{uuid.uuid4().hex[:12]}",
             status='available',
         )
@@ -177,7 +178,7 @@ class VPCViewSet(viewsets.ModelViewSet):
 # SUBNET VIEWSET
 # ============================================================================
 
-class SubnetViewSet(viewsets.ModelViewSet):
+class SubnetViewSet(TenantScopedViewSetMixin, viewsets.ModelViewSet):
     """
     Viewset for VPC subnets.
     Full CRUD operations for managing subnets.
@@ -190,7 +191,7 @@ class SubnetViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Filter subnets by VPC owner."""
-        return Subnet.objects.filter(vpc__owner=self.request.user)
+        return self.filter_queryset_by_tenant(Subnet.objects.filter(vpc__owner=self.request.user), owner_field='vpc__owner')
 
     def get_serializer_class(self):
         """Use different serializers for different actions."""

@@ -154,6 +154,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'services.core.jwt_auth.JWTAuthentication',
+        'services.core.authentication.APIKeyAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         # SessionAuthentication removed: it enforces CSRF on every POST,
         # which breaks token-based API clients that don't carry a CSRF cookie.
@@ -162,6 +164,12 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_RENDERER_CLASSES': [
+        'services.core.api_envelope.VersionedEnvelopeJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'EXCEPTION_HANDLER': 'services.core.api_envelope.versioned_exception_handler',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.openapi.AutoSchema',
     'PAGE_SIZE': 20,
     'DEFAULT_THROTTLE_RATES': {
         'domain_search': '30/minute',

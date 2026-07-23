@@ -90,7 +90,6 @@ import EnvironmentDetailPage      from './pages/EnvironmentDetailPage';
 import DevOperationalPage         from './pages/DevOperationalPage'
 import DevDeployAppPage           from './pages/DevDeployAppPage';
 import TeamDetailPage             from './pages/TeamDetailPage';
-import EnterpriseOverviewDashboard from './pages/EnterpriseOverviewDashboard';
 import EnterpriseDashboardPage   from './pages/EnterpriseDashboardPage';
 import BusinessWorkspacePage     from './pages/BusinessWorkspacePage';
 import EnterpriseEntryRoute      from './pages/EnterpriseEntryRoute';
@@ -168,15 +167,6 @@ const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const AppShell: React.FC = () => {
   const location = useLocation();
   const isMatrixDashboard = location.pathname.startsWith('/matrix');
-
-  if (portalVariant === 'home') {
-    return (
-      <Routes>
-        <Route path="/" element={<PortalEntryPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    );
-  }
 
   if (portalVariant === 'login') {
     return (
@@ -455,7 +445,7 @@ const AppShell: React.FC = () => {
       <ProtectedRoute>
         <DashboardLayout>
           <Routes>
-            <Route path="/dashboard"                         element={<EnterpriseOverviewDashboard />} />
+            <Route path="/dashboard"                         element={<OnboardingDashboard />} />
             <Route path="/dashboard/compute"                 element={<ComputePage />} />
             <Route path="/dashboard/compute/create"          element={<ComputePage />} />
             <Route path="/dashboard/kubernetes"              element={<KubernetesPage />} />
@@ -500,7 +490,7 @@ const AppShell: React.FC = () => {
             <Route path="/dashboard/organization"            element={<OrganizationPage />} />
             <Route path="/dashboard/deployments"             element={<DevDeploymentsPage />} />
             <Route path="/dashboard/governance"              element={<GovernancePage />} />
-            <Route path="/dashboard/*"                       element={<EnterpriseOverviewDashboard />} />
+            <Route path="/dashboard/*"                       element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </DashboardLayout>
       </ProtectedRoute>
@@ -662,6 +652,7 @@ const AppShell: React.FC = () => {
       <Box component="main" sx={{ flex: 1 }}>
         <Routes>
           <Route path="/"          element={<Homepage />} />
+          <Route path="/portal"    element={<PortalEntryPage />} />
           <Route path="/features"  element={<FeaturesPage />} />
           <Route path="/bare-metal-vps/:slug" element={<BareMetalVpsPage />} />
           <Route path="/developer" element={<DeveloperPage />} />
@@ -691,7 +682,18 @@ const AppShell: React.FC = () => {
   );
 };
 
-const routerBasename = process.env.PUBLIC_URL || '/';
+function getRouterBasename(): string {
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return '/';
+    }
+  }
+
+  return process.env.PUBLIC_URL || '/';
+}
+
+const routerBasename = getRouterBasename();
 
 function App() {
   useEffect(() => {

@@ -28,6 +28,7 @@ from .serializers import (
     AutoScalingGroupCreateSerializer, AutoScalingGroupUpdateSerializer,
     ScalingPolicySerializer
 )
+from ..core.tenant import TenantScopedViewSetMixin
 from infrastructure.openstack.compute import (
     provision_kubernetes_cluster,
     deploy_kubernetes_manifest,
@@ -74,7 +75,7 @@ class FlavorViewSet(viewsets.ReadOnlyModelViewSet):
 # IMAGE VIEWSET
 # ============================================================================
 
-class ImageViewSet(viewsets.ModelViewSet):
+class ImageViewSet(TenantScopedViewSetMixin, viewsets.ModelViewSet):
     """
     Viewset for VM images/templates.
     Full CRUD operations for managing OS images and custom AMIs.
@@ -89,7 +90,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Filter images by owner or public images."""
         user = self.request.user
-        return Image.objects.filter(is_public=True) | Image.objects.filter(owner=user)
+        return Image.objects.filter(is_public=True) | self.filter_queryset_by_tenant(Image.objects.filter(owner=user))
 
     @action(detail=False, methods=['get'])
     def public(self, request):
@@ -110,7 +111,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 # INSTANCE VIEWSET
 # ============================================================================
 
-class InstanceViewSet(viewsets.ModelViewSet):
+class InstanceViewSet(TenantScopedViewSetMixin, viewsets.ModelViewSet):
     """
     Viewset for VM instances.
     Full CRUD operations for creating, managing, and monitoring VM instances.
@@ -123,7 +124,7 @@ class InstanceViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Filter instances by owner."""
-        return Instance.objects.filter(owner=self.request.user)
+        return self.filter_queryset_by_tenant(Instance.objects.all())
 
     def get_serializer_class(self):
         """Use different serializers for different actions."""
@@ -137,7 +138,7 @@ class InstanceViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """Set owner to current user."""
-        serializer.save(owner=self.request.user)
+        serializer.save(**self.build_tenant_create_kwargs(Instance))
 
     @action(detail=True, methods=['post'])
     def start(self, request, pk=None):
@@ -183,7 +184,7 @@ class InstanceViewSet(viewsets.ModelViewSet):
 # KUBERNETES CLUSTER VIEWSET
 # ============================================================================
 
-class KubernetesClusterViewSet(viewsets.ModelViewSet):
+class KubernetesClusterViewSet(TenantScopedViewSetMixin, viewsets.ModelViewSet):
     """
     Viewset for Kubernetes clusters.
     Full CRUD operations for managing Kubernetes clusters.
@@ -198,7 +199,7 @@ class KubernetesClusterViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Filter clusters by owner."""
-        return KubernetesCluster.objects.filter(owner=self.request.user)
+        return self.filter_queryset_by_tenant(KubernetesCluster.objects.all())
 
     def get_serializer_class(self):
         """Use different serializers for different actions."""
@@ -211,7 +212,7 @@ class KubernetesClusterViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create cluster, provision backing resources, and bootstrap nodes."""
         cluster = serializer.save(
-            owner=self.request.user,
+            **self.build_tenant_create_kwargs(KubernetesCluster),
             cluster_id=f"k8s-{uuid.uuid4().hex[:10]}",
             status='provisioning',
         )

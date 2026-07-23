@@ -1,17 +1,6 @@
 # Multi-Dashboard Local Development
 
-This stack runs a unified local portal behind Nginx on port 3000 and exposes separate dashboard services by hostname.
-
-## Host entries
-
-Add these entries to `/etc/hosts`:
-
-```text
-127.0.0.1 login.localhost
-127.0.0.1 cloud.localhost
-127.0.0.1 developer.localhost
-127.0.0.1 matrix.localhost
-```
+This stack runs a unified local portal behind Nginx on port 3000 and exposes each dashboard on its own localhost port.
 
 ## Start the stack
 
@@ -39,17 +28,25 @@ docker compose -f docker-compose.multi-dashboard.yml --profile devtools up --bui
 ## Endpoints
 
 - `http://localhost:3000`
-- `http://login.localhost:3000`
-- `http://cloud.localhost:3000`
-- `http://developer.localhost:3000`
-- `http://matrix.localhost:3000`
+- `http://localhost:3001`
+- `http://localhost:3002`
+- `http://localhost:3003`
+- `http://localhost:3004`
+
+Port mapping:
+
+- `3000` home portal
+- `3001` login service
+- `3002` cloud dashboard
+- `3003` developer dashboard
+- `3004` matrix dashboard
 
 ## Login flow
 
 1. Open `http://localhost:3000`.
 2. Choose a target dashboard.
-3. Sign in through `http://login.localhost:3000`.
-4. The login page seeds the local onboarding plan and redirects to the chosen dashboard host.
+3. Sign in through `http://localhost:3001`.
+4. The login page seeds the local onboarding plan and redirects to the chosen dashboard port.
 
 ## Demo credentials
 

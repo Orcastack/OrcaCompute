@@ -83,6 +83,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Store token and set user
       setStoredAuthSession(response.token, userWithType);
+      if (response.refresh_token) {
+        localStorage.setItem('refreshToken', response.refresh_token);
+      }
       setAuthToken(response.token);
       setUser(userWithType);
 
@@ -112,6 +115,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Store token and set user
       setStoredAuthSession(response.token, individualUser);
+      if (response.refresh_token) {
+        localStorage.setItem('refreshToken', response.refresh_token);
+      }
       setAuthToken(response.token);
       setUser(individualUser);
       console.log('Individual signup successful, user set:', individualUser);
@@ -150,6 +156,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = (): void => {
     clearStoredAuthSession();
+    localStorage.removeItem('refreshToken');
     clearAuthToken();
     setUser(null);
   };
@@ -158,30 +165,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(true);
     try {
       console.log('Registering organization:', orgData);
-      // Mock organization registration for demo
-      const mockOrg: Organization = {
-        id: Date.now(),
-        name: orgData.name,
-        domain: orgData.domain,
-        description: orgData.description,
-        website: orgData.website,
-        industry: orgData.industry,
-        size: orgData.size,
-        location: orgData.location,
-        is_registered: true,
-        registration_date: new Date().toISOString(),
-        subscription_plan: 'enterprise',
-        features_enabled: ['dashboard', 'analytics', 'security', 'compliance'],
-      };
-
-      setOrganization(mockOrg);
-
-      // Update user with organization info
-      if (user) {
-        setUser({ ...user, organization: mockOrg });
-      }
-
-      console.log('Organization registered successfully:', mockOrg);
+      throw new Error('Organization registration requires backend organization APIs. Local mock registration has been removed.');
     } catch (error) {
       console.error('Organization registration failed:', error);
       throw error;
@@ -194,75 +178,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(true);
     try {
       console.log('Attempting organization signup with:', { userData, orgData });
-
-      // Store organization user credentials separately
-      const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
-
-      // Check if user already exists
-      const existingCredential = userCredentials.find((c: any) => c.email === userData.email);
-      if (existingCredential) {
-        throw new Error('User with this email already exists');
-      }
-
-      // Create organization
-      const mockOrg: Organization = {
-        id: Date.now(),
-        name: orgData.name,
-        domain: orgData.domain,
-        description: orgData.description,
-        website: orgData.website,
-        industry: orgData.industry,
-        size: orgData.size,
-        location: orgData.location,
-        is_registered: true,
-        registration_date: new Date().toISOString(),
-        subscription_plan: 'enterprise',
-        features_enabled: ['dashboard', 'analytics', 'security', 'compliance', 'enterprise-features'],
-      };
-
-      // Create organization user
-      const orgUser: User = {
-        id: Date.now() + 1, // Ensure different ID from organization
-        username: userData.username || userData.email.split('@')[0],
-        email: userData.email,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        avatar: undefined,
-        bio: '',
-        github_url: '',
-        linkedin_url: '',
-        location: '',
-        skills: [],
-        is_active: true,
-        date_joined: new Date().toISOString(),
-        last_login: new Date().toISOString(),
-        user_type: 'organization',
-        organization: mockOrg,
-      };
-
-      // Store credentials separately
-      userCredentials.push({
-        id: orgUser.id,
-        email: userData.email,
-        password: userData.password,
-        user_type: 'organization'
-      });
-      localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
-
-      // Store user data
-      const registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
-      registeredUsers.push(orgUser);
-      localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
-
-      setOrganization(mockOrg);
-
-      // Store token and set user
-      const token = `mock-jwt-token-${orgUser.id}`;
-      setStoredAuthSession(token, orgUser);
-      setAuthToken(token);
-      setUser(orgUser);
-
-      console.log('Organization signup successful, user and org set:', { user: orgUser, org: mockOrg });
+      throw new Error('Organization signup requires backend organization APIs. Local mock organization creation has been removed.');
     } catch (error) {
       console.error('Organization signup failed:', error);
       // Clean up on failure
@@ -279,7 +195,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
-        // Verify and refresh token with backend
+        const refreshed = await authService.refreshAccessToken();
+        localStorage.setItem('authToken', refreshed.token);
+        if (refreshed.refreshToken) {
+          localStorage.setItem('refreshToken', refreshed.refreshToken);
+        }
+        setAuthToken(refreshed.token);
         const userData = await authService.getCurrentUser();
         setUser(userData);
       }

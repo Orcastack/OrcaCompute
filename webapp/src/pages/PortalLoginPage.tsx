@@ -18,17 +18,12 @@ import { buildPortalTransferUrl, getStoredAuthUser } from '../portal/portalSessi
 import type { LoginRequest } from '../types/auth';
 import { dashboardTokens } from '../styles/dashboardDesignSystem';
 
-const demoAccount = {
-  email: 'demo@example.com',
-  password: 'password',
-};
-
 export default function PortalLoginPage() {
   const { login, user } = useAuth();
   const { actions } = useOnboarding();
   const [searchParams] = useSearchParams();
   const [target, setTarget] = useState<PortalTarget>(resolvePortalTarget(searchParams.get('target')));
-  const [formData, setFormData] = useState<LoginRequest>(demoAccount);
+  const [formData, setFormData] = useState<LoginRequest>({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -120,16 +115,8 @@ export default function PortalLoginPage() {
           <Paper sx={{ p: 4, borderRadius: 2, border: `1px solid ${dashboardTokens.colors.border}`, bgcolor: dashboardTokens.colors.surfaceSubtle, boxShadow: 'none' }}>
             <Typography sx={{ fontWeight: 700, color: dashboardTokens.colors.textPrimary }}>Local developer flow</Typography>
             <Typography sx={{ mt: 1.5, color: dashboardTokens.colors.textSecondary, lineHeight: 1.6 }}>
-              This local login page defaults to the demo account so the multi-dashboard flow stays testable even when the backend auth API is offline.
+              This login flow now requires the real backend authentication service. Use a valid account from the running OrcaCompute backend.
             </Typography>
-            <Stack spacing={1} sx={{ mt: 3 }}>
-              <Typography sx={{ fontFamily: dashboardTokens.typography.fontFamily, color: dashboardTokens.colors.textPrimary }}>
-                Email: {demoAccount.email}
-              </Typography>
-              <Typography sx={{ fontFamily: dashboardTokens.typography.fontFamily, color: dashboardTokens.colors.textPrimary }}>
-                Password: {demoAccount.password}
-              </Typography>
-            </Stack>
             <Button href={getPortalLoginUrl()} sx={{ mt: 3, textTransform: 'none' }}>
               Reset target selection
             </Button>

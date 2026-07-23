@@ -12,8 +12,12 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import json
 from django.conf import settings
+from rest_framework.schemas import get_schema_view
 from services.api.portal_views import ApiPortalLandingView
+from services.api.docs_views import swagger_ui_view, redoc_view
 from services.api.telemetry_views import telemetry_endpoint
+from services.core.jwt_auth import issue_tokens_for_user
+from services.core.jwt_views import TokenRefreshView
 
 try:
     from graphene_django.views import GraphQLView
@@ -21,10 +25,60 @@ except Exception:
     GraphQLView = None
 
 
+schema_view = get_schema_view(
+    title='OrcaCompute Unified API',
+    description='Versioned API surface for compute, storage, networking, identity, billing, monitoring, and automation.',
+    version='v1',
+    public=True,
+)
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def health_check(request):
     return Response({'status': 'ok', 'service': 'orcacompute-backend'})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def api_index(request):
+    version = 'v1'
+    base = f'/api/{version}'
+    return Response(
+        {
+            'name': 'OrcaCompute Unified API',
+            'version': version,
+            'status': 'ok',
+            'domains': {
+                'identity': f'{base}/auth/',
+                'services': f'{base}/services/',
+                'enterprise': f'{base}/enterprise/',
+                'graphql': f'{base}/graphql/',
+                'telemetry': f'{base}/telemetry/',
+                'health': f'{base}/health/',
+            },
+        }
+    )
+
+
+def _serialize_user(user):
+    return {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'user_type': getattr(user, 'profile', None) and 'individual' or 'individual',
+    }
+
+
+def _build_auth_response(user, token):
+    return {
+        'message': 'Authentication successful.',
+        'token': token.key,
+        'user': _serialize_user(user),
+        **issue_tokens_for_user(user),
+    }
 
 
 @csrf_exempt
@@ -59,17 +113,7 @@ def login_view(request):
         return Response({'detail': 'Invalid credentials.'}, status=400)
 
     token, _ = Token.objects.get_or_create(user=user)
-    return Response({
-        'token': token.key,
-        'user': {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'user_type': getattr(user, 'profile', None) and 'individual' or 'individual',
-        }
-    })
+    return Response(_build_auth_response(user, token))
 
 
 @csrf_exempt
@@ -110,30 +154,13 @@ def signup_view(request):
         last_name=last_name,
     )
     token, _ = Token.objects.get_or_create(user=user)
-    return Response({
-        'token': token.key,
-        'user': {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'user_type': 'individual',
-        }
-    }, status=201)
+    return Response(_build_auth_response(user, token), status=201)
 
 
 @api_view(['GET'])
 def current_user_view(request):
     user = request.user
-    return Response({
-        'id': user.id,
-        'username': user.username,
-        'email': user.email,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'user_type': 'individual',
-    })
+    return Response(_serialize_user(user))
 
 
 @api_view(['GET', 'PATCH'])
@@ -141,14 +168,7 @@ def profile_view(request):
     """GET or PATCH the authenticated user's profile."""
     user = request.user
     if request.method == 'GET':
-        return Response({
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'user_type': 'individual',
-        })
+        return Response(_serialize_user(user))
 
     # PATCH — update only provided fields
     first_name = request.data.get('first_name', user.first_name)
@@ -170,14 +190,7 @@ def profile_view(request):
         user.set_password(new_password)
     user.save()
 
-    return Response({
-        'id': user.id,
-        'username': user.username,
-        'email': user.email,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'user_type': 'individual',
-    })
+    return Response(_serialize_user(user))
 
 
 @api_view(['GET', 'POST'])
@@ -195,6 +208,7 @@ def graphql_unavailable(request):
 urlpatterns = [
     path('', ApiPortalLandingView.as_view(), name='api-portal-home'),
     path('admin/', admin.site.urls),
+    path('api/', api_index, name='api-index'),
     path('api/health/', health_check),
     path('api/telemetry/', telemetry_endpoint),
     path('api/auth/login/', login_view),
@@ -203,15 +217,34 @@ urlpatterns = [
     path('api/auth/me/', current_user_view),
     path('api/auth/user/', current_user_view),  # alias
     path('api/auth/profile/', profile_view),
+    path('api/v1/', api_index, name='api-v1-index'),
+    path('api/v1/health/', health_check),
+    path('api/v1/telemetry/', telemetry_endpoint),
+    path('api/v1/auth/login/', login_view),
+    path('api/v1/auth/signup/', signup_view),
+    path('api/v1/auth/register/', signup_view),
+    path('api/v1/auth/me/', current_user_view),
+    path('api/v1/auth/user/', current_user_view),
+    path('api/v1/auth/profile/', profile_view),
+    path('api/v1/auth/token/refresh/', TokenRefreshView.as_view(), name='api-v1-token-refresh'),
     path(
         'api/graphql/',
         GraphQLView.as_view(graphiql=settings.DEBUG) if GraphQLView else graphql_unavailable,
     ),
+    path(
+        'api/v1/graphql/',
+        GraphQLView.as_view(graphiql=settings.DEBUG) if GraphQLView else graphql_unavailable,
+    ),
+    path('api/v1/schema/', schema_view, name='api-v1-schema'),
+    path('api/v1/docs/swagger/', swagger_ui_view, name='api-v1-swagger'),
+    path('api/v1/docs/redoc/', redoc_view, name='api-v1-redoc'),
     # Git smart-HTTP endpoint — handles clone / fetch / push
     re_path(r'^repos/(?P<repo_path>.+)$',
             __import__('services.pipelines.git_http', fromlist=['git_http_backend_view']).git_http_backend_view),
-        path('api/services/',    include('services.api.urls')),
+    path('api/services/', include('services.api.urls')),
+    path('api/v1/services/', include('services.api.urls')),
     path('api/enterprise/', include('services.enterprise.urls')),
+    path('api/v1/enterprise/', include('services.enterprise.urls')),
 ]
 
 # Gunicorn does not serve static files. For local demos/dev we serve /static/

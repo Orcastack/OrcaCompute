@@ -1,12 +1,12 @@
 // OrcaCompute Cloud – Compute / Deploy Server Page
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box, Typography, Stack, Button, Chip,
   TextField,
   Stepper, Step, StepLabel, StepConnector,
   stepConnectorClasses,
-  Divider, Paper,
+  Divider, Paper, Alert, CircularProgress,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
@@ -23,14 +23,13 @@ import {
   dashboardTokens,
   dashboardPrimaryButtonSx,
   dashboardSemanticColors,
-  computeCatalogPalette,
   computeUiTokens,
 } from '../styles/dashboardDesignSystem';
-import { serversApi } from '../services/cloudApi';
+import { dashboardApi, serversApi } from '../services/cloudApi';
 import { DeployDropdown } from '../components/deploy/DeployDropdown';
+import type { CloudFlavor, CloudImage, CloudNetwork, WizardOptions } from '../types/cloud';
 
 const COMPUTE_ACCENT = '#153d75';
-const CATALOG = computeCatalogPalette;
 const ACCENT_STRONG = computeUiTokens.accentStrong;
 const WHITE = dashboardTokens.colors.white;
 const BORDER = dashboardTokens.colors.border;
@@ -58,7 +57,7 @@ interface OSGroup {
   versions: OSVersion[];
 }
 
-interface Flavor {
+interface FlavorCardView {
   id: string;
   name: string;
   vcpu: number;
@@ -70,95 +69,74 @@ interface Flavor {
   recommended?: boolean;
 }
 
-// ── OS catalogue (grouped) ──────────────────────────────────────────────────
-const OS_GROUPS: OSGroup[] = [
-  // ── Debian family ──────────────────────────────────────────────────────────
-  { groupId: 'debian',      family: 'Debian',     name: 'Debian',        logo: 'Deb',  logoColor: CATALOG.logos.debian, badge: 'Recommended', badgeColor: CATALOG.badges.recommended, description: 'Rock-solid, minimal, universal OS — the mother of all Debian distros', versions: [
-    { id: 'debian-13', version: '13 Trixie',   badge: 'New',      badgeColor: CATALOG.badges.new },
-    { id: 'debian-12', version: '12 Bookworm', badge: 'Stable',   badgeColor: CATALOG.badges.stable },
-    { id: 'debian-11', version: '11 Bullseye' },
-    { id: 'debian-10', version: '10 Buster',  badge: 'EOL',      badgeColor: CATALOG.badges.eol },
-  ]},
-  { groupId: 'ubuntu',      family: 'Ubuntu',     name: 'Ubuntu',        logo: 'Ubu',  logoColor: CATALOG.logos.ubuntu, description: 'Most popular Linux distro, backed by Canonical', versions: [
-    { id: 'ubuntu-2404', version: '24.04 LTS', badge: 'Latest',   badgeColor: CATALOG.badges.latest },
-    { id: 'ubuntu-2204', version: '22.04 LTS' },
-    { id: 'ubuntu-2004', version: '20.04 LTS', badge: 'EOL Soon', badgeColor: CATALOG.badges.eolSoon },
-  ]},
-  { groupId: 'linuxmint',   family: 'Linux Mint', name: 'Linux Mint',    logo: 'Mint', logoColor: CATALOG.logos.linuxMint, description: 'User-friendly desktop-oriented Ubuntu derivative', versions: [
-    { id: 'linuxmint-22', version: '22 Wilma' },
-    { id: 'linuxmint-21', version: '21 Vera'  },
-  ]},
-  { groupId: 'kali',        family: 'Kali',       name: 'Kali Linux',    logo: 'Kali', logoColor: CATALOG.logos.kali, badge: 'Security', badgeColor: CATALOG.badges.security, description: 'Advanced penetration testing & security auditing distro', versions: [
-    { id: 'kali-2024', version: '2024.4' },
-    { id: 'kali-2023', version: '2023.4' },
-  ]},
-  { groupId: 'mxlinux',     family: 'MX Linux',   name: 'MX Linux',      logo: 'MX',   logoColor: CATALOG.logos.mxLinux, description: 'Antipatterns-free, cooperative development Linux', versions: [
-    { id: 'mxlinux-23', version: '23 Libretto' },
-  ]},
-  { groupId: 'deepin',      family: 'Deepin',     name: 'Deepin',        logo: 'Dpe',  logoColor: CATALOG.logos.deepin, description: 'Beautiful, intuitive Chinese Linux distribution', versions: [
-    { id: 'deepin-23', version: '23' },
-  ]},
-  { groupId: 'zorin',       family: 'Zorin',      name: 'Zorin OS',      logo: 'Zrn',  logoColor: CATALOG.logos.zorin, description: 'Windows-familiar interface, built on Ubuntu LTS', versions: [
-    { id: 'zorin-17', version: '17' },
-    { id: 'zorin-16', version: '16' },
-  ]},
-  { groupId: 'elementary',  family: 'Elementary', name: 'Elementary OS', logo: 'eos',  logoColor: CATALOG.logos.elementary, description: 'macOS-inspired, privacy-first Ubuntu derivative', versions: [
-    { id: 'elementaryos-8', version: '8 Circe' },
-  ]},
-  { groupId: 'popos',       family: 'Pop!_OS',    name: 'Pop!_OS',       logo: 'Pop',  logoColor: CATALOG.logos.popos, description: 'System76 developer-focused Ubuntu variant', versions: [
-    { id: 'popos-2204', version: '22.04 LTS' },
-  ]},
-  { groupId: 'antix',       family: 'antiX',      name: 'antiX',         logo: 'aX',   logoColor: CATALOG.logos.antix, description: 'Fast, lightweight, systemd-free Debian derivative', versions: [
-    { id: 'antix-23', version: '23 Arditi del Popolo' },
-  ]},
-  { groupId: 'pureos',      family: 'PureOS',     name: 'PureOS',        logo: 'Pur',  logoColor: CATALOG.logos.pureos, description: 'Privacy-respecting, FSF-endorsed Debian derivative', versions: [
-    { id: 'pureos-10', version: '10 Byzantium' },
-  ]},
-  { groupId: 'parrot',      family: 'Parrot',     name: 'Parrot OS',     logo: 'Par',  logoColor: CATALOG.logos.parrot, badge: 'Security', badgeColor: CATALOG.badges.security, description: 'Security & forensics-oriented Debian fork', versions: [
-    { id: 'parrotos-6', version: '6.2' },
-    { id: 'parrotos-5', version: '5.3' },
-  ]},
-  { groupId: 'bodhi',       family: 'Bodhi',      name: 'Bodhi Linux',   logo: 'Boh',  logoColor: CATALOG.logos.bodhi, description: 'Lightweight, elegantly minimal Ubuntu derivative', versions: [
-    { id: 'bodhi-7', version: '7.0' },
-  ]},
-  { groupId: 'peppermint',  family: 'Peppermint', name: 'Peppermint OS', logo: 'Pep',  logoColor: CATALOG.logos.peppermint, description: 'Cloud-oriented Debian lightweight desktop OS', versions: [
-    { id: 'peppermint-11', version: '11' },
-  ]},
-  // ── Other ──────────────────────────────────────────────────────────────────
-  { groupId: 'centos',      family: 'RHEL',       name: 'CentOS',        logo: 'CeS',  logoColor: CATALOG.logos.centos, badge: 'Enterprise', badgeColor: CATALOG.badges.enterprise, description: 'Enterprise-grade RHEL upstream tracking distro', versions: [
-    { id: 'centos-stream-9', version: 'Stream 9' },
-    { id: 'centos-stream-8', version: 'Stream 8' },
-  ]},
-  { groupId: 'windows',     family: 'Windows',    name: 'Windows Server',logo: 'Win',  logoColor: CATALOG.logos.windows, description: 'Microsoft Windows Server — Datacenter & Standard editions', versions: [
-    { id: 'windows-2022', version: 'Server 2022', badge: 'Latest', badgeColor: CATALOG.badges.latest },
-    { id: 'windows-2019', version: 'Server 2019' },
-    { id: 'windows-2016', version: 'Server 2016' },
-  ]},
-];
+interface ImageLookup {
+  id: string;
+  name: string;
+  version: string;
+  logoColor: string;
+}
 
-// Flat map used only for review-step lookup
-const OS_FLAT: { id: string; name: string; version: string; logoColor: string }[] =
-  OS_GROUPS.flatMap(g => g.versions.map(v => ({ id: v.id, name: g.name, version: v.version, logoColor: g.logoColor })));
+const OS_TYPE_COLOR: Record<CloudImage['os_type'], string> = {
+  linux: '#153d75',
+  windows: '#0078d4',
+  custom: '#6b7280',
+};
 
-// ── Flavors ───────────────────────────────────────────────────────────────────
-const FLAVORS: Flavor[] = [
-  { id: 'nano',    name: 'Nano',    vcpu: 1,  ram_gb: 0.5, disk_gb: 10,  bandwidth_tb: 0.5, price_mo: 4    },
-  { id: 'micro',   name: 'Micro',   vcpu: 1,  ram_gb: 1,   disk_gb: 25,  bandwidth_tb: 1,   price_mo: 6    },
-  { id: 'small',   name: 'Small',   vcpu: 1,  ram_gb: 2,   disk_gb: 50,  bandwidth_tb: 2,   price_mo: 12   },
-  { id: 'medium',  name: 'Medium',  vcpu: 2,  ram_gb: 4,   disk_gb: 80,  bandwidth_tb: 4,   price_mo: 24,  recommended: true },
-  { id: 'large',   name: 'Large',   vcpu: 4,  ram_gb: 8,   disk_gb: 160, bandwidth_tb: 5,   price_mo: 48   },
-  { id: 'xlarge',  name: 'X-Large', vcpu: 8,  ram_gb: 16,  disk_gb: 320, bandwidth_tb: 6,   price_mo: 96   },
-  { id: '2xlarge', name: '2X-Large',vcpu: 16, ram_gb: 32,  disk_gb: 640, bandwidth_tb: 8,   price_mo: 192, badge: 'High Perf' },
-  { id: 'gpu',     name: 'GPU-1x',  vcpu: 8,  ram_gb: 32,  disk_gb: 320, bandwidth_tb: 10,  price_mo: 299, badge: 'GPU' },
-];
+function buildImageGroups(images: CloudImage[]): OSGroup[] {
+  const groups = new Map<string, OSGroup>();
 
-const REGIONS = [
-  { id: 'af-south-1', label: 'Africa — Johannesburg',   flag: '🇿🇦' },
-  { id: 'eu-west-1',  label: 'Europe — Frankfurt',       flag: '🇩🇪' },
-  { id: 'ap-south-1', label: 'Asia — Singapore',         flag: '🇸🇬' },
-  { id: 'us-east-1',  label: 'US East — New York',       flag: '🇺🇸' },
-  { id: 'us-west-1',  label: 'US West — Los Angeles',    flag: '🇺🇸' },
-];
+  images.forEach((image) => {
+    const family = image.os_name || image.name;
+    const groupId = family.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const existing = groups.get(groupId);
+    const nextVersion: OSVersion = {
+      id: image.image_id,
+      version: image.os_version || image.name,
+    };
+
+    if (existing) {
+      existing.versions.push(nextVersion);
+      return;
+    }
+
+    groups.set(groupId, {
+      groupId,
+      family: image.os_type === 'windows' ? 'Windows' : image.os_type === 'custom' ? 'Custom' : 'Linux',
+      name: family,
+      logo: family.slice(0, 3),
+      logoColor: OS_TYPE_COLOR[image.os_type],
+      description: `${image.os_type === 'windows' ? 'Windows' : image.os_type === 'custom' ? 'Custom' : 'Linux'} image from live backend catalog`,
+      versions: [nextVersion],
+    });
+  });
+
+  return Array.from(groups.values()).sort((left, right) => left.name.localeCompare(right.name));
+}
+
+function buildImageLookup(groups: OSGroup[]): ImageLookup[] {
+  return groups.flatMap((group) =>
+    group.versions.map((version) => ({
+      id: version.id,
+      name: group.name,
+      version: version.version,
+      logoColor: group.logoColor,
+    }))
+  );
+}
+
+function buildFlavorViews(flavors: CloudFlavor[]): FlavorCardView[] {
+  return flavors.map((flavor) => ({
+    id: flavor.flavor_id,
+    name: flavor.name,
+    vcpu: flavor.vcpus,
+    ram_gb: flavor.memory_mb / 1024,
+    disk_gb: flavor.disk_gb,
+    bandwidth_tb: 0,
+    price_mo: Number(flavor.hourly_cost_usd || 0) * 730,
+    badge: flavor.is_gpu ? 'GPU' : undefined,
+    recommended: !flavor.is_gpu && flavor.vcpus >= 2 && flavor.vcpus <= 4,
+  }));
+}
 
 // ── Styled stepper connector ──────────────────────────────────────────────────
 const StepConnectorStyled = styled(StepConnector)(({ theme }) => ({
@@ -295,7 +273,7 @@ function OSCard({ group, selectedVersionId, onSelect, isDark }: {
 }
 
 // ── Flavor card ───────────────────────────────────────────────────────────────
-function FlavorCard({ fl, selected, onClick, isDark }: { fl: Flavor; selected: boolean; onClick: () => void; isDark: boolean }) {
+function FlavorCard({ fl, selected, onClick, isDark }: { fl: FlavorCardView; selected: boolean; onClick: () => void; isDark: boolean }) {
   const border = isDark ? 'rgba(255,255,255,.08)' : BORDER;
   return (
     <Box onClick={onClick} sx={{
@@ -309,7 +287,7 @@ function FlavorCard({ fl, selected, onClick, isDark }: { fl: Flavor; selected: b
         <Chip size="small" label="Recommended" sx={{ position: 'absolute', top: 8, right: 8, height: 16, fontSize: '.6rem', fontWeight: 700, bgcolor: computeUiTokens.successSoft, color: computeUiTokens.successStrong }} />
       )}
       {fl.badge && !fl.recommended && (
-        <Chip size="small" label={fl.badge} sx={{ position: 'absolute', top: 8, right: 8, height: 16, fontSize: '.6rem', fontWeight: 700, bgcolor: computeUiTokens.violetSoft, color: CATALOG.badges.flavorBadge }} />
+        <Chip size="small" label={fl.badge} sx={{ position: 'absolute', top: 8, right: 8, height: 16, fontSize: '.6rem', fontWeight: 700, bgcolor: computeUiTokens.violetSoft, color: ACCENT_STRONG }} />
       )}
       {selected && (
         <Box sx={{ position: 'absolute', top: 8, left: 8, width: 18, height: 18, bgcolor: ACCENT_STRONG, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -326,7 +304,7 @@ function FlavorCard({ fl, selected, onClick, isDark }: { fl: Flavor; selected: b
           { icon: <SpeedIcon sx={{ fontSize: '.88rem' }} />,       label: `${fl.vcpu} vCPU${fl.vcpu > 1 ? 's' : ''}` },
           { icon: <MemoryIcon sx={{ fontSize: '.88rem' }} />,      label: `${fl.ram_gb < 1 ? `${fl.ram_gb * 1024} MB` : `${fl.ram_gb} GB`} RAM` },
           { icon: <StorageIcon sx={{ fontSize: '.88rem' }} />,     label: `${fl.disk_gb} GB NVMe SSD` },
-          { icon: <NetworkCheckIcon sx={{ fontSize: '.88rem' }} />,label: `${fl.bandwidth_tb} TB transfer` },
+          { icon: <NetworkCheckIcon sx={{ fontSize: '.88rem' }} />,label: fl.bandwidth_tb > 0 ? `${fl.bandwidth_tb} TB transfer` : 'Bandwidth depends on backend policy' },
         ].map(row => (
           <Box key={row.label} display="flex" alignItems="center" gap={.75}>
             <Box sx={{ color: isDark ? 'rgba(255,255,255,.4)' : MUTED }}>{row.icon}</Box>
@@ -339,27 +317,25 @@ function FlavorCard({ fl, selected, onClick, isDark }: { fl: Flavor; selected: b
 }
 
 // ── Step 1 — Choose Image ─────────────────────────────────────────────────────
-function StepImage({ selectedOS, onSelect, isDark }: { selectedOS: string; onSelect: (id: string) => void; isDark: boolean }) {
+function StepImage({ selectedOS, onSelect, groups, isDark }: { selectedOS: string; onSelect: (id: string) => void; groups: OSGroup[]; isDark: boolean }) {
   const [tab,    setTab]    = useState<'debian' | 'other' | 'windows'>('debian');
   const [search, setSearch] = useState('');
   const border = isDark ? 'rgba(255,255,255,.08)' : BORDER;
-
-  const DEBIAN_FAMILIES = ['Debian','Ubuntu','Linux Mint','Kali','MX Linux','Deepin','Zorin','Elementary','Pop!_OS','antiX','PureOS','Parrot','Bodhi','Peppermint'];
 
   const matchSearch = (g: OSGroup) =>
     !search ||
     g.name.toLowerCase().includes(search.toLowerCase()) ||
     g.versions.some(v => v.version.toLowerCase().includes(search.toLowerCase()));
 
-  const debGroups   = OS_GROUPS.filter(g => DEBIAN_FAMILIES.includes(g.family) && matchSearch(g));
-  const otherGroups = OS_GROUPS.filter(g => !DEBIAN_FAMILIES.includes(g.family) && g.family !== 'Windows' && matchSearch(g));
-  const winGroups   = OS_GROUPS.filter(g => g.family === 'Windows' && matchSearch(g));
+  const linuxGroups = groups.filter(g => g.family === 'Linux' && matchSearch(g));
+  const otherGroups = groups.filter(g => g.family === 'Custom' && matchSearch(g));
+  const winGroups   = groups.filter(g => g.family === 'Windows' && matchSearch(g));
 
-  const visibleGroups = tab === 'debian' ? debGroups : tab === 'windows' ? winGroups : otherGroups;
+  const visibleGroups = tab === 'debian' ? linuxGroups : tab === 'windows' ? winGroups : otherGroups;
 
   const TABS: { key: typeof tab; label: string; count: number }[] = [
-    { key: 'debian',  label: 'Debian Family', count: debGroups.length   },
-    { key: 'other',   label: 'Other Linux',   count: otherGroups.length },
+    { key: 'debian',  label: 'Linux Images',  count: linuxGroups.length   },
+    { key: 'other',   label: 'Custom Images', count: otherGroups.length },
     { key: 'windows', label: 'Windows',       count: winGroups.length   },
   ];
 
@@ -395,7 +371,7 @@ function StepImage({ selectedOS, onSelect, isDark }: { selectedOS: string; onSel
         </Box>
       ) : (
         <Box textAlign="center" py={5}>
-          <Typography sx={{ color: isDark ? 'rgba(255,255,255,.3)' : MUTED }}>No distros match your search</Typography>
+          <Typography sx={{ color: isDark ? 'rgba(255,255,255,.3)' : MUTED }}>No images match your search</Typography>
         </Box>
       )}
     </SSection>
@@ -403,19 +379,20 @@ function StepImage({ selectedOS, onSelect, isDark }: { selectedOS: string; onSel
 }
 
 // ── Step 2 — Choose Flavor ────────────────────────────────────────────────────
-function StepFlavor({ selectedFlavor, onSelect, isDark }: { selectedFlavor: string; onSelect: (id: string) => void; isDark: boolean }) {
+function StepFlavor({ selectedFlavor, onSelect, flavors, isDark }: { selectedFlavor: string; onSelect: (id: string) => void; flavors: FlavorCardView[]; isDark: boolean }) {
   return (
     <SSection title="Choose a Plan" subtitle="Pick the CPU, memory and storage configuration for your server." isDark={isDark}>
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 1.5 }}>
-        {FLAVORS.map(fl => <FlavorCard key={fl.id} fl={fl} selected={selectedFlavor === fl.id} onClick={() => onSelect(fl.id)} isDark={isDark} />)}
+        {flavors.map(fl => <FlavorCard key={fl.id} fl={fl} selected={selectedFlavor === fl.id} onClick={() => onSelect(fl.id)} isDark={isDark} />)}
       </Box>
     </SSection>
   );
 }
 
 // ── Step 3 — Network & Name ───────────────────────────────────────────────────
-function StepNetwork({ config, onChange, isDark }: {
-  config: { hostname: string; region: string; network: 'public' | 'private' | 'both'; sshKey: string; password: string; backups: boolean; ipv6: boolean };
+function StepNetwork({ config, networks, onChange, isDark }: {
+  config: { hostname: string; networkId: string; network: 'public' | 'private' | 'both'; sshKey: string; password: string; backups: boolean; ipv6: boolean };
+  networks: CloudNetwork[];
   onChange: (k: string, v: string | boolean) => void;
   isDark: boolean;
 }) {
@@ -435,24 +412,29 @@ function StepNetwork({ config, onChange, isDark }: {
           placeholder="my-web-server" sx={inp} />
       </SSection>
 
-      <SSection title="Choose Region" subtitle="Select the data centre location closest to your users." isDark={isDark}>
+      <SSection title="Choose Network" subtitle="Select one of your live VPC networks from the backend." isDark={isDark}>
+        {networks.length > 0 ? (
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 1 }}>
-          {REGIONS.map(r => (
-            <Box key={r.id} onClick={() => onChange('region', r.id)} sx={{
+          {networks.map(network => (
+            <Box key={network.id} onClick={() => onChange('networkId', network.id)} sx={{
               display: 'flex', alignItems: 'center', gap: 1.25, p: 1.5, borderRadius: '10px', cursor: 'pointer',
-              border: `2px solid ${config.region === r.id ? ACCENT_STRONG : border}`,
-              bgcolor: config.region === r.id ? (isDark ? computeUiTokens.accentSoftDark : computeUiTokens.accentSoftLight) : (isDark ? 'rgba(255,255,255,.03)' : computeUiTokens.surfaceSubtle),
+              border: `2px solid ${config.networkId === network.id ? ACCENT_STRONG : border}`,
+              bgcolor: config.networkId === network.id ? (isDark ? computeUiTokens.accentSoftDark : computeUiTokens.accentSoftLight) : (isDark ? 'rgba(255,255,255,.03)' : computeUiTokens.surfaceSubtle),
               transition: 'all .12s',
             }}>
-              <Typography sx={{ fontSize: '1.4rem' }}>{r.flag}</Typography>
               <Box>
-                <Typography fontWeight={600} fontSize=".82rem" color={isDark ? WHITE : TEXT_STRONG}>{r.label.split('—')[0].trim()}</Typography>
-                <Typography variant="caption" sx={{ color: textSec }}>{r.label.split('—')[1]?.trim()}</Typography>
+                <Typography fontWeight={600} fontSize=".82rem" color={isDark ? WHITE : TEXT_STRONG}>{network.name || network.id}</Typography>
+                <Typography variant="caption" sx={{ color: textSec }}>{network.id}</Typography>
               </Box>
-              {config.region === r.id && <CheckIcon sx={{ ml: 'auto', fontSize: '.9rem', color: ACCENT_STRONG }} />}
+              {config.networkId === network.id && <CheckIcon sx={{ ml: 'auto', fontSize: '.9rem', color: ACCENT_STRONG }} />}
             </Box>
           ))}
         </Box>
+        ) : (
+          <Alert severity="info" sx={{ borderRadius: '8px' }}>
+            No live networks are available for this account yet. Create a VPC first, then return to deploy a server.
+          </Alert>
+        )}
       </SSection>
 
       <SSection title="Network Type" isDark={isDark}>
@@ -509,23 +491,26 @@ function StepNetwork({ config, onChange, isDark }: {
 }
 
 // ── Step 4 — Review ───────────────────────────────────────────────────────────
-function StepReview({ osId, flavorId, netConfig, isDark }: {
+function StepReview({ osId, flavorId, netConfig, osFlat, flavors, networks, isDark }: {
   osId: string; flavorId: string;
-  netConfig: { hostname: string; region: string; network: string; sshKey: string; password: string; backups: boolean; ipv6: boolean };
+  netConfig: { hostname: string; networkId: string; network: string; sshKey: string; password: string; backups: boolean; ipv6: boolean };
+  osFlat: ImageLookup[];
+  flavors: FlavorCardView[];
+  networks: CloudNetwork[];
   isDark: boolean;
 }) {
-  const os     = OS_FLAT.find(o => o.id === osId);
-  const fl     = FLAVORS.find(f => f.id === flavorId);
-  const region = REGIONS.find(r => r.id === netConfig.region);
+  const os     = osFlat.find(o => o.id === osId);
+  const fl     = flavors.find(f => f.id === flavorId);
+  const network = networks.find(item => item.id === netConfig.networkId);
   const border = isDark ? 'rgba(255,255,255,.08)' : BORDER;
   const textSec = isDark ? 'rgba(255,255,255,.5)' : MUTED;
 
   const rows: [string, string][] = [
     ['Hostname',     netConfig.hostname    || '(not set)'],
     ['OS Image',     os ? `${os.name} ${os.version}` : '—'],
-    ['Region',       region ? region.label : '—'],
+    ['Network',      network ? network.name || network.id : '—'],
     ['Plan',         fl ? `${fl.name} · ${fl.vcpu} vCPU · ${fl.ram_gb < 1 ? fl.ram_gb * 1024 + ' MB' : fl.ram_gb + ' GB'} RAM · ${fl.disk_gb} GB SSD` : '—'],
-    ['Network',      netConfig.network],
+    ['Exposure',     netConfig.network],
     ['Backups',      netConfig.backups ? 'Enabled' : 'Disabled'],
     ['IPv6',         netConfig.ipv6    ? 'Enabled' : 'Disabled'],
     ['SSH Key',      netConfig.sshKey  ? 'OK Provided'  : 'None'],
@@ -568,24 +553,55 @@ const ComputePage: React.FC = () => {
   const theme  = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
+  const [wizardOptions, setWizardOptions] = useState<WizardOptions | null>(null);
+  const [catalogLoading, setCatalogLoading] = useState(true);
+  const [catalogError, setCatalogError] = useState('');
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedOS,      setOS]      = useState('ubuntu-2404');
-  const [selectedFlavor,  setFlavor]  = useState('medium');
+  const [selectedOS,      setOS]      = useState('');
+  const [selectedFlavor,  setFlavor]  = useState('');
   const [deploying,       setDeploy]  = useState(false);
   const [deployed,        setDeployed]= useState(false);
   const [deployError,     setDeployError] = useState('');
   const [netConfig, setNet] = useState({
-    hostname: '', region: 'us-east-1',
+    hostname: '', networkId: '',
     network: 'public' as 'public' | 'private' | 'both',
     sshKey: '', password: '', backups: false, ipv6: true,
   });
+
+  const osGroups = useMemo(() => buildImageGroups(wizardOptions?.images ?? []), [wizardOptions]);
+  const osFlat = useMemo(() => buildImageLookup(osGroups), [osGroups]);
+  const flavorViews = useMemo(() => buildFlavorViews(wizardOptions?.flavors ?? []), [wizardOptions]);
+
+  const loadWizardOptions = useCallback(async () => {
+    setCatalogLoading(true);
+    setCatalogError('');
+    try {
+      const response = await dashboardApi.getWizardOptions();
+      const nextOptions = response.data;
+      setWizardOptions(nextOptions);
+      setOS((current) => current || nextOptions.images[0]?.image_id || '');
+      setFlavor((current) => current || nextOptions.flavors[0]?.flavor_id || '');
+      setNet((current) => ({
+        ...current,
+        networkId: current.networkId || nextOptions.networks[0]?.id || '',
+      }));
+    } catch {
+      setCatalogError('Live compute catalog is unavailable. Connect images, flavors, and networks in the backend before using this deploy flow.');
+    } finally {
+      setCatalogLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadWizardOptions();
+  }, [loadWizardOptions]);
 
   const border = isDark ? 'rgba(255,255,255,.08)' : BORDER;
 
   const canNext = () => {
     if (activeStep === 0) return !!selectedOS;
     if (activeStep === 1) return !!selectedFlavor;
-    if (activeStep === 2) return netConfig.hostname.trim().length > 0 && !!netConfig.region;
+    if (activeStep === 2) return netConfig.hostname.trim().length > 0 && !!netConfig.networkId;
     return true;
   };
 
@@ -597,7 +613,7 @@ const ComputePage: React.FC = () => {
         name:    netConfig.hostname,
         image:   selectedOS,
         flavor:  selectedFlavor,
-        network: netConfig.network,
+        network: netConfig.networkId || undefined,
         key_name: netConfig.sshKey || undefined,
       });
       setDeployed(true);
@@ -612,8 +628,8 @@ const ComputePage: React.FC = () => {
     setNet(n => ({ ...n, [k]: v }));
 
   // selected items for price bar
-  const fl     = FLAVORS.find(f => f.id === selectedFlavor);
-  const os     = OS_FLAT.find(o => o.id === selectedOS);
+  const fl     = flavorViews.find(f => f.id === selectedFlavor);
+  const os     = osFlat.find(o => o.id === selectedOS);
   const monthlyCost = (fl?.price_mo ?? 0) * (netConfig.backups ? 1.2 : 1);
 
   if (deployed) {
@@ -627,7 +643,7 @@ const ComputePage: React.FC = () => {
           <Typography variant="body2" sx={{ color: isDark ? 'rgba(255,255,255,.5)' : dashboardTokens.colors.textSecondary, mb: 3 }}>
             <strong style={{ color: isDark ? dashboardTokens.colors.white : dashboardTokens.colors.textPrimary }}>{netConfig.hostname || 'your-server'}</strong> is provisioning and will be ready in ~45 seconds.
           </Typography>
-          <Button variant="contained" onClick={() => { setDeployed(false); setActiveStep(0); setOS('ubuntu-2404'); setFlavor('medium'); setNet({ hostname: '', region: 'us-east-1', network: 'public', sshKey: '', password: '', backups: false, ipv6: true }); }}
+          <Button variant="contained" onClick={() => { setDeployed(false); setActiveStep(0); setOS(wizardOptions?.images[0]?.image_id || ''); setFlavor(wizardOptions?.flavors[0]?.flavor_id || ''); setNet({ hostname: '', networkId: wizardOptions?.networks[0]?.id || '', network: 'public', sshKey: '', password: '', backups: false, ipv6: true }); }}
             sx={dashboardPrimaryButtonSx}>
             Deploy Another Server
           </Button>
@@ -643,7 +659,7 @@ const ComputePage: React.FC = () => {
         <Box>
           <Typography fontWeight={700} fontSize="1.25rem" color={dashboardTokens.colors.textPrimary}>Cloud Compute</Typography>
           <Typography variant="body2" sx={{ color: dashboardTokens.colors.textSecondary, mt: .25 }}>
-            Cloud compute instances · 5 regions · NVMe SSD · Provisioned in {'<'}60s
+            Cloud compute instances sourced from the live backend catalog
           </Typography>
         </Box>
         <DeployDropdown />
@@ -670,10 +686,18 @@ const ComputePage: React.FC = () => {
       <Box sx={{ display: 'flex', gap: 0, alignItems: 'flex-start' }}>
         {/* Form area */}
         <Box sx={{ flex: 1, overflowY: 'auto', px: { xs: 2, md: 4 }, py: 3.5 }}>
-          {activeStep === 0 && <StepImage selectedOS={selectedOS} onSelect={setOS} isDark={isDark} />}
-          {activeStep === 1 && <StepFlavor selectedFlavor={selectedFlavor} onSelect={setFlavor} isDark={isDark} />}
-          {activeStep === 2 && <StepNetwork config={netConfig} onChange={handleNet} isDark={isDark} />}
-          {activeStep === 3 && <StepReview osId={selectedOS} flavorId={selectedFlavor} netConfig={netConfig} isDark={isDark} />}
+          {catalogLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}><CircularProgress size={32} sx={{ color: COMPUTE_ACCENT }} /></Box>
+          ) : catalogError ? (
+            <Alert severity="warning" sx={{ borderRadius: '8px' }}>{catalogError}</Alert>
+          ) : (
+            <>
+              {activeStep === 0 && <StepImage selectedOS={selectedOS} onSelect={setOS} groups={osGroups} isDark={isDark} />}
+              {activeStep === 1 && <StepFlavor selectedFlavor={selectedFlavor} onSelect={setFlavor} flavors={flavorViews} isDark={isDark} />}
+              {activeStep === 2 && <StepNetwork config={netConfig} onChange={handleNet} networks={wizardOptions?.networks ?? []} isDark={isDark} />}
+              {activeStep === 3 && <StepReview osId={selectedOS} flavorId={selectedFlavor} netConfig={netConfig} osFlat={osFlat} flavors={flavorViews} networks={wizardOptions?.networks ?? []} isDark={isDark} />}
+            </>
+          )}
         </Box>
 
         {/* Sticky summary sidebar */}
@@ -683,7 +707,7 @@ const ComputePage: React.FC = () => {
             {[
               { label: 'Image',  value: os ? `${os.name} ${os.version}` : '—', color: os?.logoColor },
               { label: 'Plan',   value: fl ? `${fl.name} · $${fl.price_mo}/mo` : '—' },
-              { label: 'Region', value: REGIONS.find(r => r.id === netConfig.region)?.label.split('—')[0].trim() ?? '—' },
+              { label: 'Network', value: wizardOptions?.networks.find(network => network.id === netConfig.networkId)?.name ?? '—' },
               { label: 'Host',   value: netConfig.hostname || '—' },
             ].map(row => (
               <Box key={row.label} sx={{ p: 1.25, bgcolor: isDark ? 'rgba(255,255,255,.04)' : dashboardTokens.colors.surfaceSubtle, borderRadius: '8px', border: `1px solid ${border}` }}>
@@ -710,7 +734,7 @@ const ComputePage: React.FC = () => {
               </Button>
             ) : (
               <>
-                <Button fullWidth variant="contained" disabled={!canNext() || deploying}
+                <Button fullWidth variant="contained" disabled={!canNext() || deploying || !!catalogError}
                   onClick={handleDeploy}
                   sx={{ bgcolor: computeUiTokens.successStrong, '&:hover': { bgcolor: computeUiTokens.successHover }, textTransform: 'none', borderRadius: '8px', fontWeight: 700, py: 1.25 }}>
                   {deploying ? 'Creating...' : 'Create Server'}

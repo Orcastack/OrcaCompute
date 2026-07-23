@@ -7,22 +7,37 @@ import { config } from '../config/environment';
 
 // ── Axios client (reuses enterprise token/base) ───────────────────────────────
 const mktClient = axios.create({
-  baseURL: config.API_BASE_URL + '/enterprise',
+  baseURL: config.API_BASE_URL + '/v1/enterprise',
   timeout: config.API_TIMEOUT,
   headers: { 'Content-Type': 'application/json' },
 });
 
+function ____formatAuthHeader(token: string): string {
+  return token.split('.').length === 3 ? `Bearer ${token}` : `Token ${token}`;
+}
+
+function ____unwrapEnvelope(payload: any) {
+  if (payload && typeof payload === 'object' && 'success' in payload) {
+    return payload.data;
+  }
+  return payload;
+}
+
 mktClient.interceptors.request.use((cfg) => {
   const token = localStorage.getItem('authToken');
-  if (token) cfg.headers.Authorization = `Token ${token}`;
+  if (token) cfg.headers.Authorization = ____formatAuthHeader(token);
   return cfg;
 });
 
 mktClient.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    res.data = ____unwrapEnvelope(res.data);
+    return res;
+  },
   (err) => {
     if (err.response?.status === 401) {
       localStorage.removeItem('authToken');
+      localStorage.removeItem('refreshToken');
       window.location.href = '/';
     }
     return Promise.reject(err);

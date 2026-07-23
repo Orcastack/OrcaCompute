@@ -79,24 +79,39 @@ import {
 
 // Cloud API client – routes under /api/services/*
 const cloudClient = axios.create({
-  baseURL: config.API_BASE_URL + '/services',
+  baseURL: config.API_BASE_URL + '/v1/services',
   timeout: config.API_TIMEOUT,
   headers: { 'Content-Type': 'application/json' },
 });
 
+function ____formatAuthHeader(token: string): string {
+  return token.split('.').length === 3 ? `Bearer ${token}` : `Token ${token}`;
+}
+
+function ____unwrapEnvelope(payload: any) {
+  if (payload && typeof payload === 'object' && 'success' in payload) {
+    return payload.data;
+  }
+  return payload;
+}
+
 // Attach auth token on every request
 cloudClient.interceptors.request.use((cfg) => {
   const token = localStorage.getItem('authToken');
-  if (token) cfg.headers.Authorization = `Token ${token}`;
+  if (token) cfg.headers.Authorization = ____formatAuthHeader(token);
   return cfg;
 });
 
 // On 401 redirect to home
 cloudClient.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    res.data = ____unwrapEnvelope(res.data);
+    return res;
+  },
   (err) => {
     if (err.response?.status === 401) {
       localStorage.removeItem('authToken');
+      localStorage.removeItem('refreshToken');
       window.location.href = '/';
     }
     return Promise.reject(err);

@@ -24,20 +24,13 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LockIcon from '@mui/icons-material/Lock';
 import SearchIcon from '@mui/icons-material/Search';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import ForkRightIcon from '@mui/icons-material/ForkRight';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { dashboardTokens, dashboardSemanticColors } from '../styles/dashboardDesignSystem';
-import { createProject } from '../services/projectsApi';
 
 const FONT = dashboardTokens.typography.fontFamily;
 const t = dashboardTokens.colors;
-const PROJECT_LIST_KEY = 'orcacompute:projects:list:v1';
-const LEGACY_PROJECT_LIST_KEY = 'atonix:projects:list:v1';
-const PROJECT_SNACK_KEY = 'orcacompute:projects:snack:v1';
-const LEGACY_PROJECT_SNACK_KEY = 'atonix:projects:snack:v1';
 
 type Provider = 'github' | 'gitlab' | 'bitbucket';
 
@@ -80,50 +73,7 @@ const PROVIDERS: ProviderConfig[] = [
   },
 ];
 
-interface MockRepo {
-  id: string;
-  name: string;
-  fullName: string;
-  description: string;
-  language: string;
-  stars: number;
-  forks: number;
-  private: boolean;
-  updatedAt: string;
-}
-
-const MOCK_REPOS: Record<Provider, MockRepo[]> = {
-  github: [
-    { id: 'ghrepo-1', name: 'api-gateway',       fullName: 'myorg/api-gateway',       description: 'Central API routing and auth layer',  language: 'TypeScript', stars: 24, forks: 8,  private: false, updatedAt: '2h ago' },
-    { id: 'ghrepo-2', name: 'payments-service',  fullName: 'myorg/payments-service',  description: 'Stripe + PayPal payment processing',   language: 'Python',     stars: 12, forks: 3,  private: true,  updatedAt: '1d ago' },
-    { id: 'ghrepo-3', name: 'infra-terraform',   fullName: 'myorg/infra-terraform',   description: 'Cloud infrastructure as code',         language: 'HCL',        stars: 7,  forks: 2,  private: true,  updatedAt: '3d ago' },
-    { id: 'ghrepo-4', name: 'frontend-portal',   fullName: 'myorg/frontend-portal',   description: 'React dashboard & customer portal',    language: 'TypeScript', stars: 56, forks: 14, private: false, updatedAt: '5h ago' },
-    { id: 'ghrepo-5', name: 'ml-pipeline',       fullName: 'myorg/ml-pipeline',       description: 'MLflow training & serving pipeline',   language: 'Python',     stars: 33, forks: 9,  private: false, updatedAt: '2d ago' },
-  ],
-  gitlab: [
-    { id: 'glrepo-1', name: 'backend-core',      fullName: 'acme/backend-core',       description: 'Core backend microservices',           language: 'Go',         stars: 18, forks: 5,  private: true,  updatedAt: '1h ago' },
-    { id: 'glrepo-2', name: 'devops-tooling',    fullName: 'acme/devops-tooling',     description: 'CI/CD utilities and helpers',          language: 'Python',     stars: 9,  forks: 2,  private: false, updatedAt: '4d ago' },
-    { id: 'glrepo-3', name: 'k8s-manifests',     fullName: 'acme/k8s-manifests',      description: 'Kubernetes deployment manifests',      language: 'YAML',       stars: 4,  forks: 1,  private: true,  updatedAt: '1w ago' },
-  ],
-  bitbucket: [
-    { id: 'bbrepo-1', name: 'mobile-app',        fullName: 'teamspace/mobile-app',    description: 'React Native cross-platform app',      language: 'TypeScript', stars: 0,  forks: 0,  private: true,  updatedAt: '6h ago' },
-    { id: 'bbrepo-2', name: 'data-warehouse',    fullName: 'teamspace/data-warehouse','description': 'dbt models and Snowflake schemas',  language: 'SQL',        stars: 0,  forks: 0,  private: true,  updatedAt: '3d ago' },
-  ],
-};
-
-const LANG_COLOR: Record<string, string> = {
-  TypeScript: '#3178c6',
-  Python: '#f7c948',
-  Go: '#00acd7',
-  Rust: '#ce412b',
-  Java: '#b07219',
-  HCL: '#844fba',
-  YAML: '#cb171e',
-  SQL: '#e38c00',
-  Ruby: '#701516',
-};
-
-const STEPS = ['Choose Provider', 'Connect Account', 'Select Repository', 'Configure & Import'];
+const STEPS = ['Choose Provider', 'Connect Account', 'Repository Integration Required'];
 
 const ProviderBadge: React.FC<{ provider: ProviderConfig; size?: number; selected?: boolean; onClick?: () => void }> = ({
   provider, size = 40, selected = false, onClick,
@@ -180,11 +130,6 @@ const ProjectImportPage: React.FC = () => {
   const [connecting, setConnecting] = useState(false);
   const [connectError, setConnectError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [selectedRepo, setSelectedRepo] = useState<MockRepo | null>(null);
-  const [projectName, setProjectName] = useState('');
-  const [projectDesc, setProjectDesc] = useState('');
-  const [importing, setImporting] = useState(false);
-  const [importError, setImportError] = useState<string | null>(null);
 
   const cfg = PROVIDERS.find((p) => p.id === provider)!;
 
@@ -192,19 +137,7 @@ const ProjectImportPage: React.FC = () => {
     setConnected(false);
     setToken('');
     setConnectError(null);
-    setSelectedRepo(null);
   }, [provider]);
-
-  useEffect(() => {
-    if (selectedRepo) {
-      setProjectName(selectedRepo.name);
-      setProjectDesc(selectedRepo.description);
-    }
-  }, [selectedRepo]);
-
-  const repos = MOCK_REPOS[provider].filter(
-    (r) => !search || r.name.toLowerCase().includes(search.toLowerCase()) || r.description.toLowerCase().includes(search.toLowerCase()),
-  );
 
   const handleConnect = () => {
     if (!token.trim()) {
@@ -213,59 +146,12 @@ const ProjectImportPage: React.FC = () => {
     }
     setConnecting(true);
     setConnectError(null);
-    setTimeout(() => {
+    window.setTimeout(() => {
       setConnecting(false);
       setConnected(true);
       setStep(2);
-    }, 1400);
-  };
-
-  const handleSelectRepo = (repo: MockRepo) => {
-    setSelectedRepo(repo);
-    setStep(3);
-  };
-
-  const handleImport = async () => {
-    if (!projectName.trim()) return;
-    setImporting(true);
-    setImportError(null);
-    try {
-      const project = await createProject({
-        name: projectName.trim(),
-        description: projectDesc.trim(),
-      });
-      // Persist to localStorage so DevProjectsPage can pick it up
-      const existing = JSON.parse(localStorage.getItem(PROJECT_LIST_KEY) || localStorage.getItem(LEGACY_PROJECT_LIST_KEY) || '[]');
-      const merged = [
-        ...existing.filter((p: { id: string }) => p.id !== project.id),
-        {
-          id: project.id,
-          name: project.name,
-          description: project.description,
-          status: 'active',
-          language: selectedRepo?.language || 'TypeScript',
-          branch: 'main',
-          progress: 100,
-          openIssues: 0,
-          lastBuild: 'passing',
-          updatedAt: 'Just now',
-          members: ['Y'],
-          tags: [provider],
-          provider,
-          importedFrom: selectedRepo?.fullName || '',
-        },
-      ];
-      const serialized = JSON.stringify(merged);
-      localStorage.setItem(PROJECT_LIST_KEY, serialized);
-      localStorage.setItem(LEGACY_PROJECT_LIST_KEY, serialized);
-      const snack = `Project "${project.name}" imported successfully!`;
-      localStorage.setItem(PROJECT_SNACK_KEY, snack);
-      localStorage.setItem(LEGACY_PROJECT_SNACK_KEY, snack);
-      navigate(`/developer/Dashboard/projects/${project.id}`);
-    } catch {
-      setImportError('Failed to create project. Make sure the backend is running.');
-      setImporting(false);
-    }
+      setConnectError(`Repository import for ${cfg.label} requires a backend provider integration. Mock repositories have been removed.`);
+    }, 250);
   };
 
   return (
@@ -401,7 +287,7 @@ const ProjectImportPage: React.FC = () => {
               <Divider sx={{ borderColor: t.border, my: 3 }} />
 
               <Typography sx={{ color: t.textTertiary, fontSize: '.78rem' }}>
-                [Secure] Your token is used only for this session and is never stored on our servers.
+                Backend-backed provider import is required. This page no longer fabricates repository results locally.
               </Typography>
             </CardContent>
           </Card>
@@ -430,6 +316,7 @@ const ProjectImportPage: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               sx={{ ...inputSx, mb: 2 }}
+              disabled
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -439,193 +326,10 @@ const ProjectImportPage: React.FC = () => {
               }}
             />
 
-            <Stack spacing={1.5}>
-              {repos.length === 0 ? (
-                <Typography sx={{ color: t.textSecondary, fontSize: '.875rem', textAlign: 'center', py: 4 }}>
-                  No repositories found.
-                </Typography>
-              ) : (
-                repos.map((repo) => (
-                  <Card
-                    key={repo.id}
-                    onClick={() => handleSelectRepo(repo)}
-                    sx={{
-                      border: `1px solid ${t.border}`,
-                      bgcolor: t.surface,
-                      borderRadius: '12px',
-                      boxShadow: 'none',
-                      cursor: 'pointer',
-                      transition: 'border-color .15s, background .15s',
-                      '&:hover': { borderColor: t.brandPrimary, bgcolor: 'rgba(21,61,117,.03)' },
-                    }}
-                  >
-                    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                      <Stack direction="row" alignItems="center" spacing={1.5}>
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 0.25 }}>
-                            <Typography
-                              noWrap
-                              sx={{ fontWeight: 700, fontSize: '.9rem', color: t.textPrimary }}
-                            >
-                              {repo.fullName}
-                            </Typography>
-                            {repo.private && (
-                              <Chip
-                                icon={<LockIcon sx={{ fontSize: '.7rem !important' }} />}
-                                label="Private"
-                                size="small"
-                                sx={{ height: 18, fontSize: '.62rem', bgcolor: t.surfaceSubtle, color: t.textSecondary }}
-                              />
-                            )}
-                          </Stack>
-                          <Typography noWrap sx={{ color: t.textSecondary, fontSize: '.8rem', mb: 0.5 }}>
-                            {repo.description}
-                          </Typography>
-                          <Stack direction="row" spacing={1.5} alignItems="center">
-                            <Stack direction="row" spacing={0.5} alignItems="center">
-                              <Box
-                                sx={{
-                                  width: 10, height: 10, borderRadius: '50%',
-                                  bgcolor: LANG_COLOR[repo.language] || t.textSecondary,
-                                  flexShrink: 0,
-                                }}
-                              />
-                              <Typography sx={{ color: t.textSecondary, fontSize: '.75rem' }}>{repo.language}</Typography>
-                            </Stack>
-                            <Stack direction="row" spacing={0.3} alignItems="center">
-                              <StarBorderIcon sx={{ fontSize: '.8rem', color: t.textTertiary }} />
-                              <Typography sx={{ color: t.textTertiary, fontSize: '.75rem' }}>{repo.stars}</Typography>
-                            </Stack>
-                            <Stack direction="row" spacing={0.3} alignItems="center">
-                              <ForkRightIcon sx={{ fontSize: '.8rem', color: t.textTertiary }} />
-                              <Typography sx={{ color: t.textTertiary, fontSize: '.75rem' }}>{repo.forks}</Typography>
-                            </Stack>
-                            <Typography sx={{ color: t.textTertiary, fontSize: '.72rem', ml: 'auto' }}>
-                              Updated {repo.updatedAt}
-                            </Typography>
-                          </Stack>
-                        </Box>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{
-                            textTransform: 'none',
-                            color: t.brandPrimary,
-                            borderColor: t.brandPrimary,
-                            borderRadius: '8px',
-                            fontWeight: 600,
-                            fontSize: '.78rem',
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
-                          }}
-                        >
-                          Select
-                        </Button>
-                      </Stack>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </Stack>
+            <Alert severity="warning" sx={{ borderRadius: '10px' }}>
+              No repositories are shown locally anymore. Connect this page to a backend provider integration before importing from {cfg.label}.
+            </Alert>
           </Box>
-        )}
-
-        {/* ── Step 3: Configure & Import ── */}
-        {step === 3 && selectedRepo && (
-          <Card sx={{ border: `1px solid ${t.border}`, bgcolor: t.surface, borderRadius: '14px', boxShadow: 'none' }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography sx={{ fontWeight: 700, color: t.textPrimary, fontSize: '1rem', mb: 0.5 }}>
-                Configure your project
-              </Typography>
-              <Typography sx={{ color: t.textSecondary, fontSize: '.85rem', mb: 3 }}>
-                Importing{' '}
-                <Box component="span" sx={{ fontWeight: 700, color: t.textPrimary }}>
-                  {selectedRepo.fullName}
-                </Box>{' '}
-                from {cfg.label}
-              </Typography>
-
-              <Stack spacing={2.5}>
-                <TextField
-                  fullWidth
-                  label="Project Name"
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
-                  sx={inputSx}
-                />
-                <TextField
-                  fullWidth
-                  label="Description (optional)"
-                  value={projectDesc}
-                  onChange={(e) => setProjectDesc(e.target.value)}
-                  multiline
-                  rows={2}
-                  sx={inputSx}
-                />
-
-                {/* Summary card */}
-                <Box
-                  sx={{
-                    bgcolor: t.surfaceSubtle,
-                    border: `1px solid ${t.border}`,
-                    borderRadius: '10px',
-                    p: 2,
-                  }}
-                >
-                  <Typography sx={{ fontWeight: 600, color: t.textPrimary, fontSize: '.85rem', mb: 1 }}>
-                    Import summary
-                  </Typography>
-                  <Stack spacing={0.75}>
-                    {[
-                      ['Repository', selectedRepo.fullName],
-                      ['Provider', cfg.label],
-                      ['Language', selectedRepo.language],
-                      ['Visibility', selectedRepo.private ? 'Private' : 'Public'],
-                      ['Branch', 'main'],
-                    ].map(([k, v]) => (
-                      <Stack key={k} direction="row" spacing={1}>
-                        <Typography sx={{ color: t.textSecondary, fontSize: '.8rem', width: 90, flexShrink: 0 }}>
-                          {k}
-                        </Typography>
-                        <Typography sx={{ color: t.textPrimary, fontSize: '.8rem', fontWeight: 600 }}>{v}</Typography>
-                      </Stack>
-                    ))}
-                  </Stack>
-                </Box>
-
-                {importError && (
-                  <Alert severity="error" sx={{ fontSize: '.82rem' }}>{importError}</Alert>
-                )}
-
-                {importing && <LinearProgress sx={{ borderRadius: '4px' }} />}
-
-                <Stack direction="row" spacing={1.5}>
-                  <Button
-                    variant="contained"
-                    disabled={!projectName.trim() || importing}
-                    onClick={handleImport}
-                    endIcon={importing ? <CircularProgress size={14} color="inherit" /> : <ArrowForwardIcon />}
-                    sx={{
-                      bgcolor: t.brandPrimary,
-                      '&:hover': { bgcolor: t.brandPrimaryHover },
-                      textTransform: 'none',
-                      fontWeight: 700,
-                      borderRadius: '10px',
-                    }}
-                  >
-                    {importing ? 'Importing…' : 'Import Project'}
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => setStep(2)}
-                    sx={{ textTransform: 'none', color: t.textSecondary, borderColor: t.border, borderRadius: '10px' }}
-                  >
-                    Back to Repos
-                  </Button>
-                </Stack>
-              </Stack>
-            </CardContent>
-          </Card>
         )}
       </Box>
     </Box>

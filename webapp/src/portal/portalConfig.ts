@@ -2,6 +2,45 @@ export type PortalVariant = 'standard' | 'home' | 'login' | 'cloud' | 'developer
 export type PortalTarget = 'cloud' | 'developer' | 'matrix';
 
 const publicPort = process.env.REACT_APP_PORTAL_PUBLIC_PORT || '3000';
+const isLocalMultiDashboardEnvironment = process.env.REACT_APP_ENVIRONMENT === 'local-multi-dashboard';
+
+const localPortalPorts = {
+  home: '3000',
+  login: '3001',
+  cloud: '3002',
+  developer: '3003',
+  matrix: '3004',
+} as const;
+
+function inferPortalVariantFromPort(): PortalVariant | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  if (!isLocalMultiDashboardEnvironment) {
+    return null;
+  }
+
+  const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
+
+  if (port === localPortalPorts.home) {
+    return 'home';
+  }
+  if (port === localPortalPorts.login) {
+    return 'login';
+  }
+  if (port === localPortalPorts.cloud) {
+    return 'cloud';
+  }
+  if (port === localPortalPorts.developer) {
+    return 'developer';
+  }
+  if (port === localPortalPorts.matrix) {
+    return 'matrix';
+  }
+
+  return null;
+}
 
 function inferPortalVariantFromPathname(): PortalVariant | null {
   if (typeof window === 'undefined') {
@@ -45,6 +84,11 @@ function inferPortalVariantFromHostname(): PortalVariant {
     return 'standard';
   }
 
+  const portPortalVariant = inferPortalVariantFromPort();
+  if (portPortalVariant) {
+    return portPortalVariant;
+  }
+
   const pathnamePortalVariant = inferPortalVariantFromPathname();
   if (pathnamePortalVariant) {
     return pathnamePortalVariant;
@@ -83,8 +127,14 @@ function isLocalSingleHostMode(): boolean {
     return false;
   }
 
+  if (!isLocalMultiDashboardEnvironment) {
+    return false;
+  }
+
   const hostname = window.location.hostname;
-  return hostname === 'localhost' || hostname === '127.0.0.1';
+  const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
+
+  return (hostname === 'localhost' || hostname === '127.0.0.1') && port === localPortalPorts.home;
 }
 
 function getLocalSingleHostBaseUrl(): string {
@@ -106,10 +156,10 @@ const singleHostBaseUrl = getLocalSingleHostBaseUrl();
 export const portalHosts: Record<PortalTarget | 'home' | 'login', string> = isLocalSingleHostMode()
   ? {
       home: `${singleHostBaseUrl}/`,
-      login: `${singleHostBaseUrl}/login`,
-      cloud: `${singleHostBaseUrl}/cloud`,
-      developer: `${singleHostBaseUrl}/developer`,
-      matrix: `${singleHostBaseUrl}/matrix`,
+      login: `http://localhost:${localPortalPorts.login}`,
+      cloud: `http://localhost:${localPortalPorts.cloud}`,
+      developer: `http://localhost:${localPortalPorts.developer}`,
+      matrix: `http://localhost:${localPortalPorts.matrix}`,
     }
   : {
       home: `http://localhost:${publicPort}`,

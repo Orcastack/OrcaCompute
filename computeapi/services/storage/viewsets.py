@@ -24,13 +24,14 @@ from .serializers import (
     BackupPolicyListSerializer, BackupPolicyDetailSerializer, BackupPolicyCreateSerializer, BackupPolicyUpdateSerializer,
     StorageMetricSerializer
 )
+from ..core.tenant import TenantScopedViewSetMixin
 
 
 # ============================================================================
 # STORAGE BUCKET VIEWSET
 # ============================================================================
 
-class StorageBucketViewSet(viewsets.ModelViewSet):
+class StorageBucketViewSet(TenantScopedViewSetMixin, viewsets.ModelViewSet):
     """
     Viewset for object storage buckets (S3-compatible).
     Full CRUD operations for managing storage buckets.
@@ -44,7 +45,7 @@ class StorageBucketViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Filter buckets by owner."""
-        return StorageBucket.objects.filter(owner=self.request.user)
+        return self.filter_queryset_by_tenant(StorageBucket.objects.all())
 
     def get_serializer_class(self):
         """Use different serializers for different actions."""
@@ -58,7 +59,7 @@ class StorageBucketViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """Set owner to current user."""
-        serializer.save(owner=self.request.user)
+        serializer.save(**self.build_tenant_create_kwargs(StorageBucket))
 
     @action(detail=True, methods=['get'])
     def objects(self, request, pk=None):

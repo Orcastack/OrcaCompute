@@ -11,7 +11,13 @@
 <body>
 <header class="topbar">
     <div class="container topbar-inner">
-        <a class="brand" href="/">OrcaCompute API</a>
+        <a class="brand" href="/">
+            <span class="brand-mark">OC</span>
+            <span class="brand-copy">
+                <strong>OrcaCompute</strong>
+                <span>API Platform</span>
+            </span>
+        </a>
         <nav class="topnav" id="topnav">
             <a href="#categories">APIs</a>
             <a href="#quickstart">Quickstart</a>
@@ -22,7 +28,8 @@
             <a href="#dx">DX Standards</a>
         </nav>
         <div class="topbar-actions">
-            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark and light mode">Dark Dark</button>
+            <a class="btn btn-ghost" href="http://localhost:3000/">Main App</a>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark and light mode">Dark mode</button>
 
             <!-- Get Started dropdown -->
             <div class="gs-dropdown" id="gsDropdown">
@@ -72,18 +79,60 @@
 <main>
     <section class="hero">
         <div class="container hero-inner">
-            <p class="eyebrow">api.orcacompute.com</p>
-            <h1>OrcaCompute APIs</h1>
-            <p class="subtitle">Unified APIs for Compute, Storage, Networking, Identity, Billing, Monitoring, and Automation.</p>
-            <p class="description">Designed for enterprise-grade reliability with clear onboarding, predictable resource models, strict versioning, and secure multi-tenant operations.</p>
-            <div class="hero-actions">
-                <a class="btn btn-secondary" href="/api/services/">Browse Endpoints</a>
+            <div class="hero-copy">
+                <p class="eyebrow">OrcaCompute stack API</p>
+                <h1>Operate the backend stack with the same visual language as the frontend platform.</h1>
+                <p class="subtitle">Unified APIs for compute, storage, networking, identity, billing, monitoring, and automation.</p>
+                <p class="description">This localhost backend page is styled to feel like the product frontend: structured enterprise typography, neutral Carbon-inspired surfaces, direct stack actions, and faster access to live endpoints.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="#reference">Explore Live Reference</a>
+                    <a class="btn btn-secondary" href="http://localhost:3000/">Open Frontend</a>
+                </div>
+            </div>
+            <div class="hero-metrics">
+                <article class="metric-card">
+                    <span class="metric-label">Backend URL</span>
+                    <strong>localhost:8000</strong>
+                    <p>Primary Django stack entrypoint for local API work.</p>
+                </article>
+                <article class="metric-card">
+                    <span class="metric-label">Mode</span>
+                    <strong>Developer platform</strong>
+                    <p>Aligned with the frontend shell rather than a raw docs page.</p>
+                </article>
+                <article class="metric-card">
+                    <span class="metric-label">Fast paths</span>
+                    <strong>/api, /api/services, /api/graphql</strong>
+                    <p>Health, service APIs, and schema exploration from one page.</p>
+                </article>
             </div>
             <div class="hero-code">
 <pre><code>curl -X GET "http://127.0.0.1:8000/api/services/instances/?limit=20&cursor=abc123&sort=created_at&order=desc" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "X-Region: us-east"</code></pre>
             </div>
+        </div>
+    </section>
+
+    <section class="command-strip">
+        <div class="container command-strip-inner">
+            <article class="command-card command-card-primary">
+                <span class="command-label">Primary stack routes</span>
+                <div class="command-links">
+                    <a href="/api/">REST Root</a>
+                    <a href="/api/services/">Service API</a>
+                    <a href="/api/graphql/">GraphQL</a>
+                    <a href="/admin/">Admin</a>
+                </div>
+            </article>
+            <article class="command-card">
+                <span class="command-label">Platform posture</span>
+                <p>Versioned APIs, live reference navigation, request console, and backend-first access from one local entrypoint.</p>
+            </article>
+            <article class="command-card">
+                <span class="command-label">Recommended flow</span>
+                <p>Check health, authenticate, inspect service schemas, then move into live tenant resources through the API console.</p>
+            </article>
         </div>
     </section>
 
@@ -172,6 +221,36 @@ func main() {
   "request_id": "abc-123"
 }</code></pre>
                 </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="overview-banner">
+                <div>
+                    <p class="overview-kicker">Backend landing workspace</p>
+                    <h2>Use this page as the operational front door for the local stack.</h2>
+                    <p class="section-text">It is designed to bridge product navigation and engineering workflow: service families, auth entrypoints, live request testing, architecture conventions, and generated backend reference in one place.</p>
+                </div>
+                <div class="overview-grid">
+                    <div class="overview-item">
+                        <strong>Unified API</strong>
+                        <span>Single local backend root for compute, storage, networking, IAM, monitoring, and automation.</span>
+                    </div>
+                    <div class="overview-item">
+                        <strong>Developer workflow</strong>
+                        <span>Fast path from health checks to authenticated service requests and endpoint discovery.</span>
+                    </div>
+                    <div class="overview-item">
+                        <strong>Investor-safe presentation</strong>
+                        <span>Structured layout, consistent typography, and fewer raw backend edges exposed by default.</span>
+                    </div>
+                    <div class="overview-item">
+                        <strong>Production direction</strong>
+                        <span>Grounded around live routes and generated reference rather than static marketing copy alone.</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

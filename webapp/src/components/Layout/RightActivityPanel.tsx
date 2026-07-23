@@ -284,13 +284,7 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
       { label: 'Pipelines',  value: live.pipelines   ?? '—', color: STATUS_COLOR.running,             loading: live.loading },
       { label: 'Containers', value: live.containers  ?? '—', color: dashboardSemanticColors.success,  loading: live.loading },
     ],
-    items: [
-      { id: '1', label: 'Pipeline #142 running',    sub: '3m ago',  status: 'running' },
-      { id: '2', label: 'Commit pushed to main',    sub: '43m ago', status: 'success' },
-      { id: '3', label: 'Container restarted',      sub: '1h ago',  status: 'warning' },
-      { id: '4', label: 'Deploy to staging done',   sub: '2h ago',  status: 'success' },
-      { id: '5', label: 'Node-2 cpu spike',         sub: '3h ago',  status: 'warning' },
-    ],
+    items: [],
     actions: [
       { label: 'Go to Pipelines',  icon: <PlayCircleIcon  sx={{ fontSize: '.85rem' }} />, onClick: () => navigate('/developer/Dashboard/cicd') },
       { label: 'Go to Repos',      icon: <AccountTreeIcon sx={{ fontSize: '.85rem' }} />, onClick: () => navigate('/developer/Dashboard/repositories') },
@@ -450,6 +444,24 @@ const RightActivityPanel: React.FC<RightActivityPanelProps> = ({ collapsed, onTo
                 </Box>
               </Box>
             ))}
+            {panel.items.length === 0 && (
+              <Box
+                sx={{
+                  px: 1,
+                  py: 1.2,
+                  borderRadius: '7px',
+                  border: `1px solid ${t.border}`,
+                  bgcolor: t.surfaceSubtle,
+                }}
+              >
+                <Typography sx={{ fontSize: '.72rem', fontWeight: 600, color: t.textPrimary, fontFamily: FONT }}>
+                  No live process activity available.
+                </Typography>
+                <Typography sx={{ fontSize: '.68rem', color: t.textTertiary, fontFamily: FONT, mt: 0.2 }}>
+                  This panel no longer shows placeholder events.
+                </Typography>
+              </Box>
+            )}
           </Stack>
         </Box>
 
