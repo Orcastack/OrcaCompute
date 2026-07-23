@@ -15,8 +15,25 @@ Add these entries to `/etc/hosts`:
 
 ## Start the stack
 
+For local runs, you can either rely on the development defaults baked into the multi-dashboard compose file, or copy the shared template first if you want to override passwords and other settings:
+
+```bash
+cp .env.example .env
+```
+
 ```bash
 docker compose -f docker-compose.multi-dashboard.yml up --build
+```
+
+That default command now starts only the core multi-dashboard login flow and its required backend dependencies. The five dashboard hosts now use a prebuilt static webapp image, so local startup no longer depends on `npm install` completing inside each frontend container.
+
+Optional stacks are behind profiles:
+
+```bash
+docker compose -f docker-compose.multi-dashboard.yml --profile observability up --build
+docker compose -f docker-compose.multi-dashboard.yml --profile logging up --build
+docker compose -f docker-compose.multi-dashboard.yml --profile tools up --build
+docker compose -f docker-compose.multi-dashboard.yml --profile devtools up --build
 ```
 
 ## Endpoints

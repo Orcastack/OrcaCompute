@@ -3,7 +3,37 @@ export type PortalTarget = 'cloud' | 'developer' | 'matrix';
 
 const publicPort = process.env.REACT_APP_PORTAL_PUBLIC_PORT || '3000';
 
-export const portalVariant = (process.env.REACT_APP_PORTAL_VARIANT || 'standard') as PortalVariant;
+function inferPortalVariantFromHostname(): PortalVariant {
+  if (typeof window === 'undefined') {
+    return 'standard';
+  }
+
+  const hostname = window.location.hostname;
+
+  if (hostname === 'login.localhost') {
+    return 'login';
+  }
+  if (hostname === 'cloud.localhost') {
+    return 'cloud';
+  }
+  if (hostname === 'developer.localhost') {
+    return 'developer';
+  }
+  if (hostname === 'matrix.localhost') {
+    return 'matrix';
+  }
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'home';
+  }
+
+  return 'standard';
+}
+
+const configuredPortalVariant = (process.env.REACT_APP_PORTAL_VARIANT || 'standard') as PortalVariant;
+
+export const portalVariant = configuredPortalVariant === 'standard'
+  ? inferPortalVariantFromHostname()
+  : configuredPortalVariant;
 
 export const isMultiPortalVariant = portalVariant !== 'standard';
 

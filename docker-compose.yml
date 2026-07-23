@@ -43,13 +43,13 @@ services:
     image: postgres:15-alpine
     container_name: orcastack_db
     environment:
-      POSTGRES_DB: orcastack
+      POSTGRES_DB: orcacompute
       POSTGRES_USER: orcastack_user
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -61,7 +61,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -83,7 +83,7 @@ services:
       - "15672:15672"
       - "15692:15692"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -102,7 +102,7 @@ services:
       - "2181:2181"
       - "8080:8080"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -124,7 +124,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -160,7 +160,7 @@ services:
       - rabbitmq
       - kafka
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: always
 
   # ───────────────────────────────────────────────
@@ -175,7 +175,7 @@ services:
     expose:
       - "80"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: always
 
   # ───────────────────────────────────────────────
@@ -197,7 +197,7 @@ services:
       - media_volume:/var/www/media:ro
       - /var/log/atonix-nginx:/var/log/nginx
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: always
 
   # ───────────────────────────────────────────────
@@ -236,7 +236,7 @@ services:
       - rabbitmq
       - kafka
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -261,7 +261,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -274,7 +274,7 @@ services:
     ports:
       - "9091:9091"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   prometheus:
@@ -288,7 +288,7 @@ services:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./monitoring/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   grafana:
@@ -305,7 +305,7 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
       GF_USERS_ALLOW_SIGN_UP: "false"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   kafka-ui:
@@ -319,7 +319,7 @@ services:
     ports:
       - "8090:8080"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   # ───────────────────────────────────────────────
@@ -338,7 +338,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   logstash:
@@ -349,7 +349,7 @@ services:
       - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./monitoring/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   kibana:
@@ -361,7 +361,7 @@ services:
     environment:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped
 
   jaeger:
@@ -372,5 +372,5 @@ services:
       - "16686:16686"
       - "14268:14268"
     networks:
-      - orcastack-net
+      - orcacompute-net
     restart: unless-stopped

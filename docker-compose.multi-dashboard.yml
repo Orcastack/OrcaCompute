@@ -29,9 +29,9 @@ services:
     image: postgres:15-alpine
     container_name: orcastack_db
     environment:
-      POSTGRES_DB: orcastack
+      POSTGRES_DB: orcacompute
       POSTGRES_USER: orcastack_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcastack-dev-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -52,7 +52,7 @@ services:
     container_name: orcastack_rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-orcastack-dev-rabbitmq}
       RABBITMQ_DEFAULT_VHOST: orcastack
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
@@ -115,12 +115,12 @@ services:
       ENVIRONMENT: production
       DEBUG: "False"
       POSTGRES_USER: orcastack_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD}@db:5432/orcacompute"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcastack-dev-postgres}
+      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD:-orcastack-dev-postgres}@db:5432/orcacompute"
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-replace-with-production-secret}
       ALLOWED_HOSTS: orcastack.org,api.orcastack.org,www.orcastack.org
-      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD}@rabbitmq:5672/"
+      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-orcastack-dev-rabbitmq}@rabbitmq:5672/"
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     volumes:
       - static_volume:/app/staticfiles
@@ -180,12 +180,12 @@ services:
     environment:
       ENVIRONMENT: development
       DEBUG: "True"
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD}@db:5432/orcacompute"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcastack-dev-postgres}
+      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD:-orcastack-dev-postgres}@db:5432/orcacompute"
       REDIS_URL: redis://redis:6379
       SECRET_KEY: ${SECRET_KEY:-dev-secret}
       ALLOWED_HOSTS: localhost,127.0.0.1,backend-dev,proxy,login.localhost,cloud.localhost,developer.localhost,matrix.localhost
-      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD}@rabbitmq:5672/"
+      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-orcastack-dev-rabbitmq}@rabbitmq:5672/"
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_ENABLED: "true"
       PROMETHEUS_PUSHGATEWAY_URL: http://pushgateway:9091
@@ -201,7 +201,8 @@ services:
     restart: unless-stopped
 
   frontend-dev:
-    image: node:18-alpine
+    profiles: [devtools]
+    image: node:20-alpine
     container_name: orcastack_webapp_dev
     working_dir: /app
     volumes:
@@ -216,7 +217,7 @@ services:
       DANGEROUSLY_DISABLE_HOST_CHECK: "true"
       REACT_APP_PORTAL_VARIANT: developer
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
-    command: sh -c "npm ci --legacy-peer-deps && npm start"
+    command: sh -c "rm -rf /app/node_modules/* && npm install --legacy-peer-deps && npm start"
     expose:
       - "3000"
     depends_on:
@@ -226,151 +227,79 @@ services:
     restart: unless-stopped
 
   home:
-    image: node:18-alpine
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile
+      args:
+        PUBLIC_URL: /
+        REACT_APP_API_URL: http://localhost:3000/api
+        REACT_APP_WS_URL: ws://localhost:3000/ws
+        REACT_APP_ENVIRONMENT: local-multi-dashboard
+    image: orcacompute-portal-webapp:local
     container_name: orcacompute_portal_home
-    working_dir: /app
-    volumes:
-      - ./webapp:/app
-      - home_node_modules:/app/node_modules
     environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-      BROWSER: none
-      CHOKIDAR_USEPOLLING: "true"
-      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
-      REACT_APP_PORTAL_VARIANT: home
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
-      REACT_APP_API_URL: http://localhost:3000/api
-      REACT_APP_WS_URL: ws://localhost:3000/ws
-      REACT_APP_ENVIRONMENT: local-multi-dashboard
-    command: sh -c "npm ci --legacy-peer-deps && npm start"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 10
-    depends_on:
-      - backend-dev
     networks:
       - orcacompute-net
     restart: unless-stopped
 
   login:
-    image: node:18-alpine
+    image: orcacompute-portal-webapp:local
     container_name: orcacompute_portal_login
-    working_dir: /app
-    volumes:
-      - ./webapp:/app
-      - login_node_modules:/app/node_modules
     environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-      BROWSER: none
-      CHOKIDAR_USEPOLLING: "true"
-      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
-      REACT_APP_PORTAL_VARIANT: login
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
-      REACT_APP_API_URL: http://localhost:3000/api
-      REACT_APP_WS_URL: ws://localhost:3000/ws
-      REACT_APP_ENVIRONMENT: local-multi-dashboard
-    command: sh -c "npm ci --legacy-peer-deps && npm start"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 10
-    depends_on:
-      - backend-dev
     networks:
       - orcacompute-net
     restart: unless-stopped
 
   cloud:
-    image: node:18-alpine
+    image: orcacompute-portal-webapp:local
     container_name: orcacompute_portal_cloud
-    working_dir: /app
-    volumes:
-      - ./webapp:/app
-      - cloud_node_modules:/app/node_modules
     environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-      BROWSER: none
-      CHOKIDAR_USEPOLLING: "true"
-      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
-      REACT_APP_PORTAL_VARIANT: cloud
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
-      REACT_APP_API_URL: http://localhost:3000/api
-      REACT_APP_WS_URL: ws://localhost:3000/ws
-      REACT_APP_ENVIRONMENT: local-multi-dashboard
-    command: sh -c "npm ci --legacy-peer-deps && npm start"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 10
-    depends_on:
-      - backend-dev
     networks:
       - orcacompute-net
     restart: unless-stopped
 
   developer:
-    image: node:18-alpine
+    image: orcacompute-portal-webapp:local
     container_name: orcacompute_portal_developer
-    working_dir: /app
-    volumes:
-      - ./webapp:/app
-      - developer_node_modules:/app/node_modules
     environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-      BROWSER: none
-      CHOKIDAR_USEPOLLING: "true"
-      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
-      REACT_APP_PORTAL_VARIANT: developer
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
-      REACT_APP_API_URL: http://localhost:3000/api
-      REACT_APP_WS_URL: ws://localhost:3000/ws
-      REACT_APP_ENVIRONMENT: local-multi-dashboard
-    command: sh -c "npm ci --legacy-peer-deps && npm start"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 10
-    depends_on:
-      - backend-dev
     networks:
       - orcacompute-net
     restart: unless-stopped
 
   matrix:
-    image: node:18-alpine
+    image: orcacompute-portal-webapp:local
     container_name: orcacompute_portal_matrix
-    working_dir: /app
-    volumes:
-      - ./webapp:/app
-      - matrix_node_modules:/app/node_modules
     environment:
-      HOST: 0.0.0.0
-      PORT: 3000
-      BROWSER: none
-      CHOKIDAR_USEPOLLING: "true"
-      DANGEROUSLY_DISABLE_HOST_CHECK: "true"
-      REACT_APP_PORTAL_VARIANT: matrix
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
-      REACT_APP_API_URL: http://localhost:3000/api
-      REACT_APP_WS_URL: ws://localhost:3000/ws
-      REACT_APP_ENVIRONMENT: local-multi-dashboard
-    command: sh -c "npm ci --legacy-peer-deps && npm start"
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000 >/dev/null 2>&1 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 10
-    depends_on:
-      - backend-dev
     networks:
       - orcacompute-net
     restart: unless-stopped
@@ -396,6 +325,7 @@ services:
     restart: unless-stopped
 
   pushgateway:
+    profiles: [observability]
     image: prom/pushgateway:latest
     container_name: orcastack_pushgateway
     ports:
@@ -405,6 +335,7 @@ services:
     restart: unless-stopped
 
   prometheus:
+    profiles: [observability]
     image: prom/prometheus:latest
     container_name: orcastack_prometheus
     ports:
@@ -418,6 +349,7 @@ services:
     restart: unless-stopped
 
   grafana:
+    profiles: [observability]
     image: grafana/grafana:latest
     container_name: orcastack_grafana
     ports:
@@ -434,6 +366,7 @@ services:
     restart: unless-stopped
 
   kafka-ui:
+    profiles: [tools]
     image: provectuslabs/kafka-ui:latest
     container_name: orcastack_kafka_ui
     environment:
@@ -447,6 +380,7 @@ services:
     restart: unless-stopped
 
   elasticsearch:
+    profiles: [logging]
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
     container_name: orcastack_elasticsearch
     environment:
@@ -462,6 +396,7 @@ services:
     restart: unless-stopped
 
   logstash:
+    profiles: [logging]
     image: docker.elastic.co/logstash/logstash:8.8.0
     container_name: orcastack_logstash
     volumes:
@@ -472,6 +407,7 @@ services:
     restart: unless-stopped
 
   kibana:
+    profiles: [logging]
     image: docker.elastic.co/kibana/kibana:8.8.0
     container_name: orcastack_kibana
     ports:
@@ -483,6 +419,7 @@ services:
     restart: unless-stopped
 
   jaeger:
+    profiles: [observability]
     image: jaegertracing/all-in-one:latest
     container_name: orcastack_jaeger
     ports:
