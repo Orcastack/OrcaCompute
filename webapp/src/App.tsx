@@ -124,6 +124,7 @@ import DevSSHKeysPage            from './pages/DevSSHKeysPage';
 import PortalEntryPage           from './pages/PortalEntryPage';
 import PortalLoginPage           from './pages/PortalLoginPage';
 import PortalMatrixPage          from './pages/PortalMatrixPage';
+import ModuleLandingPage         from './pages/ModuleLandingPage';
 import { getPortalLoginUrl, portalVariant } from './portal/portalConfig';
 
 // Redirect /developer/Dashboard/groups/:groupId → /groups/:groupId
@@ -149,7 +150,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   // New users who haven't completed onboarding are redirected there first
   if (!onboardingState.isCompleted) return <Navigate to="/onboarding" replace />;
   // Developer-plan users who land on /dashboard get sent to the dev dashboard
-  if (onboardingState.userPlan === 'developer' && location.pathname.startsWith('/dashboard')) {
+  if (onboardingState.userPlan === 'developer' && (location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/cloud'))) {
     return <Navigate to="/developer/Dashboard" replace />;
   }
   return <>{children}</>;
@@ -178,8 +179,8 @@ const AppShell: React.FC = () => {
     );
   }
 
-  if (portalVariant === 'cloud' && (location.pathname === '/' || location.pathname === '/cloud')) {
-    return <Navigate to="/dashboard" replace />;
+  if (portalVariant === 'cloud' && location.pathname === '/') {
+    return <Navigate to="/cloud" replace />;
   }
 
   if (portalVariant === 'developer' && (location.pathname === '/' || location.pathname === '/developer')) {
@@ -191,7 +192,16 @@ const AppShell: React.FC = () => {
   }
 
   const isDashboard = location.pathname.startsWith('/dashboard');
+  const isCloudDashboardHome = location.pathname === '/cloud';
   const isDeveloperDashboard = location.pathname.startsWith('/developer/Dashboard');
+  const isProductsDashboard = location.pathname.startsWith('/products/Dashboard');
+  const isSectionsDashboard = location.pathname.startsWith('/sections/Dashboard');
+  const isStandaloneDomainsDashboard = location.pathname.startsWith('/domains/Dashboard');
+  const isStandaloneBillingDashboard = location.pathname.startsWith('/billing/Dashboard');
+  const isStandaloneTeamsDashboard = location.pathname.startsWith('/teams/Dashboard');
+  const isStandaloneObservabilityDashboard = location.pathname.startsWith('/observability/Dashboard');
+  const isStandaloneComplianceDashboard = location.pathname.startsWith('/compliance/Dashboard');
+  const isStandaloneSupportDashboard = location.pathname.startsWith('/support/Dashboard');
   const isProjectPage = location.pathname.startsWith('/developer/Dashboard/projects/');
   const isCicdPage = location.pathname.startsWith('/developer/Dashboard/cicd/builder') ||
                      location.pathname.startsWith('/developer/Dashboard/cicd/runs');
@@ -440,12 +450,169 @@ const AppShell: React.FC = () => {
     );
   }
 
+  if (isCloudDashboardHome) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout>
+          <Routes>
+            <Route path="/cloud" element={<OnboardingDashboard />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isProductsDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout dashboardMode="products">
+          <Routes>
+            <Route path="/products/Dashboard"               element={<ModuleLandingPage title="Products" description="Manage compute, storage, networking, and platform product surfaces." items={[
+              { label: 'Compute', path: '/products/Dashboard/compute', description: 'Virtual machines, images, and lifecycle operations.' },
+              { label: 'Storage', path: '/products/Dashboard/storage', description: 'Volumes, snapshots, and persistent storage services.' },
+              { label: 'Kubernetes', path: '/products/Dashboard/kubernetes', description: 'Clusters, workloads, and container orchestration.' },
+              { label: 'Networking', path: '/products/Dashboard/network', description: 'VPCs, firewall controls, and traffic routing.' },
+              { label: 'Databases', path: '/products/Dashboard/databases', description: 'Managed database services and connectivity.' },
+            ]} />} />
+            <Route path="/products/Dashboard/compute"       element={<ComputePage />} />
+            <Route path="/products/Dashboard/compute/create" element={<ComputePage />} />
+            <Route path="/products/Dashboard/kubernetes"    element={<KubernetesPage />} />
+            <Route path="/products/Dashboard/kubernetes/:id" element={<KubernetesPage />} />
+            <Route path="/products/Dashboard/serverless"    element={<ServerlessPage />} />
+            <Route path="/products/Dashboard/serverless/:id" element={<ServerlessPage />} />
+            <Route path="/products/Dashboard/databases"     element={<DatabasePage />} />
+            <Route path="/products/Dashboard/databases/:id" element={<DatabasePage />} />
+            <Route path="/products/Dashboard/containers"    element={<ContainerRegistryPage />} />
+            <Route path="/products/Dashboard/containers/:id" element={<ContainerRegistryPage />} />
+            <Route path="/products/Dashboard/storage"       element={<StoragePage />} />
+            <Route path="/products/Dashboard/storage/:id"   element={<StoragePage />} />
+            <Route path="/products/Dashboard/load-balancers" element={<LoadBalancersPage />} />
+            <Route path="/products/Dashboard/cdn"           element={<CDNPage />} />
+            <Route path="/products/Dashboard/network"       element={<NetworkPage />} />
+            <Route path="/products/Dashboard/orchestration" element={<OrchestrationPage />} />
+            <Route path="/products/Dashboard/gpu"           element={<GPUWorkloadsPage />} />
+            <Route path="/products/Dashboard/autoscaling"   element={<AutoScalingPage />} />
+            <Route path="/products/Dashboard/snapshots"     element={<SnapshotsPage />} />
+            <Route path="/products/Dashboard/firewall"      element={<FirewallPage />} />
+            <Route path="/products/Dashboard/*"             element={<Navigate to="/products/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isSectionsDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout dashboardMode="sections">
+          <Routes>
+            <Route path="/sections/Dashboard"   element={<DashboardSectionsPage dashboardMode="cloud" />} />
+            <Route path="/sections/Dashboard/*" element={<Navigate to="/sections/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isStandaloneDomainsDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout dashboardMode="domains">
+          <Routes>
+            <Route path="/domains/Dashboard"      element={<DomainsServiceDashboardPage />} />
+            <Route path="/domains/Dashboard/dns"  element={<DNSPage />} />
+            <Route path="/domains/Dashboard/:id"  element={<DomainDetailPage />} />
+            <Route path="/domains/Dashboard/*"    element={<Navigate to="/domains/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isStandaloneBillingDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout hideSidebar>
+          <Routes>
+            <Route path="/billing/Dashboard"   element={<BillingPage />} />
+            <Route path="/billing/Dashboard/*" element={<Navigate to="/billing/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isStandaloneTeamsDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout hideSidebar>
+          <Routes>
+            <Route path="/teams/Dashboard"         element={<TeamsPage />} />
+            <Route path="/teams/Dashboard/:teamId" element={<TeamDetailPage />} />
+            <Route path="/teams/Dashboard/*"       element={<Navigate to="/teams/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isStandaloneObservabilityDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout dashboardMode="monitor">
+          <Routes>
+            <Route path="/observability/Dashboard"            element={<ModuleLandingPage title="Observability" description="Review monitoring, tracing, service levels, and incident response." items={[
+              { label: 'Monitoring', path: '/observability/Dashboard/dashboards', description: 'Dashboards, alerts, and service telemetry.' },
+              { label: 'SLO / SLA', path: '/observability/Dashboard/slo', description: 'Service targets and reliability posture.' },
+              { label: 'Tracing', path: '/observability/Dashboard/tracing', description: 'Request flow inspection and dependency tracing.' },
+              { label: 'Incidents', path: '/observability/Dashboard/incidents', description: 'Active incidents and operational history.' },
+            ]} />} />
+            <Route path="/observability/Dashboard/dashboards" element={<MonitorCustomDashboardsPage />} />
+            <Route path="/observability/Dashboard/incidents"  element={<Navigate to="/observability/Dashboard/dashboards" replace />} />
+            <Route path="/observability/Dashboard/alerts"     element={<Navigate to="/observability/Dashboard/dashboards" replace />} />
+            <Route path="/observability/Dashboard/metrics"    element={<Navigate to="/observability/Dashboard/dashboards" replace />} />
+            <Route path="/observability/Dashboard/logs"       element={<Navigate to="/observability/Dashboard/dashboards" replace />} />
+            <Route path="/observability/Dashboard/slo"        element={<SLOPage />} />
+            <Route path="/observability/Dashboard/tracing"    element={<TracingPage />} />
+            <Route path="/observability/Dashboard/*"          element={<Navigate to="/observability/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isStandaloneComplianceDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout hideSidebar>
+          <Routes>
+            <Route path="/compliance/Dashboard"   element={<CompliancePage />} />
+            <Route path="/compliance/Dashboard/*" element={<Navigate to="/compliance/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isStandaloneSupportDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout hideSidebar>
+          <Routes>
+            <Route path="/support/Dashboard"   element={<SupportPage />} />
+            <Route path="/support/Dashboard/*" element={<Navigate to="/support/Dashboard" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
   if (isDashboard) {
     return (
       <ProtectedRoute>
         <DashboardLayout>
           <Routes>
-            <Route path="/dashboard"                         element={<OnboardingDashboard />} />
+            <Route path="/dashboard"                         element={<Navigate to="/cloud" replace />} />
             <Route path="/dashboard/compute"                 element={<ComputePage />} />
             <Route path="/dashboard/compute/create"          element={<ComputePage />} />
             <Route path="/dashboard/kubernetes"              element={<KubernetesPage />} />

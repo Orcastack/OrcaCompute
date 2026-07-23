@@ -12,6 +12,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { onboardingApi, dashboardApi } from '../services/cloudApi';
 import { OnboardingProgress, DashboardStats } from '../types/cloud';
 import { dashboardPrimaryButtonSx, dashboardTokens } from '../styles/dashboardDesignSystem';
+import { dashboardPageHeaderSx, dashboardSectionHeadingSx, dashboardSummaryCardSx, dashboardSummaryGridSx } from '../styles/dashboardShell';
 
 import WelcomeHero         from '../components/Cloud/WelcomeHero';
 import OnboardingChecklist from '../components/Cloud/OnboardingChecklist';
@@ -69,19 +70,18 @@ const OnboardingDashboard: React.FC = () => {
     fetchStats();
   };
 
+  const completedSteps = progress?.completed_steps.length ?? 0;
+  const totalSteps = progress ? 6 : 0;
+  const computeRunning = stats?.compute.running ?? 0;
+  const storageVolumes = stats?.storage.total_volumes ?? 0;
+  const networkCount = stats?.networking.vpcs ?? 0;
+  const hasCloudData = computeRunning > 0 || storageVolumes > 0 || networkCount > 0;
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: dashboardTokens.colors.background, pb: 6 }}>
 
       {/* ── Page Header ────────────────────────────────────────────────────── */}
-      <Box
-        sx={{
-          bgcolor: dashboardTokens.colors.surface,
-          borderBottom: `1px solid ${dashboardTokens.colors.border}`,
-          px: { xs: 2, md: 4 },
-          pt: 2.5,
-          pb: 2,
-        }}
-      >
+      <Box sx={dashboardPageHeaderSx}>
         {/* Breadcrumbs — 12px, Graphite Gray */}
         <Breadcrumbs
           separator={<NavigateNextIcon sx={{ fontSize: '.75rem', color: dashboardTokens.colors.textTertiary }} />}
@@ -122,7 +122,31 @@ const OnboardingDashboard: React.FC = () => {
 
       {/* ── Content ──────────────────────────────────────────────────────────── */}
       <Container maxWidth="xl" sx={{ pt: 4 }}>
+        {!loadingStats && !hasCloudData ? (
+          <Box sx={{ minHeight: '40vh' }} />
+        ) : (
         <Stack spacing={3.5}>
+
+          <Box sx={dashboardSummaryGridSx}>
+            {[
+              { label: 'Onboarding Completion', value: progress ? `${progress.completion_pct}%` : '—', sub: progress ? `${completedSteps}/${totalSteps} steps completed` : 'Waiting for live onboarding data' },
+              { label: 'Running Compute', value: stats ? computeRunning : '—', sub: 'Live running virtual machines' },
+              { label: 'Storage Volumes', value: stats ? storageVolumes : '—', sub: 'Attached and detached cloud volumes' },
+              { label: 'Network Spaces', value: stats ? networkCount : '—', sub: 'Configured VPCs from the backend' },
+            ].map((item) => (
+              <Box key={item.label} sx={dashboardSummaryCardSx}>
+                <Typography sx={{ fontSize: '11px', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: dashboardTokens.colors.textSecondary, mb: 0.75 }}>
+                  {item.label}
+                </Typography>
+                <Typography sx={{ fontSize: '1.5rem', fontWeight: 800, color: dashboardTokens.colors.textPrimary, lineHeight: 1.1 }}>
+                  {item.value}
+                </Typography>
+                <Typography sx={{ fontSize: '.78rem', color: dashboardTokens.colors.textSecondary, mt: 0.5 }}>
+                  {item.sub}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
 
           {/* 1 ── Welcome Hero */}
           <WelcomeHero
@@ -164,6 +188,7 @@ const OnboardingDashboard: React.FC = () => {
           </Box>
 
         </Stack>
+        )}
       </Container>
 
       {/* Deploy Wizard Modal */}
@@ -200,13 +225,7 @@ const OnboardingDashboard: React.FC = () => {
 
 const SectionHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <Typography
-      fontWeight={700}
-      fontSize="12px"
-      letterSpacing=".08em"
-      textTransform="uppercase"
-      sx={{ color: dashboardTokens.colors.textSecondary, mb: 1.5 }}
-    >
+    <Typography sx={dashboardSectionHeadingSx}>
       {children}
     </Typography>
   );

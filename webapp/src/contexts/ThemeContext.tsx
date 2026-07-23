@@ -743,7 +743,16 @@ export const CustomThemeProvider: React.FC<CustomThemeProviderProps> = ({ childr
   }, []);
 
   const isDashboardRoute =
+    location.pathname.startsWith('/cloud') ||
     location.pathname.startsWith('/dashboard') ||
+    location.pathname.startsWith('/products/Dashboard') ||
+    location.pathname.startsWith('/sections/Dashboard') ||
+    location.pathname.startsWith('/domains/Dashboard') ||
+    location.pathname.startsWith('/billing/Dashboard') ||
+    location.pathname.startsWith('/teams/Dashboard') ||
+    location.pathname.startsWith('/observability/Dashboard') ||
+    location.pathname.startsWith('/compliance/Dashboard') ||
+    location.pathname.startsWith('/support/Dashboard') ||
     location.pathname.startsWith('/developer/Dashboard') ||
     location.pathname.startsWith('/marketing-dashboard') ||
     location.pathname.startsWith('/domains/dashboard') ||

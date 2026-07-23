@@ -43,7 +43,7 @@ export interface DashboardTopBarProps {
   leftContent?: React.ReactNode;
   /** Extra content rendered between leftContent and the standard right-side icons. */
   actions?: React.ReactNode;
-  /** Base path prefix for profile-menu navigation items. Defaults to '/dashboard'. */
+  /** Base path prefix for profile-menu navigation items. Defaults to '/cloud'. */
   routeBase?: string;
   /** When true renders a hamburger icon for mobile drawers (unused when leftContent overrides). */
   showMobileMenu?: boolean;
@@ -54,7 +54,7 @@ export interface DashboardTopBarProps {
 const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
   leftContent,
   actions,
-  routeBase = '/dashboard',
+  routeBase = '/cloud',
   showMobileMenu = false,
   onMobileMenuOpen,
 }) => {

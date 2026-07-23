@@ -111,7 +111,7 @@ export interface DeployButtonProps {
 
 /**
  * Reusable Deploy button used across every page.
- * Hover opens a right-side dropdown with filtered deploy actions.
+ * Click opens a dropdown with filtered deploy actions.
  * Use `category` to pre-filter to a specific section.
  * Use `onModalOpen` to trigger a page-level modal instead of navigating.
  */
@@ -139,12 +139,14 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
     visibleItems.some(i => i.category === cat.key)
   );
 
-  const openMenu  = () => {
+  const openMenu = () => {
     if (leaveTimer.current) clearTimeout(leaveTimer.current);
     setOpen(true);
   };
-  const closeMenu = () => {
-    leaveTimer.current = setTimeout(() => setOpen(false), 120);
+  const closeMenu = () => setOpen(false);
+  const toggleMenu = () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    setOpen((previous) => !previous);
   };
 
   const handleSelect = useCallback((item: DeployItem) => {
@@ -168,8 +170,6 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
   return (
     <Box
       ref={anchorRef}
-      onMouseEnter={openMenu}
-      onMouseLeave={closeMenu}
       sx={{ display: 'inline-flex', position: 'relative' }}
     >
       {/* ── Trigger button ── */}
@@ -178,6 +178,7 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
         aria-haspopup="true"
         aria-expanded={open}
         aria-controls="deploy-menu"
+        onClick={toggleMenu}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -218,8 +219,6 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
           <Grow {...TransitionProps} style={{ transformOrigin: 'top left' }}>
             <Paper
               elevation={0}
-              onMouseEnter={openMenu}
-              onMouseLeave={closeMenu}
               sx={{
                 width: 300,
                 maxHeight: 540,

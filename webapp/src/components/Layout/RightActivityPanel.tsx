@@ -72,6 +72,10 @@ interface PanelDef {
   items:    ProcessItem[];
   actions:  QuickAction[];
   metrics?: { label: string; value: string | number; color?: string; loading?: boolean }[];
+  emptyState?: {
+    title: string;
+    body: string;
+  };
 }
 
 interface LiveCounts {
@@ -115,17 +119,11 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
     return {
       title: 'Repository Activity',
       icon:  <AccountTreeIcon sx={{ fontSize: '1rem', color: t.brandPrimary }} />,
-      metrics: [
-        { label: 'Branches',    value: 3,     color: t.textPrimary },
-        { label: 'Tags',        value: 2,     color: t.textPrimary },
-        { label: 'Open PRs',    value: 1,     color: '#153d75'     },
-        { label: 'Open Issues', value: 4,     color: dashboardSemanticColors.warning },
-      ],
-      items: [
-        { id: '1', label: 'main',    sub: 'Last push 43m ago',    status: 'success', meta: 'protected' },
-        { id: '2', label: 'develop', sub: 'Last push 2h ago',     status: 'running', meta: '2 ahead'   },
-        { id: '3', label: 'feat/auth', sub: 'Last push 1d ago',   status: 'idle',    meta: '5 ahead'   },
-      ],
+      items: [],
+      emptyState: {
+        title: 'No live repository activity available.',
+        body: 'Connect repository events and branch telemetry before showing recent repository changes here.',
+      },
       actions: [
         { label: 'Sync Repository', icon: <SyncIcon sx={{ fontSize: '.85rem' }} />,     onClick: () => {} },
         { label: 'View Logs',       icon: <TerminalIcon sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
@@ -138,19 +136,11 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
     return {
       title: 'Container Activity',
       icon:  <ViewInArIcon sx={{ fontSize: '1rem', color: t.brandPrimary }} />,
-      metrics: [
-        { label: 'Running',   value: 4,       color: dashboardSemanticColors.success  },
-        { label: 'Stopped',   value: 1,       color: t.textTertiary },
-        { label: 'CPU',       value: '34%',   color: dashboardSemanticColors.warning  },
-        { label: 'Memory',    value: '2.1 GB', color: t.textPrimary },
-      ],
-      items: [
-        { id: '1', label: 'api-gateway',    sub: 'cpu 12% · mem 310MB',  status: 'running' },
-        { id: '2', label: 'auth-service',   sub: 'cpu 5%  · mem 180MB',  status: 'running' },
-        { id: '3', label: 'worker-1',       sub: 'cpu 22% · mem 640MB',  status: 'warning' },
-        { id: '4', label: 'postgres-proxy', sub: 'cpu 2%  · mem 90MB',   status: 'running' },
-        { id: '5', label: 'redis-cache',    sub: 'exited 10m ago',        status: 'failed'  },
-      ],
+      items: [],
+      emptyState: {
+        title: 'No live container process feed available.',
+        body: 'Container runtime events are not yet wired into this side panel.',
+      },
       actions: [
         { label: 'Restart Failed',  icon: <RefreshIcon   sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
         { label: 'Scale Up',        icon: <LayersIcon    sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
@@ -163,19 +153,11 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
     return {
       title: 'Pipeline Activity',
       icon:  <PlayCircleIcon sx={{ fontSize: '1rem', color: t.brandPrimary }} />,
-      metrics: [
-        { label: 'Running',  value: 2,    color: STATUS_COLOR.running },
-        { label: 'Passed',   value: 14,   color: dashboardSemanticColors.success },
-        { label: 'Failed',   value: 1,    color: dashboardSemanticColors.danger  },
-        { label: 'Queued',   value: 3,    color: '#153d75' },
-      ],
-      items: [
-        { id: '1', label: 'build:main',      sub: 'triggered 3m ago',   status: 'running', meta: '#142' },
-        { id: '2', label: 'test:develop',    sub: 'triggered 8m ago',   status: 'running', meta: '#141' },
-        { id: '3', label: 'deploy:staging',  sub: 'completed 22m ago',  status: 'success', meta: '#140' },
-        { id: '4', label: 'test:feat/auth',  sub: 'failed 1h ago',      status: 'failed',  meta: '#139' },
-        { id: '5', label: 'build:hotfix',    sub: 'queued',             status: 'pending', meta: '#143' },
-      ],
+      items: [],
+      emptyState: {
+        title: 'No live pipeline execution feed available.',
+        body: 'Wire CI/CD run history into this panel before showing pipeline events here.',
+      },
       actions: [
         { label: 'Trigger Pipeline', icon: <PlayCircleIcon sx={{ fontSize: '.85rem' }} />, onClick: () => navigate('/developer/Dashboard/cicd') },
         { label: 'View Logs',        icon: <TerminalIcon   sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
@@ -187,19 +169,11 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
     return {
       title: 'Cluster Activity',
       icon:  <HubIcon sx={{ fontSize: '1rem', color: t.brandPrimary }} />,
-      metrics: [
-        { label: 'Nodes',     value: 3,    color: dashboardSemanticColors.success },
-        { label: 'Pods',      value: 18,   color: t.textPrimary },
-        { label: 'Services',  value: 7,    color: t.textPrimary },
-        { label: 'CPU',       value: '61%', color: dashboardSemanticColors.warning },
-      ],
-      items: [
-        { id: '1', label: 'node-1 (master)', sub: 'cpu 45% · ready',    status: 'success' },
-        { id: '2', label: 'node-2',          sub: 'cpu 78% · ready',    status: 'warning' },
-        { id: '3', label: 'node-3',          sub: 'cpu 34% · ready',    status: 'success' },
-        { id: '4', label: 'pod: api-7f9d',   sub: 'Running · 2/2',      status: 'running' },
-        { id: '5', label: 'pod: worker-4b2', sub: 'CrashLoopBackOff',   status: 'failed'  },
-      ],
+      items: [],
+      emptyState: {
+        title: 'No live cluster activity available.',
+        body: 'Kubernetes health and pod events are not yet feeding this panel.',
+      },
       actions: [
         { label: 'Scale Cluster', icon: <LayersIcon     sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
         { label: 'View Metrics',  icon: <MemoryIcon     sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
@@ -212,18 +186,11 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
     return {
       title: 'SDK & Tool Activity',
       icon:  <TerminalIcon sx={{ fontSize: '1rem', color: t.brandPrimary }} />,
-      metrics: [
-        { label: 'Active Tools', value: 6,  color: t.textPrimary },
-        { label: 'Downloads',    value: 12, color: dashboardSemanticColors.success },
-        { label: 'Updates',      value: 2,  color: dashboardSemanticColors.warning },
-      ],
-      items: [
-        { id: '1', label: 'orcacompute-cli v2.4.1',  sub: 'Up to date',       status: 'success' },
-        { id: '2', label: 'go-sdk v1.3.0',       sub: 'Update available', status: 'warning', meta: 'v1.4.0' },
-        { id: '3', label: 'python-sdk v3.0.1',   sub: 'Up to date',       status: 'success' },
-        { id: '4', label: 'terraform-provider',  sub: 'Installing…',      status: 'running' },
-        { id: '5', label: 'kubectl-plugin',      sub: 'Up to date',       status: 'success' },
-      ],
+      items: [],
+      emptyState: {
+        title: 'No live SDK activity available.',
+        body: 'SDK installation and version activity should come from real package telemetry, not static entries.',
+      },
       actions: [
         { label: 'Update All SDKs', icon: <RefreshIcon   sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
         { label: 'Install Tool',    icon: <StorageIcon   sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
@@ -235,17 +202,11 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
     return {
       title: 'IaC Activity',
       icon:  <StorageIcon sx={{ fontSize: '1rem', color: t.brandPrimary }} />,
-      metrics: [
-        { label: 'Stacks',    value: 5,    color: t.textPrimary },
-        { label: 'Drifted',   value: 1,    color: dashboardSemanticColors.warning },
-        { label: 'Planned',   value: 2,    color: '#153d75' },
-      ],
-      items: [
-        { id: '1', label: 'prod-vpc',        sub: 'Applied 2h ago',      status: 'success' },
-        { id: '2', label: 'staging-cluster', sub: 'Plan in progress',    status: 'running' },
-        { id: '3', label: 'dev-network',     sub: 'Drift detected',      status: 'warning' },
-        { id: '4', label: 'db-module',       sub: 'Applied 1d ago',      status: 'success' },
-      ],
+      items: [],
+      emptyState: {
+        title: 'No live infrastructure change feed available.',
+        body: 'Plan, apply, and drift events should appear here only after real IaC execution history is connected.',
+      },
       actions: [
         { label: 'Run Plan',   icon: <PlayCircleIcon sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
         { label: 'View Drift', icon: <WarningAmberIcon sx={{ fontSize: '.85rem' }} />, onClick: () => {} },
@@ -262,11 +223,11 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
         { label: 'Repos',    value: live.repos      ?? '—', color: t.textPrimary,                   loading: live.loading },
         { label: 'Pipelines',value: live.pipelines  ?? '—', color: STATUS_COLOR.running,             loading: live.loading },
       ],
-      items: [
-        { id: '1', label: 'orcacompute',   sub: 'Last activity 43m ago', status: 'success' },
-        { id: '2', label: 'platform-v2',  sub: 'Last activity 2h ago',  status: 'running' },
-        { id: '3', label: 'infra-tools',  sub: 'Last activity 1d ago',  status: 'idle'    },
-      ],
+      items: [],
+      emptyState: {
+        title: 'No live project activity available.',
+        body: 'Project events should be sourced from real repository and deployment activity.',
+      },
       actions: [
         { label: 'New Project',   icon: <FolderOpenIcon   sx={{ fontSize: '.85rem' }} />, onClick: () => navigate('/developer/Dashboard/projects/create') },
         { label: 'Import Repo',   icon: <AccountTreeIcon  sx={{ fontSize: '.85rem' }} />, onClick: () => navigate('/developer/Dashboard/projects/import') },
@@ -289,6 +250,10 @@ function usePanelDef(pathname: string, live: LiveCounts): PanelDef {
       { label: 'Go to Pipelines',  icon: <PlayCircleIcon  sx={{ fontSize: '.85rem' }} />, onClick: () => navigate('/developer/Dashboard/cicd') },
       { label: 'Go to Repos',      icon: <AccountTreeIcon sx={{ fontSize: '.85rem' }} />, onClick: () => navigate('/developer/Dashboard/repositories') },
     ],
+    emptyState: {
+      title: 'No live process activity available.',
+      body: 'This panel now waits for real backend activity instead of showing placeholder events.',
+    },
   };
 }
 
@@ -455,10 +420,10 @@ const RightActivityPanel: React.FC<RightActivityPanelProps> = ({ collapsed, onTo
                 }}
               >
                 <Typography sx={{ fontSize: '.72rem', fontWeight: 600, color: t.textPrimary, fontFamily: FONT }}>
-                  No live process activity available.
+                  {panel.emptyState?.title || 'No live process activity available.'}
                 </Typography>
                 <Typography sx={{ fontSize: '.68rem', color: t.textTertiary, fontFamily: FONT, mt: 0.2 }}>
-                  This panel no longer shows placeholder events.
+                  {panel.emptyState?.body || 'This panel no longer shows placeholder events.'}
                 </Typography>
               </Box>
             )}

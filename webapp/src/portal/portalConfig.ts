@@ -176,7 +176,7 @@ export const portalTargetLabels: Record<PortalTarget, string> = {
 };
 
 export const portalTargetPaths: Record<PortalTarget, string> = {
-  cloud: '/dashboard',
+  cloud: '/cloud',
   developer: '/developer/Dashboard',
   matrix: '/matrix',
 };
