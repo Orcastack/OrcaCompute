@@ -110,41 +110,41 @@ export const authService = {
         last_login: '2024-03-20T14:45:00Z',
         user_type: 'individual',
       };
-      
+
       const mockResponse: LoginResponse = {
         message: 'Login successful',
         token: 'mock-jwt-token',
         user: mockUser,
       };
-      
+
       console.log('Mock login successful:', mockResponse);
       return mockResponse;
     }
-    
+
     // Check for registered users in localStorage
     const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
     const credential = userCredentials.find((c: any) => c.email === credentials.email && c.password === credentials.password);
-    
+
     if (credential) {
       const registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
       const user = registeredUsers.find((u: any) => u.id === credential.id);
-      
+
       if (user) {
         // Update last login
         user.last_login = new Date().toISOString();
         localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
-        
+
         const loginResponse: LoginResponse = {
           message: 'Login successful',
           token: `mock-jwt-token-${user.id}`,
           user: user,
         };
-        
+
         console.log('Registered user login successful:', loginResponse);
         return loginResponse;
       }
     }
-    
+
     // For other credentials, try real API (will fail gracefully)
     try {
       const response = await ____authApi.post<any>('/login/', credentials);
@@ -210,13 +210,13 @@ export const authService = {
     // --- Local fallback ---
     // Store user credentials separately for authentication
     const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
-    
+
     // Check if user already exists
     const existingCredential = userCredentials.find((c: any) => c.email === userData.email);
     if (existingCredential) {
       throw new Error('User with this email already exists');
     }
-    
+
     // Create new user
     const newUser: User = {
       id: Date.now(), // Generate a unique ID
@@ -235,7 +235,7 @@ export const authService = {
       last_login: new Date().toISOString(),
       user_type: 'individual',
     };
-    
+
     // Store credentials separately
     userCredentials.push({
       id: newUser.id,
@@ -244,21 +244,21 @@ export const authService = {
       user_type: 'individual'
     });
     localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
-    
+
     // Store user data
     const registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '[]');
     registeredUsers.push(newUser);
     localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
-    
+
     const mockResponse: SignupResponse = {
       message: 'Account created successfully',
       token: `mock-jwt-token-${newUser.id}`,
       user: newUser,
     };
-    
+
     console.log('Individual signup successful:', mockResponse);
     return mockResponse;
-    
+
     // For real API (commented out for now)
     // try {
     //   const response = await authApi.post<SignupResponse>('/signup/', userData);
@@ -338,7 +338,7 @@ export const mockCommunityService = {
   getMembers: async (): Promise<CommunityMember[]> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     return [
       {
         id: 1,
@@ -421,7 +421,7 @@ export const mockCommunityService = {
   getDiscussions: async (): Promise<Discussion[]> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     return [
       {
         id: 1,

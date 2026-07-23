@@ -197,7 +197,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Store organization user credentials separately
       const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
-      
+
       // Check if user already exists
       const existingCredential = userCredentials.find((c: any) => c.email === userData.email);
       if (existingCredential) {
