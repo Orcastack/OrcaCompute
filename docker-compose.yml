@@ -41,10 +41,10 @@ services:
   # ───────────────────────────────────────────────
   db:
     image: postgres:15-alpine
-    container_name: orcastack_db
+    container_name: orcacompute_db
     environment:
       POSTGRES_DB: orcacompute
-      POSTGRES_USER: orcastack_user
+      POSTGRES_USER: orcacompute_user
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -57,7 +57,7 @@ services:
   # ───────────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    container_name: orcastack_redis
+    container_name: orcacompute_redis
     volumes:
       - redis_data:/data
     networks:
@@ -69,11 +69,11 @@ services:
   # ───────────────────────────────────────────────
   rabbitmq:
     image: rabbitmq:3.12-management-alpine
-    container_name: orcastack_rabbitmq
+    container_name: orcacompute_rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
-      RABBITMQ_DEFAULT_VHOST: orcastack
+      RABBITMQ_DEFAULT_VHOST: orcacompute
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
@@ -91,7 +91,7 @@ services:
   # ───────────────────────────────────────────────
   zookeeper:
     image: zookeeper:3.8
-    container_name: orcastack_zookeeper
+    container_name: orcacompute_zookeeper
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zookeeper:2888:3888
@@ -110,7 +110,7 @@ services:
   # ───────────────────────────────────────────────
   kafka:
     image: confluentinc/cp-kafka:7.4.0
-    container_name: orcastack_kafka
+    container_name: orcacompute_kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -135,20 +135,20 @@ services:
     build:
       context: ./computeapi
       dockerfile: Dockerfile
-    container_name: orcastack_api_prod
+    container_name: orcacompute_api_prod
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
-             gunicorn orcastack.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+             gunicorn orcacompute.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     environment:
       ENVIRONMENT: production
       DEBUG: "False"
-      POSTGRES_USER: orcastack_user
+      POSTGRES_USER: orcacompute_user
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD}@db:5432/orcacompute"
+      DATABASE_URL: "postgresql://orcacompute_user:${POSTGRES_PASSWORD}@db:5432/orcacompute"
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-replace-with-production-secret}
-      ALLOWED_HOSTS: orcastack.org,api.orcastack.org,www.orcastack.org
+      ALLOWED_HOSTS: orcacompute.org,api.orcacompute.org,www.orcacompute.org
       RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD}@rabbitmq:5672/"
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     volumes:
@@ -171,7 +171,7 @@ services:
     build:
       context: ./webapp
       dockerfile: Dockerfile
-    container_name: orcastack_webapp_prod
+    container_name: orcacompute_webapp_prod
     expose:
       - "80"
     networks:
@@ -186,7 +186,7 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
-    container_name: orcastack_nginx
+    container_name: orcacompute_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -208,7 +208,7 @@ services:
     build:
       context: ./computeapi
       dockerfile: Dockerfile
-    container_name: orcastack_api_dev
+    container_name: orcacompute_api_dev
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py runserver 0.0.0.0:8000"
@@ -220,7 +220,7 @@ services:
       ENVIRONMENT: development
       DEBUG: "True"
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD}@db:5432/orcacompute"
+      DATABASE_URL: "postgresql://orcacompute_user:${POSTGRES_PASSWORD}@db:5432/orcacompute"
       REDIS_URL: redis://redis:6379
       SECRET_KEY: ${SECRET_KEY:-dev-secret}
       ALLOWED_HOSTS: localhost,127.0.0.1,backend,nginx
@@ -245,7 +245,7 @@ services:
   frontend-dev:
     profiles: [dev]
     image: node:18-alpine
-    container_name: orcastack_webapp_dev
+    container_name: orcacompute_webapp_dev
     working_dir: /app
     volumes:
       - ./webapp:/app
@@ -270,7 +270,7 @@ services:
   pushgateway:
     profiles: [dev, monitoring]
     image: prom/pushgateway:latest
-    container_name: orcastack_pushgateway
+    container_name: orcacompute_pushgateway
     ports:
       - "9091:9091"
     networks:
@@ -280,7 +280,7 @@ services:
   prometheus:
     profiles: [monitoring]
     image: prom/prometheus:latest
-    container_name: orcastack_prometheus
+    container_name: orcacompute_prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -294,7 +294,7 @@ services:
   grafana:
     profiles: [monitoring]
     image: grafana/grafana:latest
-    container_name: orcastack_grafana
+    container_name: orcacompute_grafana
     ports:
       - "3002:3000"
     volumes:
@@ -311,7 +311,7 @@ services:
   kafka-ui:
     profiles: [monitoring]
     image: provectuslabs/kafka-ui:latest
-    container_name: orcastack_kafka_ui
+    container_name: orcacompute_kafka_ui
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
@@ -328,7 +328,7 @@ services:
   elasticsearch:
     profiles: [logging]
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
-    container_name: orcastack_elasticsearch
+    container_name: orcacompute_elasticsearch
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m
@@ -344,7 +344,7 @@ services:
   logstash:
     profiles: [logging]
     image: docker.elastic.co/logstash/logstash:8.8.0
-    container_name: orcastack_logstash
+    container_name: orcacompute_logstash
     volumes:
       - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./monitoring/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
@@ -355,7 +355,7 @@ services:
   kibana:
     profiles: [logging]
     image: docker.elastic.co/kibana/kibana:8.8.0
-    container_name: orcastack_kibana
+    container_name: orcacompute_kibana
     ports:
       - "5601:5601"
     environment:
@@ -367,7 +367,7 @@ services:
   jaeger:
     profiles: [logging]
     image: jaegertracing/all-in-one:latest
-    container_name: orcastack_jaeger
+    container_name: orcacompute_jaeger
     ports:
       - "16686:16686"
       - "14268:14268"

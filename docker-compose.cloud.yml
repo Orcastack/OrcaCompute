@@ -1,4 +1,4 @@
-name: orcacompute-multi-dashboard
+name: orca-cloud
 
 networks:
   orcacompute-net:
@@ -27,11 +27,11 @@ volumes:
 services:
   db:
     image: postgres:15-alpine
-    container_name: orcastack_db
+    container_name: orcacompute_db
     environment:
       POSTGRES_DB: orcacompute
-      POSTGRES_USER: orcastack_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcastack-dev-postgres}
+      POSTGRES_USER: orcacompute_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcacompute-dev-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -40,7 +40,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: orcastack_redis
+    container_name: orcacompute_redis
     volumes:
       - redis_data:/data
     networks:
@@ -49,11 +49,11 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.12-management-alpine
-    container_name: orcastack_rabbitmq
+    container_name: orcacompute_rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-orcastack-dev-rabbitmq}
-      RABBITMQ_DEFAULT_VHOST: orcastack
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-orcacompute-dev-rabbitmq}
+      RABBITMQ_DEFAULT_VHOST: orcacompute
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
@@ -68,7 +68,7 @@ services:
 
   zookeeper:
     image: zookeeper:3.8
-    container_name: orcastack_zookeeper
+    container_name: orcacompute_zookeeper
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zookeeper:2888:3888
@@ -84,7 +84,7 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
-    container_name: orcastack_kafka
+    container_name: orcacompute_kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -106,21 +106,21 @@ services:
     build:
       context: ./computeapi
       dockerfile: Dockerfile
-    container_name: orcastack_api_prod
+    container_name: orcacompute_api_prod
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
-             gunicorn orcastack.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+             gunicorn orcacompute.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     environment:
       ENVIRONMENT: production
       DEBUG: "False"
-      POSTGRES_USER: orcastack_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcastack-dev-postgres}
-      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD:-orcastack-dev-postgres}@db:5432/orcacompute"
+      POSTGRES_USER: orcacompute_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcacompute-dev-postgres}
+      DATABASE_URL: "postgresql://orcacompute_user:${POSTGRES_PASSWORD:-orcacompute-dev-postgres}@db:5432/orcacompute"
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-replace-with-production-secret}
-      ALLOWED_HOSTS: orcastack.org,api.orcastack.org,www.orcastack.org
-      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-orcastack-dev-rabbitmq}@rabbitmq:5672/"
+      ALLOWED_HOSTS: orcacompute.org,api.orcacompute.org,www.orcacompute.org
+      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-orcacompute-dev-rabbitmq}@rabbitmq:5672/"
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     volumes:
       - static_volume:/app/staticfiles
@@ -139,7 +139,7 @@ services:
     build:
       context: ./webapp
       dockerfile: Dockerfile
-    container_name: orcastack_webapp_prod
+    container_name: orcacompute_webapp_prod
     expose:
       - "80"
     networks:
@@ -151,7 +151,7 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
-    container_name: orcastack_nginx
+    container_name: orcacompute_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -169,7 +169,7 @@ services:
     build:
       context: ./computeapi
       dockerfile: Dockerfile
-    container_name: orcastack_api_dev
+    container_name: orcacompute_api_dev
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py runserver 0.0.0.0:8000"
@@ -180,12 +180,12 @@ services:
     environment:
       ENVIRONMENT: development
       DEBUG: "True"
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcastack-dev-postgres}
-      DATABASE_URL: "postgresql://orcastack_user:${POSTGRES_PASSWORD:-orcastack-dev-postgres}@db:5432/orcacompute"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orcacompute-dev-postgres}
+      DATABASE_URL: "postgresql://orcacompute_user:${POSTGRES_PASSWORD:-orcacompute-dev-postgres}@db:5432/orcacompute"
       REDIS_URL: redis://redis:6379
       SECRET_KEY: ${SECRET_KEY:-dev-secret}
       ALLOWED_HOSTS: localhost,127.0.0.1,backend-dev,proxy,login.localhost,cloud.localhost,developer.localhost,matrix.localhost
-      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-orcastack-dev-rabbitmq}@rabbitmq:5672/"
+      RABBITMQ_URL: "amqp://${RABBITMQ_USER:-admin}:${RABBITMQ_PASSWORD:-orcacompute-dev-rabbitmq}@rabbitmq:5672/"
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_ENABLED: "true"
       PROMETHEUS_PUSHGATEWAY_URL: http://pushgateway:9091
@@ -203,7 +203,7 @@ services:
   frontend-dev:
     profiles: [devtools]
     image: node:20-alpine
-    container_name: orcastack_webapp_dev
+    container_name: orcacompute_webapp_dev
     working_dir: /app
     volumes:
       - ./webapp:/app
@@ -226,7 +226,7 @@ services:
       - orcacompute-net
     restart: unless-stopped
 
-  home:
+  x-portal-webapp: &portal-webapp
     build:
       context: ./webapp
       dockerfile: Dockerfile
@@ -236,7 +236,6 @@ services:
         REACT_APP_WS_URL: ws://localhost:3000/ws
         REACT_APP_ENVIRONMENT: local-multi-dashboard
     image: orcacompute-portal-webapp:local
-    container_name: orcacompute_portal_home
     environment:
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
     healthcheck:
@@ -247,62 +246,26 @@ services:
     networks:
       - orcacompute-net
     restart: unless-stopped
+
+  home:
+    <<: *portal-webapp
+    container_name: orcacompute_portal_home
 
   login:
-    image: orcacompute-portal-webapp:local
+    <<: *portal-webapp
     container_name: orcacompute_portal_login
-    environment:
-      REACT_APP_PORTAL_PUBLIC_PORT: 3000
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-    networks:
-      - orcacompute-net
-    restart: unless-stopped
 
   cloud:
-    image: orcacompute-portal-webapp:local
+    <<: *portal-webapp
     container_name: orcacompute_portal_cloud
-    environment:
-      REACT_APP_PORTAL_PUBLIC_PORT: 3000
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-    networks:
-      - orcacompute-net
-    restart: unless-stopped
 
   developer:
-    image: orcacompute-portal-webapp:local
+    <<: *portal-webapp
     container_name: orcacompute_portal_developer
-    environment:
-      REACT_APP_PORTAL_PUBLIC_PORT: 3000
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-    networks:
-      - orcacompute-net
-    restart: unless-stopped
 
   matrix:
-    image: orcacompute-portal-webapp:local
+    <<: *portal-webapp
     container_name: orcacompute_portal_matrix
-    environment:
-      REACT_APP_PORTAL_PUBLIC_PORT: 3000
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1 >/dev/null 2>&1 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-    networks:
-      - orcacompute-net
-    restart: unless-stopped
 
   proxy:
     image: nginx:stable-alpine
@@ -327,7 +290,7 @@ services:
   pushgateway:
     profiles: [observability]
     image: prom/pushgateway:latest
-    container_name: orcastack_pushgateway
+    container_name: orcacompute_pushgateway
     ports:
       - "9091:9091"
     networks:
@@ -337,7 +300,7 @@ services:
   prometheus:
     profiles: [observability]
     image: prom/prometheus:latest
-    container_name: orcastack_prometheus
+    container_name: orcacompute_prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -351,7 +314,7 @@ services:
   grafana:
     profiles: [observability]
     image: grafana/grafana:latest
-    container_name: orcastack_grafana
+    container_name: orcacompute_grafana
     ports:
       - "3002:3000"
     volumes:
@@ -368,7 +331,7 @@ services:
   kafka-ui:
     profiles: [tools]
     image: provectuslabs/kafka-ui:latest
-    container_name: orcastack_kafka_ui
+    container_name: orcacompute_kafka_ui
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
@@ -382,7 +345,7 @@ services:
   elasticsearch:
     profiles: [logging]
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
-    container_name: orcastack_elasticsearch
+    container_name: orcacompute_elasticsearch
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms512m -Xmx512m
@@ -398,7 +361,7 @@ services:
   logstash:
     profiles: [logging]
     image: docker.elastic.co/logstash/logstash:8.8.0
-    container_name: orcastack_logstash
+    container_name: orcacompute_logstash
     volumes:
       - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline:ro
       - ./monitoring/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
@@ -409,7 +372,7 @@ services:
   kibana:
     profiles: [logging]
     image: docker.elastic.co/kibana/kibana:8.8.0
-    container_name: orcastack_kibana
+    container_name: orcacompute_kibana
     ports:
       - "5601:5601"
     environment:
@@ -421,7 +384,7 @@ services:
   jaeger:
     profiles: [observability]
     image: jaegertracing/all-in-one:latest
-    container_name: orcastack_jaeger
+    container_name: orcacompute_jaeger
     ports:
       - "16686:16686"
       - "14268:14268"
