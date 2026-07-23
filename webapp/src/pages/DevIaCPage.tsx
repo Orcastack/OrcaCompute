@@ -52,7 +52,7 @@ export default function DevIaCPage() {
           <Box sx={{ p: 2 }}>
             <Grid container spacing={2}>
               {TERRAFORM_MODULES.map(m => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={m.name}>
+                <Grid item xs={12} sm={6} md={4} key={m.name}>
                   <Paper sx={{ p: 2.5, bgcolor: T.surfaceSubtle, border: `1px solid ${T.border}`, borderRadius: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                       <Chip label={m.provider} size="small"
@@ -87,7 +87,7 @@ export default function DevIaCPage() {
           <Box sx={{ p: 2 }}>
             <Grid container spacing={2}>
               {BLUEPRINTS.map(bp => (
-                <Grid size={{ xs: 12, sm: 6 }} key={bp.name}>
+                <Grid item xs={12} sm={6} key={bp.name}>
                   <Paper sx={{ p: 2.5, bgcolor: T.surfaceSubtle, border: `1px solid ${T.border}`, borderRadius: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
                       <Typography variant="body1" sx={{ color: T.textPrimary, fontWeight: 700 }}>{bp.name}</Typography>

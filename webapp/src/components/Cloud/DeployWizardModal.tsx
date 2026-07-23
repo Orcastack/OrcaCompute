@@ -204,7 +204,7 @@ const DeployWizardModal: React.FC<DeployWizardModalProps> = ({ open, onClose, on
                 <Typography fontWeight={700} color="#fff" mb={2}>Select an Operating System</Typography>
                 <Grid container spacing={1.5}>
                   {images.map((img) => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={img.image_id}>
+                    <Grid item xs={12} sm={6} md={4} key={img.image_id}>
                       <Box
                         onClick={() => setSelectedImage(img)}
                         sx={{

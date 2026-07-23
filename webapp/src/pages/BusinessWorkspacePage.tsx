@@ -228,7 +228,7 @@ function OverviewModule({ org, orgId }: { org: OrgData | null; orgId: string }) 
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {metrics.map(m => (
-          <Grid key={m.label} size={{ xs: 6, md: 3 }}>
+          <Grid key={m.label} item xs={6} md={3}>
             <MetricCard {...m} />
           </Grid>
         ))}
@@ -244,7 +244,7 @@ function OverviewModule({ org, orgId }: { org: OrgData | null; orgId: string }) 
               { label: 'Country', value: org.country || '—' },
               { label: 'Domain', value: org.primary_domain || '—' },
             ].map(({ label, value }) => (
-              <Grid key={label} size={{ xs: 12, sm: 6 }}>
+              <Grid key={label} item xs={12} sm={6}>
                 <Typography variant="caption" sx={{ color: T.sub, display: 'block', mb: 0.5, fontWeight: 600 }}>{label}</Typography>
                 <Typography sx={{ color: T.text }}>{value}</Typography>
               </Grid>
@@ -315,7 +315,7 @@ function OrganizationModule({ org }: { org: OrgData | null }) {
       {/* Detail Section Grid — Context Panels */}
       <Grid container spacing={2}>
         {sections.map(section => (
-          <Grid key={section.group} size={{ xs: 12, md: 4 }}>
+          <Grid key={section.group} item xs={12} md={4}>
             <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, height: '100%' }}>
               <CardHeader title={<Typography sx={{ fontWeight: 700, fontSize: '.95rem', color: T.text }}>{section.group}</Typography>} />
               <CardContent sx={{ pt: 0 }}>
@@ -638,7 +638,7 @@ function BillingModule({ orgId }: { orgId: string }) {
                     { label: 'Storage', used: usage.storage_gb_used, limit: usage.storage_gb_limit },
                     { label: 'Email (30d)', used: usage.email_sent_30d, limit: usage.email_limit_30d },
                   ].map(m => (
-                    <Grid key={m.label} size={{ xs: 12, md: 6 }}>
+                    <Grid key={m.label} item xs={12} md={6}>
                       <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                           <Typography variant="body2" sx={{ color: T.text, fontWeight: 600 }}>{m.label}</Typography>
@@ -920,7 +920,7 @@ function EmailModule({ orgId }: { orgId: string }) {
               templates.length === 0 ? <Alert>No email templates yet. Create one to start sending branded emails.</Alert> :
               <Grid container spacing={2}>
                 {templates.map(t => (
-                  <Grid key={t.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Grid key={t.id} item xs={12} sm={6} md={4}>
                     <Paper
                       onClick={() => setSelected(selected?.id === t.id ? null : t)}
                       sx={{ p: 2.5, bgcolor: T.card2, border: `1px solid ${selected?.id === t.id ? T.brand : T.border}`, borderRadius: 2, cursor: 'pointer', '&:hover': { borderColor: T.brand } }}
@@ -1009,7 +1009,7 @@ function MarketingModule({ orgSlug, navigate }: { orgSlug: string; navigate: Ret
       {/* Teaser KPIs */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {teaser.map(m => (
-          <Grid key={m.label} size={{ xs: 6, md: 3 }}>
+          <Grid key={m.label} item xs={6} md={3}>
             <Paper sx={{ p: 2, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                 <Box sx={{ color: m.color }}>{m.icon}</Box>
@@ -1059,7 +1059,7 @@ function ComplianceModule({ orgId }: { orgId: string }) {
           {/* Security Posture Bar */}
           <Grid container spacing={2} sx={{ mb: 3 }}>
             {posture.map(p => (
-              <Grid key={p.label} size={{ xs: 12, sm: 6, md: 3 }}>
+              <Grid key={p.label} item xs={12} sm={6} md={3}>
                 <Paper sx={{
                   p: 2, bgcolor: T.card2, borderRadius: 2,
                   borderLeft: `4px solid ${p.enabled ? T.green : p.critical ? T.red : T.sub}`,
@@ -1094,7 +1094,7 @@ function ComplianceModule({ orgId }: { orgId: string }) {
                     { label: 'Audit Log Retention', value: `${policies.audit_retention_days} days` },
                     { label: 'Allowed IP Ranges', value: policies.ip_allowlist?.join(', ') || 'All IPs allowed' },
                   ].map(p => (
-                    <Grid key={p.label} size={{ xs: 12, sm: 6 }}>
+                    <Grid key={p.label} item xs={12} sm={6}>
                       <Typography variant="caption" sx={{ color: T.sub, fontWeight: 700, textTransform: 'uppercase', fontSize: '.7rem', letterSpacing: '.06em', display: 'block' }}>{p.label}</Typography>
                       <Typography sx={{ color: T.text, mt: 0.25, fontSize: '.9rem' }}>{p.value}</Typography>
                     </Grid>
@@ -1845,7 +1845,7 @@ function OrdersModule({ orgId }: { orgId: string }) {
           { label: 'Revenue (Completed)', value: `${orders[0]?.currency ?? 'USD'} ${totalRevenue.toFixed(2)}`, icon: <AttachMoneyIcon />,  color: T.purple },
           { label: 'Active Subs',       value: activeSubs,                                    icon: <RepeatIcon />,       color: T.blue },
         ].map(kpi => (
-          <Grid key={kpi.label} size={{ xs: 6, sm: 4, md: 'auto' }} sx={{ flex: 1 }}>
+          <Grid key={kpi.label} item xs={6} sm={4} md={'auto'} sx={{ flex: 1 }}>
             <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, height: '100%' }}>
               <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -2028,7 +2028,7 @@ function OrdersModule({ orgId }: { orgId: string }) {
           ) : (
             <Grid container spacing={2}>
               {subscriptions.map(s => (
-                <Grid key={s.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={s.id} item xs={12} sm={6} md={4}>
                   <Card sx={{
                     bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, height: '100%',
                     borderTop: `3px solid ${statusColor(s.status)}`,
@@ -2258,7 +2258,7 @@ function SettingsModule({ orgId }: { orgId: string }) {
                     { label: 'Date Format', value: 'YYYY-MM-DD' },
                     { label: 'Currency', value: 'USD' },
                   ].map(f => (
-                    <Grid key={f.label} size={{ xs: 12, sm: 6 }}>
+                    <Grid key={f.label} item xs={12} sm={6}>
                       <Typography variant="caption" sx={{ color: T.sub, fontWeight: 700, textTransform: 'uppercase', fontSize: '.7rem', letterSpacing: '.06em', display: 'block' }}>{f.label}</Typography>
                       <Typography sx={{ color: T.text, mt: 0.5 }}>{f.value}</Typography>
                     </Grid>
@@ -2300,23 +2300,23 @@ function SettingsModule({ orgId }: { orgId: string }) {
               />
               <CardContent>
                 <Grid container spacing={3}>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="caption" sx={{ color: T.sub, fontWeight: 700, textTransform: 'uppercase', fontSize: '.7rem', letterSpacing: '.06em', display: 'block', mb: 1.5 }}>Organization Logo</Typography>
                     <Box sx={{ width: 90, height: 90, border: `2px dashed ${T.border}`, borderRadius: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', '&:hover': { borderColor: T.brand } }}>
                       <Typography variant="caption" sx={{ color: T.sub, textAlign: 'center', fontSize: '.75rem' }}>Upload<br />Logo</Typography>
                     </Box>
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="caption" sx={{ color: T.sub, fontWeight: 700, textTransform: 'uppercase', fontSize: '.7rem', letterSpacing: '.06em', display: 'block', mb: 1.5 }}>Primary Brand Color</Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       <Box sx={{ width: 44, height: 44, borderRadius: 1.5, bgcolor: T.brand, border: `2px solid ${T.border}`, cursor: 'pointer', '&:hover': { opacity: 0.85 } }} />
                       <Typography sx={{ color: T.text, fontFamily: 'monospace', fontSize: '.9rem' }}>{T.brand}</Typography>
                     </Box>
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid item xs={12}>
                     <Divider sx={{ borderColor: T.border }} />
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="caption" sx={{ color: T.sub, fontWeight: 700, textTransform: 'uppercase', fontSize: '.7rem', letterSpacing: '.06em', display: 'block', mb: 1.5 }}>Favicon</Typography>
                     <Box sx={{ width: 48, height: 48, border: `2px dashed ${T.border}`, borderRadius: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                       <Typography variant="caption" sx={{ color: T.sub, fontSize: '.7rem' }}>Upload</Typography>
@@ -2381,7 +2381,7 @@ function MeetingsModule({ orgId }: { orgId: string }) {
     <Box>
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {stats.map(s => (
-          <Grid key={s.label} size={{ xs: 6, sm: 3 }}>
+          <Grid key={s.label} item xs={6} sm={3}>
             <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, textAlign: 'center', p: 2 }}>
               <Typography sx={{ color: s.color, fontWeight: 800, fontSize: '1.8rem' }}>{s.value}</Typography>
               <Typography sx={{ color: T.sub, fontSize: '.8rem', mt: 0.25 }}>{s.label}</Typography>
@@ -2505,7 +2505,7 @@ function EnterpriseDevWorkspaceModule({ org, orgSlug }: { org: OrgData; orgSlug:
 
       <Grid container spacing={2}>
         {workspaces.map(ws => (
-          <Grid size={{ xs: 12, md: 6 }} key={ws.workspace_id}>
+          <Grid item xs={12} md={6} key={ws.workspace_id}>
             <Card variant="outlined" sx={{ borderRadius: 2 }}>
               <CardContent sx={{ pb: '12px !important' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
@@ -2674,7 +2674,7 @@ function DeveloperHubModule({ orgId }: { orgId: string }) {
       {tab === 1 && (
         <Grid container spacing={2}>
           {sdks.map(sdk => (
-            <Grid key={sdk.name} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={sdk.name} item xs={12} sm={6} md={4}>
               <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
                   <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: sdk.color, flexShrink: 0 }} />
@@ -2712,7 +2712,7 @@ function DeveloperHubModule({ orgId }: { orgId: string }) {
           </Box>
           <Grid container spacing={1}>
             {webhookEvents.map(ev => (
-              <Grid key={ev} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid key={ev} item xs={12} sm={6} md={4}>
                 <Paper sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 1.5, px: 2, py: 1.25,
                              display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Box sx={{ width: 7, height: 7, borderRadius: '50%', bgcolor: T.green, flexShrink: 0 }} />

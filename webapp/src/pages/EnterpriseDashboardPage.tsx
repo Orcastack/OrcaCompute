@@ -277,7 +277,7 @@ function OverviewSection({ org, navigate, orgSlug }: { org: OrgData | null; navi
       {/* ── KPI Metrics ── */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {metrics.map(m => (
-          <Grid key={m.label} size={{ xs: 6, sm: 4, md: 2 }}>
+          <Grid key={m.label} item xs={6} sm={4} md={2}>
             <Card onClick={() => navigate(`/enterprise/${orgSlug}/${m.path}`)} sx={{
               bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, cursor: 'pointer',
               transition: 'all 0.2s', '&:hover': { borderColor: m.color, boxShadow: `0 0 12px ${m.color}22`, transform: 'translateY(-1px)' },
@@ -298,11 +298,11 @@ function OverviewSection({ org, navigate, orgSlug }: { org: OrgData | null; navi
       {/* ── Module Grid + Activity ── */}
       <Grid container spacing={3}>
         {/* Module Cards */}
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid item xs={12} md={8}>
           <Typography sx={{ color: T.text, fontWeight: 700, fontSize: '1rem', mb: 2, fontFamily: T.font }}>Enterprise Modules</Typography>
           <Grid container spacing={2}>
             {modules.map(mod => (
-              <Grid key={mod.label} size={{ xs: 12, sm: 6 }}>
+              <Grid key={mod.label} item xs={12} sm={6}>
                 <Paper onClick={() => navigate(mod.path.startsWith('/') ? mod.path : `/enterprise/${orgSlug}/${mod.path}`)} sx={{
                   p: 2, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2, cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: 2,
@@ -321,7 +321,7 @@ function OverviewSection({ org, navigate, orgSlug }: { org: OrgData | null; navi
         </Grid>
 
         {/* Recent Activity */}
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid item xs={12} md={4}>
           <Typography sx={{ color: T.text, fontWeight: 700, fontSize: '1rem', mb: 2, fontFamily: T.font }}>Recent Activity</Typography>
           <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2 }}>
             <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
@@ -725,7 +725,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
           { label: 'Groups',   value: totalGroups,                        color: T.purple, icon: <FolderOpenIcon /> },
           { label: 'Projects', value: totalProjects,                      color: T.green,  icon: <AccountTreeIcon /> },
         ].map(m => (
-          <Grid key={m.label} size={{ xs: 6, md: 3 }}>
+          <Grid key={m.label} item xs={6} md={3}>
             <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2 }}>
               <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                 <Box sx={{ bgcolor: `${m.color}15`, borderRadius: 1.5, p: 0.75, color: m.color, display: 'inline-flex', mb: 1.5 }}>{m.icon}</Box>
@@ -749,7 +749,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
               const color   = isOwner ? T.brand : T.blue;
               const initials = (m.name ?? m.email ?? '?').split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase();
               return (
-                <Grid key={m.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={m.id} item xs={12} sm={6} md={4}>
                   <Paper sx={{ p: 2.5, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2,
                     borderLeft: `4px solid ${color}`, display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Avatar sx={{ width: 48, height: 48, bgcolor: `${color}22`, color, fontWeight: 800,
@@ -787,7 +787,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
         <SectionCard title="Teams at a Glance" icon={<GroupsIcon />} action={<Button startIcon={<ArrowForwardIcon />} size="small" sx={{ color: T.brand }} onClick={() => setView('teams')}>View All</Button>}>
           <Grid container spacing={2}>
             {teams.map(team => (
-              <Grid key={team.id} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid key={team.id} item xs={12} sm={6} md={4}>
                 <Paper onClick={() => { setView('teams'); setSelectedTeamId(team.id); }}
                   sx={{ p: 2, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2, cursor: 'pointer',
                     '&:hover': { borderColor: T.brand, bgcolor: `${T.brand}08` }, transition: 'all .2s' }}>
@@ -850,7 +850,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
           {depts.map(dept => {
             const subCount = depts.filter(d => d.parent === dept.id).length;
             return (
-              <Grid key={dept.id} size={{ xs: 12, sm: 6, lg: 4 }}>
+              <Grid key={dept.id} item xs={12} sm={6} lg={4}>
                 <Card onClick={() => navigate(`/enterprise/${orgSlug}/organization/departments/${dept.id}/overview`)}
                   sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, height: '100%',
                   cursor: 'pointer',
@@ -957,7 +957,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
             }>
             <Grid container spacing={2}>
               {selectedTeam.groups.map(g => (
-                <Grid key={g.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={g.id} item xs={12} sm={6} md={4}>
                   <Paper sx={{ p: 2.5, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2, transition: 'all .2s', '&:hover': { borderColor: T.purple, boxShadow: `0 0 10px ${T.purple}18` } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
                       <Box sx={{ bgcolor: `${T.purple}18`, borderRadius: 1.5, p: 0.75, color: T.purple, display: 'inline-flex' }}><FolderOpenIcon sx={{ fontSize: '1.2rem' }} /></Box>
@@ -973,7 +973,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
                 </Grid>
               ))}
               {selectedTeam.groups.length === 0 && (
-                <Grid size={{ xs: 12 }}>
+                <Grid item xs={12}>
                   <Box sx={{ textAlign: 'center', py: 4, color: T.sub }}>
                     <FolderOpenIcon sx={{ fontSize: '2.5rem', opacity: 0.3, mb: 1 }} />
                     <Typography variant="body2">No groups yet. Create the first one.</Typography>
@@ -1012,7 +1012,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
           </Box>
           <Grid container spacing={2}>
             {teams.map(team => (
-              <Grid key={team.id} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid key={team.id} item xs={12} sm={6} md={4}>
                 <Card onClick={() => setSelectedTeamId(team.id)} sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, cursor: 'pointer', transition: 'all .2s', '&:hover': { borderColor: typeColor[team.type], boxShadow: `0 0 12px ${typeColor[team.type]}18`, transform: 'translateY(-1px)' } }}>
                   <CardContent sx={{ p: 2.5 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
@@ -1063,7 +1063,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
           </Box>
           <Grid container spacing={2}>
             {team.groups.map(g => (
-              <Grid key={g.id} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid key={g.id} item xs={12} sm={6} md={4}>
                 <Paper sx={{ p: 2, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2, display: 'flex', gap: 1.5, alignItems: 'flex-start', '&:hover': { borderColor: T.purple }, transition: 'border .2s' }}>
                   <Box sx={{ bgcolor: `${T.purple}18`, borderRadius: 1.5, p: 0.75, color: T.purple, display: 'inline-flex', flexShrink: 0 }}><FolderOpenIcon sx={{ fontSize: '1.1rem' }} /></Box>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -1177,18 +1177,18 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
           </Button>
         }>
         <Grid container spacing={3}>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid item xs={12} sm={6}>
             <TextField label="Organization Name" value={editOrgName}
               onChange={e => setEditOrgName(e.target.value)}
               fullWidth size="small" InputLabelProps={{ shrink: true }} />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid item xs={12} sm={6}>
             <TextField label="Primary Domain" value={editOrgDomain}
               onChange={e => setEditOrgDomain(e.target.value)}
               fullWidth size="small" InputLabelProps={{ shrink: true }}
               placeholder="e.g. acme.com" />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid item xs={12} sm={6}>
             <FormControl fullWidth size="small">
               <InputLabel shrink>Industry</InputLabel>
               <Select value={editOrgIndustry} label="Industry"
@@ -1199,7 +1199,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
               </Select>
             </FormControl>
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid item xs={12} sm={6}>
             <FormControl fullWidth size="small">
               <InputLabel shrink>Country / Region</InputLabel>
               <Select value={editOrgCountry} label="Country / Region"
@@ -1210,7 +1210,7 @@ function OrganizationSection({ orgId, org }: { orgId: string; org: OrgData | nul
               </Select>
             </FormControl>
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid item xs={12} sm={6}>
             <TextField label="Contact Email" value={editOrgEmail}
               onChange={e => setEditOrgEmail(e.target.value)}
               fullWidth size="small" InputLabelProps={{ shrink: true }}
@@ -1554,16 +1554,16 @@ function MarketingSection() {
       {tab === 0 && (
         <>
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Workspaces" value={workspaces.length} color={T.brand} /></Grid>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Campaigns" value={campaigns.length} color={T.blue} /></Grid>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Open Rate" value={`${openRate}%`} color={T.green} /></Grid>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Click Rate" value={`${clickRate}%`} color={T.purple} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Workspaces" value={workspaces.length} color={T.brand} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Campaigns" value={campaigns.length} color={T.blue} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Open Rate" value={`${openRate}%`} color={T.green} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Click Rate" value={`${clickRate}%`} color={T.purple} /></Grid>
           </Grid>
 
           <SectionCard title="Marketing Workspaces" icon={<CampaignIcon />} action={<Button startIcon={<AddIcon />} variant="contained" size="small" sx={{ bgcolor: T.brand }} onClick={() => setWorkspaceOpen(true)}>New Workspace</Button>}>
             <Grid container spacing={2}>
               {workspaces.map(ws => (
-                <Grid key={ws.id} size={{ xs: 12, md: 6 }}>
+                <Grid key={ws.id} item xs={12} md={6}>
                   <Paper sx={{ p: 2.5, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2 }}>
                     <Typography sx={{ color: T.text, fontWeight: 700, fontFamily: T.font, mb: 2 }}>{ws.name}</Typography>
                     <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
@@ -1672,7 +1672,7 @@ function EmailSection() {
         <SectionCard title="Email Sending Domains" icon={<DnsIcon />} action={<Button startIcon={<AddIcon />} variant="contained" size="small" sx={{ bgcolor: T.brand }}>Add Domain</Button>}>
           <Grid container spacing={2}>
             {mockDomains.map(d => (
-              <Grid key={d.id} size={{ xs: 12, md: 6 }}>
+              <Grid key={d.id} item xs={12} md={6}>
                 <Paper sx={{ p: 2.5, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}><DomainIcon sx={{ color: T.brand }} /><Typography sx={{ color: T.text, fontWeight: 700 }}>{d.domain}</Typography></Box>
@@ -1708,7 +1708,7 @@ function EmailSection() {
         <SectionCard title="Email Templates" icon={<MailOutlineIcon />} action={<Button startIcon={<AddIcon />} variant="contained" size="small" sx={{ bgcolor: T.brand }}>New Template</Button>}>
           <Grid container spacing={2}>
             {mockTemplates.map(t => (
-              <Grid key={t.id} size={{ xs: 12, md: 4 }}>
+              <Grid key={t.id} item xs={12} md={4}>
                 <Paper sx={{ p: 2.5, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2, height: '100%' }}>
                   <Typography sx={{ color: T.text, fontWeight: 700, mb: 0.5 }}>{t.name}</Typography>
                   <Typography variant="caption" sx={{ color: T.sub, display: 'block', mb: 1.5, fontSize: '.8rem' }}>{t.subject}</Typography>
@@ -1724,10 +1724,10 @@ function EmailSection() {
       {tab === 3 && (
         <SectionCard title="Email Analytics (Last 30 Days)" icon={<TrendingUpIcon />}>
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Sent" value="26.8K" color={T.brand} /></Grid>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Delivered" value="26.5K" color={T.green} /></Grid>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Open Rate" value="34.2%" color={T.blue} /></Grid>
-            <Grid size={{ xs: 6, md: 3 }}><MetricCard label="Click Rate" value="7.1%" color={T.purple} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Sent" value="26.8K" color={T.brand} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Delivered" value="26.5K" color={T.green} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Open Rate" value="34.2%" color={T.blue} /></Grid>
+            <Grid item xs={6} md={3}><MetricCard label="Click Rate" value="7.1%" color={T.purple} /></Grid>
           </Grid>
           {[['Bounce Rate', '1.2%', T.yellow], ['Unsubscribe Rate', '0.4%', T.red], ['Spam Rate', '0.02%', T.sub]].map(([label, val, color]) => (
             <Box key={String(label)} sx={{ display: 'flex', justifyContent: 'space-between', py: 1, borderBottom: `1px solid ${T.border}`, '&:last-child': { borderBottom: 'none' } }}>
@@ -1792,13 +1792,13 @@ function BrandingSection() {
     <Box>
       <SectionCard title="Brand Profile" icon={<PaletteIcon />} action={<Button startIcon={<EditIcon />} variant="contained" size="small" sx={{ bgcolor: T.brand }}>Edit Profile</Button>}>
         <Grid container spacing={3}>
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid item xs={12} md={6}>
             <Typography variant="body2" sx={{ color: T.sub, mb: 2, fontWeight: 600 }}>Logo</Typography>
             <Paper sx={{ p: 3, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2, textAlign: 'center' }}>
               <img src={branding.logo_url} alt="Brand Logo" style={{ maxWidth: '100%', maxHeight: 100, borderRadius: 4 }} />
             </Paper>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid item xs={12} md={6}>
             <Typography variant="body2" sx={{ color: T.sub, mb: 2, fontWeight: 600 }}>Font Family</Typography>
             <Paper sx={{ p: 2, bgcolor: T.card2, border: `1px solid ${T.border}`, borderRadius: 2 }}>
               <Typography sx={{ color: T.text, fontFamily: branding.font_family }}>{branding.font_family}</Typography>
@@ -1810,7 +1810,7 @@ function BrandingSection() {
       <SectionCard title="Color Palette" icon={<ColorLensIcon />}>
         <Grid container spacing={2}>
           {[['Primary', branding.primary_color], ['Secondary', branding.secondary_color], ['Accent', branding.accent_color]].map(([label, color]) => (
-            <Grid key={label} size={{ xs: 12, sm: 4 }}>
+            <Grid key={label} item xs={12} sm={4}>
               <Box sx={{ textAlign: 'center' }}>
                 <Box sx={{ width: '100%', height: 80, bgcolor: color, borderRadius: 2, mb: 1.5, border: `2px solid ${T.border}` }} />
                 <Typography variant="body2" sx={{ color: T.text, fontWeight: 600 }}>{label}</Typography>
@@ -1843,9 +1843,9 @@ function ComplianceSection() {
     <Box>
       <SectionCard title="Compliance & Audit" icon={<GppGoodIcon />}>
         <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid size={{ xs: 12, md: 4 }}><MetricCard label="Compliance Score" value="98%" color={T.green} /></Grid>
-          <Grid size={{ xs: 12, md: 4 }}><MetricCard label="Active Policies" value="12" color={T.blue} /></Grid>
-          <Grid size={{ xs: 12, md: 4 }}><MetricCard label="Audit Events" value={auditLogs.length.toString()} color={T.purple} /></Grid>
+          <Grid item xs={12} md={4}><MetricCard label="Compliance Score" value="98%" color={T.green} /></Grid>
+          <Grid item xs={12} md={4}><MetricCard label="Active Policies" value="12" color={T.blue} /></Grid>
+          <Grid item xs={12} md={4}><MetricCard label="Audit Events" value={auditLogs.length.toString()} color={T.purple} /></Grid>
         </Grid>
       </SectionCard>
 

@@ -94,7 +94,7 @@ export default function AutoScalingPage() {
           { label: 'Desired Total', value: ASGS.reduce((a, g) => a + g.desired, 0), sub: 'target capacity' },
           { label: 'Scaling Policies', value: POLICIES.filter(p => p.status === 'enabled').length, sub: `${POLICIES.length} total` },
         ].map(c => (
-          <Grid size={{ xs: 6, sm: 3 }} key={c.label}>
+          <Grid item xs={6} sm={3} key={c.label}>
             <SummaryCard {...c} />
           </Grid>
         ))}
@@ -206,9 +206,9 @@ export default function AutoScalingPage() {
           <TextField label="Group Name" fullWidth size="small" />
           <TextField label="Launch Template" fullWidth size="small" />
           <Grid container spacing={2}>
-            <Grid size={{ xs: 4 }}><TextField label="Min Size" type="number" fullWidth size="small" defaultValue={1} /></Grid>
-            <Grid size={{ xs: 4 }}><TextField label="Desired" type="number" fullWidth size="small" defaultValue={2} /></Grid>
-            <Grid size={{ xs: 4 }}><TextField label="Max Size" type="number" fullWidth size="small" defaultValue={10} /></Grid>
+            <Grid item xs={4}><TextField label="Min Size" type="number" fullWidth size="small" defaultValue={1} /></Grid>
+            <Grid item xs={4}><TextField label="Desired" type="number" fullWidth size="small" defaultValue={2} /></Grid>
+            <Grid item xs={4}><TextField label="Max Size" type="number" fullWidth size="small" defaultValue={10} /></Grid>
           </Grid>
           <FormControl size="small" fullWidth>
             <InputLabel>Scaling Policy Type</InputLabel>

@@ -172,7 +172,7 @@ function MarketingOverview({ orgId, orgSlug, navigate }: { orgId: string; orgSlu
           { label: 'Click Rate',         value: fmtPct(s?.click_rate ?? 0),         color: T.blue },
           { label: 'Bounce Rate',        value: fmtPct(s?.bounce_rate ?? 0),        color: (s?.bounce_rate ?? 0) > 5 ? T.red : T.sub },
         ].map(m => (
-          <Grid key={m.label} size={{ xs: 6, sm: 4, md: 3 }}>
+          <Grid key={m.label} item xs={6} sm={4} md={3}>
             <MetricCard label={m.label} value={m.value} color={m.color} />
           </Grid>
         ))}
@@ -180,7 +180,7 @@ function MarketingOverview({ orgId, orgSlug, navigate }: { orgId: string; orgSlu
 
       <Grid container spacing={2.5} sx={{ mb: 3 }}>
         {/* Recent campaigns */}
-        <Grid size={{ xs: 12, lg: 8 }}>
+        <Grid item xs={12} lg={8}>
           <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, height: '100%' }}>
             <Box sx={{ px: 2.5, pt: 2.5, pb: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography sx={{ fontWeight: 700, color: T.text }}>Recent Campaigns</Typography>
@@ -222,7 +222,7 @@ function MarketingOverview({ orgId, orgSlug, navigate }: { orgId: string; orgSlu
         </Grid>
 
         {/* Channel health */}
-        <Grid size={{ xs: 12, lg: 4 }}>
+        <Grid item xs={12} lg={4}>
           <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2.5, height: '100%' }}>
             <Typography sx={{ fontWeight: 700, color: T.text, mb: 2 }}>Channel Health</Typography>
             {(data?.channel_health ?? []).length === 0 ? (
@@ -500,7 +500,7 @@ function AudienceView({ orgId }: { orgId: string }) {
         ) : (
           <Grid container spacing={2}>
             {segments.map(seg => (
-              <Grid key={seg.id} size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid key={seg.id} item xs={12} sm={6} md={4}>
                 <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1 }}>
                     <Typography sx={{ color: T.text, fontWeight: 700 }}>{seg.name}</Typography>
@@ -607,7 +607,7 @@ function AutomationView({ orgId }: { orgId: string }) {
         ) : (
           <Grid container spacing={2}>
             {automations.map(a => (
-              <Grid key={a.resource_id} size={{ xs: 12, md: 6 }}>
+              <Grid key={a.resource_id} item xs={12} md={6}>
                 <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                     <Box sx={{ width: 36, height: 36, borderRadius: '50%', bgcolor: `${T.purple}22`,
@@ -699,7 +699,7 @@ function ChannelsView({ orgId }: { orgId: string }) {
               const status = getChannelStatus(cfg.type);
               const configured = channels.find(c => c.channel_type === cfg.type);
               return (
-                <Grid key={cfg.type} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={cfg.type} item xs={12} sm={6} md={4}>
                   <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2.5,
                     transition: 'border-color .2s', '&:hover': { borderColor: T.brand } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
@@ -890,7 +890,7 @@ function BillingView() {
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {tiers.map(t => (
-          <Grid key={t.label} size={{ xs: 12, sm: 4 }}>
+          <Grid key={t.label} item xs={12} sm={4}>
             <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2.5 }}>
               <Typography variant="caption" sx={{ color: T.sub }}>{t.label}</Typography>
               <Typography variant="h6" sx={{ color: T.text, fontWeight: 700, mt: 0.5 }}>

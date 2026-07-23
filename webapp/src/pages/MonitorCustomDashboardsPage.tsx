@@ -62,7 +62,7 @@ export default function MonitorCustomDashboardsPage() {
       <Typography variant="subtitle1" sx={{ color: T.textPrimary, fontWeight: 700, mb: 1.5 }}>Prebuilt Dashboards</Typography>
       <Grid container spacing={2} sx={{ mb: 4 }}>
         {PREBUILT.map(d => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={d.name}>
+          <Grid item xs={12} sm={6} md={4} key={d.name}>
             <Paper sx={{ p: 2.5, borderRadius: 2, border: `1px solid ${T.border}`, bgcolor: T.surface,
               cursor: 'pointer', transition: 'border-color 0.15s', '&:hover': { borderColor: T.brandPrimary } }}>
               <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1.5 }}>
@@ -87,7 +87,7 @@ export default function MonitorCustomDashboardsPage() {
       <Typography variant="subtitle1" sx={{ color: T.textPrimary, fontWeight: 700, mb: 1.5 }}>Custom Dashboards</Typography>
       <Grid container spacing={2}>
         {CUSTOM.map(d => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={d.id}>
+          <Grid item xs={12} sm={6} md={4} key={d.id}>
             <Paper sx={{ p: 2.5, borderRadius: 2, border: `1px solid ${T.border}`, bgcolor: T.surface,
               cursor: 'pointer', transition: 'border-color 0.15s', '&:hover': { borderColor: T.brandPrimary } }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>

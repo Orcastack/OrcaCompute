@@ -73,7 +73,7 @@ export default function DNSPage() {
           { label: 'Private Zones', value: ZONES.filter(z => z.type === 'private').length },
           { label: 'Total Records', value: ZONES.reduce((a, z) => a + z.records, 0) },
         ].map(c => (
-          <Grid size={{ xs: 6, sm: 3 }} key={c.label}>
+          <Grid item xs={6} sm={3} key={c.label}>
             <Paper sx={{ p: 2, borderRadius: 2, border: `1px solid ${T.border}`, bgcolor: T.surface }}>
               <Typography variant="caption" sx={{ color: T.textSecondary, textTransform: 'uppercase', letterSpacing: '.06em' }}>{c.label}</Typography>
               <Typography variant="h4" sx={{ color: T.textPrimary, fontWeight: 700, mt: 0.5 }}>{c.value}</Typography>
@@ -229,7 +229,7 @@ export default function DNSPage() {
         <DialogTitle sx={{ color: T.textPrimary }}>Add DNS Record</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '12px !important' }}>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 6 }}>
+            <Grid item xs={6}>
               <FormControl size="small" fullWidth>
                 <InputLabel>Type</InputLabel>
                 <Select label="Type" defaultValue="A">
@@ -237,7 +237,7 @@ export default function DNSPage() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 6 }}>
+            <Grid item xs={6}>
               <TextField label="Name" fullWidth size="small" placeholder="@ or subdomain" />
             </Grid>
           </Grid>

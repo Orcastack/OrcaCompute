@@ -208,7 +208,7 @@ function OverviewTab({ stats, loading }: { stats: AccountStats | null; loading: 
           { label: 'Avg Click Rate',   value: `${st.avg_click_rate}%`,            color: dashboardSemanticColors.warning },
           { label: 'Subscribers',      value: st.total_contacts.toLocaleString(), color: dashboardSemanticColors.purple },
         ].map(s => (
-          <Grid size={{  }} key={s.label}>
+          <Grid item key={s.label}>
             <StatCard {...s} />
           </Grid>
         ))}
@@ -223,7 +223,7 @@ function OverviewTab({ stats, loading }: { stats: AccountStats | null; loading: 
           { label: 'Unsubscribes',   value: st.total_unsubscribes },
           { label: 'Avg Bounce',     value: `${st.avg_bounce_rate}%` },
         ].map(s => (
-          <Grid size={{  }} key={s.label}>
+          <Grid item key={s.label}>
             <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}`, borderRadius: 2 }}>
               <CardContent sx={{ py: 2 }}>
                 <Typography sx={{ color: t.muted, fontSize: 11, textTransform: 'uppercase', letterSpacing: 1 }}>
@@ -398,7 +398,7 @@ function CampaignsTab() {
                 { label: 'Lists',   value: selected.contact_lists?.map(l => l.name).join(', ') || '—' },
                 { label: 'Sent',    value: selected.sent_at ? new Date(selected.sent_at).toLocaleString() : '—' },
               ].map(r => (
-                <Grid size={{  }} key={r.label}>
+                <Grid item key={r.label}>
                   <Typography variant="caption" sx={{ color: t.muted }}>{r.label}</Typography>
                   <Typography sx={{ color: t.text, fontSize: 14 }}>{r.value}</Typography>
                 </Grid>
@@ -416,7 +416,7 @@ function CampaignsTab() {
                     { k: 'Clicks',   v: `${selected.analytics.click_rate}%`, c: dashboardSemanticColors.warning },
                     { k: 'Bounced',  v: `${selected.analytics.bounce_rate}%`, c: dashboardSemanticColors.danger },
                   ].map(s => (
-                    <Grid size={{  }} key={s.k}>
+                    <Grid item key={s.k}>
                       <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: t.panelBg, borderRadius: 1 }}>
                         <Typography variant="h6" fontWeight={700} sx={{ color: s.c }}>{s.v}</Typography>
                         <Typography variant="caption" sx={{ color: t.muted }}>{s.k}</Typography>
@@ -512,18 +512,18 @@ function CreateCampaignDialog({ open, onClose, onCreated }:
       <DialogContent>
         {err && <Alert severity="error" sx={{ mb: 2 }}>{err}</Alert>}
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
-          <Grid size={{ xs: 12 }}><TextField fullWidth label="Campaign Name *" value={form.name || ''} onChange={set('name')} /></Grid>
-          <Grid size={{ xs: 6 }}><TextField fullWidth label="From Name *" value={form.from_name || ''} onChange={set('from_name')} /></Grid>
-          <Grid size={{ xs: 6 }}><TextField fullWidth label="From Email *" value={form.from_email || ''} onChange={set('from_email')} /></Grid>
-          <Grid size={{ xs: 12 }}><TextField fullWidth label="Subject *" value={form.subject || ''} onChange={set('subject')} /></Grid>
-          <Grid size={{ xs: 12 }}><TextField fullWidth label="Preview Text" value={form.preview_text || ''} onChange={set('preview_text')} /></Grid>
-          <Grid size={{ xs: 12 }}>
+          <Grid item xs={12}><TextField fullWidth label="Campaign Name *" value={form.name || ''} onChange={set('name')} /></Grid>
+          <Grid item xs={6}><TextField fullWidth label="From Name *" value={form.from_name || ''} onChange={set('from_name')} /></Grid>
+          <Grid item xs={6}><TextField fullWidth label="From Email *" value={form.from_email || ''} onChange={set('from_email')} /></Grid>
+          <Grid item xs={12}><TextField fullWidth label="Subject *" value={form.subject || ''} onChange={set('subject')} /></Grid>
+          <Grid item xs={12}><TextField fullWidth label="Preview Text" value={form.preview_text || ''} onChange={set('preview_text')} /></Grid>
+          <Grid item xs={12}>
             <TextField fullWidth select label="Contact Lists" value={selectedLists} SelectProps={{ multiple: true }}
               onChange={e => setSelectedLists(typeof e.target.value === 'string' ? [e.target.value] : e.target.value as string[])}>
               {lists.map(l => <MenuItem key={l.resource_id} value={l.resource_id}>{l.name} ({l.subscriber_count})</MenuItem>)}
             </TextField>
           </Grid>
-          <Grid size={{ xs: 12 }}>
+          <Grid item xs={12}>
             <TextField fullWidth multiline minRows={5} label="HTML Body"
               value={form.html_body || ''} onChange={set('html_body')}
               placeholder="<p>Hello {{ first_name }},</p>" />
@@ -702,11 +702,11 @@ function ContactsTab() {
         <DialogTitle>Add Contact</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            <Grid size={{ xs: 12 }}><TextField fullWidth label="Email *" value={newContact.email}
+            <Grid item xs={12}><TextField fullWidth label="Email *" value={newContact.email}
               onChange={e => setNewContact(p => ({ ...p, email: e.target.value }))} /></Grid>
-            <Grid size={{ xs: 6 }}><TextField fullWidth label="First Name" value={newContact.first_name}
+            <Grid item xs={6}><TextField fullWidth label="First Name" value={newContact.first_name}
               onChange={e => setNewContact(p => ({ ...p, first_name: e.target.value }))} /></Grid>
-            <Grid size={{ xs: 6 }}><TextField fullWidth label="Last Name" value={newContact.last_name}
+            <Grid item xs={6}><TextField fullWidth label="Last Name" value={newContact.last_name}
               onChange={e => setNewContact(p => ({ ...p, last_name: e.target.value }))} /></Grid>
           </Grid>
         </DialogContent>
@@ -787,7 +787,7 @@ function TemplatesTab() {
 
       <Grid container spacing={2}>
         {filtered.map(tpl => (
-          <Grid size={{  }} key={tpl.resource_id}>
+          <Grid item key={tpl.resource_id}>
             <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}`, borderRadius: 2 }}>
               <Box sx={{ height: 120, bgcolor: t.headerRowBg,
                          display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -831,18 +831,18 @@ function TemplatesTab() {
         <DialogTitle>{editing?.resource_id ? 'Edit Template' : 'New Template'}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
-            <Grid size={{ xs: 8 }}><TextField fullWidth label="Name" value={editing?.name || ''}
+            <Grid item xs={8}><TextField fullWidth label="Name" value={editing?.name || ''}
               onChange={e => setEditing(p => ({ ...p, name: e.target.value }))} /></Grid>
-            <Grid size={{ xs: 4 }}><TextField fullWidth select label="Category" value={editing?.category || 'newsletter'}
+            <Grid item xs={4}><TextField fullWidth select label="Category" value={editing?.category || 'newsletter'}
               onChange={e => setEditing(p => ({ ...p, category: e.target.value as any }))}>
               {['newsletter','promotional','transactional','welcome','announcement','custom']
                 .map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
             </TextField></Grid>
-            <Grid size={{ xs: 12 }}><TextField fullWidth label="Subject" value={editing?.subject || ''}
+            <Grid item xs={12}><TextField fullWidth label="Subject" value={editing?.subject || ''}
               onChange={e => setEditing(p => ({ ...p, subject: e.target.value }))} /></Grid>
-            <Grid size={{ xs: 12 }}><TextField fullWidth label="Preview Text" value={editing?.preview_text || ''}
+            <Grid item xs={12}><TextField fullWidth label="Preview Text" value={editing?.preview_text || ''}
               onChange={e => setEditing(p => ({ ...p, preview_text: e.target.value }))} /></Grid>
-            <Grid size={{ xs: 12 }}><TextField fullWidth multiline minRows={8} label="HTML Body"
+            <Grid item xs={12}><TextField fullWidth multiline minRows={8} label="HTML Body"
               value={editing?.html_body || ''}
               onChange={e => setEditing(p => ({ ...p, html_body: e.target.value }))} /></Grid>
           </Grid>
@@ -889,7 +889,7 @@ function AutomationsTab() {
       ) : (
         <Grid container spacing={2}>
           {automations.map(a => (
-            <Grid size={{  }} key={a.resource_id}>
+            <Grid item key={a.resource_id}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}`, borderRadius: 2 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -1017,7 +1017,7 @@ function EmailPlanTab() {
           const isCurrentPlan = tier === currentPlan;
           const color = EMAIL_PLAN_COLOR[tier];
           return (
-            <Grid key={tier} size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid key={tier} item xs={12} sm={6} md={3}>
               <Card sx={{
                 bgcolor: t.cardBg,
                 border: `2px solid ${isCurrentPlan ? color : t.border}`,

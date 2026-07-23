@@ -99,7 +99,7 @@ const DocsSupportPanel: React.FC = () => {
 
       <Grid container sx={{ p: 2.5 }} spacing={2}>
         {DOC_LINKS.map((link) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={link.title}>
+          <Grid item xs={12} sm={6} md={4} key={link.title}>
             <Box
               onClick={() => navigate(link.path)}
               sx={{

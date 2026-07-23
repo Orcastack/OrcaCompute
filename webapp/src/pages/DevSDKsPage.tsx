@@ -100,7 +100,7 @@ export default function DevSDKsPage() {
           <Box sx={{ p: 2 }}>
             <Grid container spacing={2}>
               {SDKS.map(sdk => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={sdk.lang}>
+                <Grid item xs={12} sm={6} md={4} key={sdk.lang}>
                   <Paper sx={{ p: 2.5, bgcolor: T.surfaceSubtle, border: `1px solid ${T.border}`, borderRadius: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
                       <Typography variant="body1" sx={{ color: sdk.color, fontWeight: 700, fontSize: '1.05rem' }}>{sdk.lang}</Typography>

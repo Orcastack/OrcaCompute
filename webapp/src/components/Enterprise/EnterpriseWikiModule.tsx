@@ -379,7 +379,7 @@ const EnterpriseWikiModule: React.FC<Props> = ({ orgId, orgName = 'Wiki' }) => {
             ) : (
               <Grid container spacing={2}>
                 {categories.map(c => (
-                  <Grid key={c.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Grid key={c.id} item xs={12} sm={6} md={4}>
                     <Card sx={{ bgcolor: 'background.paper', border: `1px solid ${borderColor}`, borderRadius: 2 }}>
                       <CardContent>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
@@ -434,7 +434,7 @@ const EnterpriseWikiModule: React.FC<Props> = ({ orgId, orgName = 'Wiki' }) => {
               <Box sx={{ flex: 1, overflowY: 'auto' }}>
                 <Grid container spacing={2}>
                   {filteredPages.map(p => (
-                    <Grid key={p.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                    <Grid key={p.id} item xs={12} sm={6} md={4} lg={3}>
                       <Card
                         onClick={() => openPage(p)}
                         sx={{

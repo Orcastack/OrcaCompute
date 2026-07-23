@@ -267,7 +267,7 @@ function RegionCard({ r }: { r: RegionHealth }) {
           { label: 'Incidents', value: r.incidents, warn: r.incidents > 0 },
           { label: 'Zones', value: `${r.zones_healthy}/${r.zones}` },
         ].map(({ label, value, warn }: any) => (
-          <Grid size={{ xs: 4 }} key={label}>
+          <Grid item xs={4} key={label}>
             <Box sx={{ bgcolor: SURFACE2, border: `1px solid ${BORDER}`, borderRadius: 1, p: 1, textAlign: 'center' }}>
               <Typography sx={{ fontFamily: FONT, fontSize: '0.6rem', color: MUTED, mb: 0.3, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</Typography>
               <Typography sx={{ fontFamily: FONT, fontWeight: 800, fontSize: '0.95rem', color: warn ? DANGER : TEXT, lineHeight: 1 }}>
@@ -523,7 +523,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
               { label: 'Monthly Spend',     value: stats?.monthly_spend ? `$${(stats.monthly_spend / 1000).toFixed(1)}k` : '$14.2k', sub: 'projected $17.1k', icon: <AttachMoneyIcon />, color: WARNING, path: '/dashboard/billing', trend: { value: 8.4, label: 'MoM' } },
               { label: 'Team Members',      value: stats?.team_count || 24, sub: '6 active now',  icon: <PeopleIcon />,        color: '#06B6D4', path: '/dashboard/teams' },
             ].map(item => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 2 }} key={item.label}>
+              <Grid item xs={12} sm={6} md={4} lg={4} xl={2} key={item.label}>
                 <KpiCard
                   label={item.label}
                   value={item.value}
@@ -546,7 +546,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
             />
             <Grid container spacing={1.5}>
               {liveMetrics.map(m => (
-                <Grid size={{ xs: 6, sm: 4, md: 3, lg: 3 }} key={m.name}>
+                <Grid item xs={6} sm={4} md={3} lg={3} key={m.name}>
                   <LiveMetricCard m={m} />
                 </Grid>
               ))}
@@ -557,7 +557,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
           <Grid container spacing={3} sx={{ mb: 4 }}>
 
             {/* Region health */}
-            <Grid size={{ xs: 12, lg: 8 }}>
+            <Grid item xs={12} lg={8}>
               <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 1, p: 3, height: '100%' }}>
                 <SectionTitle
                   icon={<CloudCircleIcon fontSize="small" />}
@@ -566,7 +566,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
                 />
                 <Grid container spacing={2}>
                   {regions.map(r => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={r.region}>
+                    <Grid item xs={12} sm={6} md={4} key={r.region}>
                       <RegionCard r={r} />
                     </Grid>
                   ))}
@@ -575,7 +575,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
             </Grid>
 
             {/* Active workloads */}
-            <Grid size={{ xs: 12, lg: 4 }}>
+            <Grid item xs={12} lg={4}>
               <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 1, p: 3, height: '100%' }}>
                 <SectionTitle
                   icon={<ViewInArIcon fontSize="small" />}
@@ -631,7 +631,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
           <Grid container spacing={3} sx={{ mb: 4 }}>
 
             {/* Service health table */}
-            <Grid size={{ xs: 12, lg: 7 }}>
+            <Grid item xs={12} lg={7}>
               <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 1, p: 3 }}>
                 <SectionTitle
                   icon={<MonitorHeartIcon fontSize="small" />}
@@ -685,7 +685,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
             </Grid>
 
             {/* Incident feed */}
-            <Grid size={{ xs: 12, lg: 5 }}>
+            <Grid item xs={12} lg={5}>
               <Box sx={{ bgcolor: SURFACE, border: `1px solid ${BORDER}`, borderRadius: 1, p: 3 }}>
                 <SectionTitle
                   icon={<NotificationsActiveIcon fontSize="small" />}
@@ -767,7 +767,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
                 { label: 'GPU',     used: 84,  total: 100, unit: '%',     color: '#EC4899' },
                 { label: 'Network', used: 4.8, total: 10,  unit: ' Gbps', color: '#06B6D4' },
               ].map(r => (
-                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 12/5 as any }} key={r.label}>
+                <Grid item xs={12} sm={6} md={4} lg={12/5 as any} key={r.label}>
                   <Box sx={{ bgcolor: SURFACE2, border: `1px solid ${BORDER}`, borderRadius: 1, p: 2, height: '100%' }}>
                     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
                       <Typography sx={{ fontFamily: FONT, fontSize: '0.8rem', color: TEXT, fontWeight: 700 }}>
@@ -818,7 +818,7 @@ const EnterpriseOverviewDashboard: React.FC = () => {
                 { label: 'GPU Workloads', path: '/dashboard/gpu',              icon: <MemoryIcon sx={{ fontSize: 18 }} />,       color: '#EC4899' },
                 { label: 'Zero-Trust',    path: '/dashboard/zero-trust',       icon: <SpeedIcon sx={{ fontSize: 18 }} />,        color: '#8B5CF6' },
               ].map(q => (
-                <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={q.label}>
+                <Grid item xs={6} sm={4} md={3} lg={2} key={q.label}>
                   <Box
                     onClick={() => navigate(q.path)}
                     sx={{

@@ -66,7 +66,7 @@ export default function FirewallPage() {
           { label: 'Deny Rules', value: RULES.filter(r => r.action === 'deny').length, color: S.danger },
           { label: 'Security Groups', value: SECURITY_GROUPS.length, color: T.brandPrimary },
         ].map(c => (
-          <Grid size={{ xs: 6, sm: 3 }} key={c.label}>
+          <Grid item xs={6} sm={3} key={c.label}>
             <Paper sx={{ p: 2, borderRadius: 2, border: `1px solid ${T.border}`, bgcolor: T.surface }}>
               <Typography variant="caption" sx={{ color: T.textSecondary, textTransform: 'uppercase', letterSpacing: '.06em' }}>{c.label}</Typography>
               <Typography variant="h4" sx={{ color: c.color, fontWeight: 700, mt: 0.5 }}>{c.value}</Typography>
@@ -190,7 +190,7 @@ export default function FirewallPage() {
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '12px !important' }}>
           <TextField label="Rule Name" fullWidth size="small" />
           <Grid container spacing={2}>
-            <Grid size={{ xs: 6 }}>
+            <Grid item xs={6}>
               <FormControl size="small" fullWidth>
                 <InputLabel>Direction</InputLabel>
                 <Select label="Direction" defaultValue="inbound">
@@ -199,7 +199,7 @@ export default function FirewallPage() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 6 }}>
+            <Grid item xs={6}>
               <FormControl size="small" fullWidth>
                 <InputLabel>Action</InputLabel>
                 <Select label="Action" defaultValue="allow">
@@ -210,7 +210,7 @@ export default function FirewallPage() {
             </Grid>
           </Grid>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 4 }}>
+            <Grid item xs={4}>
               <FormControl size="small" fullWidth>
                 <InputLabel>Protocol</InputLabel>
                 <Select label="Protocol" defaultValue="TCP">
@@ -218,8 +218,8 @@ export default function FirewallPage() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 4 }}><TextField label="Port / Range" fullWidth size="small" placeholder="443" /></Grid>
-            <Grid size={{ xs: 4 }}><TextField label="Priority" type="number" fullWidth size="small" defaultValue={100} /></Grid>
+            <Grid item xs={4}><TextField label="Port / Range" fullWidth size="small" placeholder="443" /></Grid>
+            <Grid item xs={4}><TextField label="Priority" type="number" fullWidth size="small" defaultValue={100} /></Grid>
           </Grid>
           <TextField label="Source / Destination CIDR" fullWidth size="small" placeholder="0.0.0.0/0" />
           <TextField label="Description" fullWidth size="small" />

@@ -170,7 +170,7 @@ export default function CreateOrganizationDialog({ open, onSuccess, onClose }: P
               Organization identity
             </Typography>
             <Grid container spacing={2.5}>
-              <Grid size={{ xs: 12 }}>
+              <Grid item xs={12}>
                 <TextField
                   label="Organization name *" value={name}
                   onChange={e => handleNameChange(e.target.value)} fullWidth autoFocus
@@ -178,7 +178,7 @@ export default function CreateOrganizationDialog({ open, onSuccess, onClose }: P
                   helperText="Appears across dashboards, emails and invoices."
                 />
               </Grid>
-              <Grid size={{ xs: 12 }}>
+              <Grid item xs={12}>
                 <TextField
                   label="Slug *" value={slug}
                   onChange={e => { setSlug(e.target.value); setSlugEdited(true); }} fullWidth
@@ -190,7 +190,7 @@ export default function CreateOrganizationDialog({ open, onSuccess, onClose }: P
                   }}
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
                   <InputLabel>Country *</InputLabel>
                   <Select value={country} label="Country *" onChange={e => setCountry(e.target.value)} displayEmpty>
@@ -199,7 +199,7 @@ export default function CreateOrganizationDialog({ open, onSuccess, onClose }: P
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
                   <InputLabel>Industry</InputLabel>
                   <Select value={industry} label="Industry" onChange={e => setIndustry(e.target.value)} displayEmpty>
@@ -225,7 +225,7 @@ export default function CreateOrganizationDialog({ open, onSuccess, onClose }: P
               Contact & domain
             </Typography>
             <Grid container spacing={2.5}>
-              <Grid size={{ xs: 12 }}>
+              <Grid item xs={12}>
                 <TextField
                   label="Contact email *" value={contactEmail} type="email" autoFocus
                   onChange={e => setContactEmail(e.target.value)} fullWidth
@@ -233,7 +233,7 @@ export default function CreateOrganizationDialog({ open, onSuccess, onClose }: P
                   helperText="Used for billing notifications, compliance alerts, and team invitations."
                 />
               </Grid>
-              <Grid size={{ xs: 12 }}>
+              <Grid item xs={12}>
                 <TextField
                   label="Primary domain" value={primaryDomain}
                   onChange={e => setPrimaryDomain(e.target.value)} fullWidth
@@ -241,7 +241,7 @@ export default function CreateOrganizationDialog({ open, onSuccess, onClose }: P
                   helperText="Optional — e.g. acme.com. You can add and verify domains later."
                 />
               </Grid>
-              <Grid size={{ xs: 12 }}>
+              <Grid item xs={12}>
                 <TextField
                   label="Logo URL" value={logoUrl}
                   onChange={e => setLogoUrl(e.target.value)} fullWidth

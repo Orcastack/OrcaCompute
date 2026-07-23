@@ -76,7 +76,7 @@ export default function SnapshotsPage() {
           { label: 'Automated', value: SNAPSHOTS.filter(s => s.type === 'automated').length, sub: 'scheduled snapshots' },
           { label: 'Replications', value: REPLICATION.filter(r => r.status === 'running').length, sub: 'active jobs' },
         ].map(c => (
-          <Grid size={{ xs: 6, sm: 3 }} key={c.label}><SummaryCard {...c} /></Grid>
+          <Grid item xs={6} sm={3} key={c.label}><SummaryCard {...c} /></Grid>
         ))}
       </Grid>
 

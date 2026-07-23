@@ -213,7 +213,7 @@ const EnterpriseDeveloperHubPage: React.FC = () => {
           {tab === 1 && (
             <Grid container spacing={2}>
               {sdks.map(sdk => (
-                <Grid key={sdk.name} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Grid key={sdk.name} item xs={12} sm={6} md={4}>
                   <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
                       <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: sdk.color, flexShrink: 0 }} />
@@ -253,7 +253,7 @@ const EnterpriseDeveloperHubPage: React.FC = () => {
               </Box>
               <Grid container spacing={1}>
                 {webhookEvents.map(ev => (
-                  <Grid key={ev} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Grid key={ev} item xs={12} sm={6} md={4}>
                     <Paper sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 1.5, px: 2, py: 1.25,
                                  display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Box sx={{ width: 7, height: 7, borderRadius: '50%', bgcolor: T.green, flexShrink: 0 }} />
@@ -330,7 +330,7 @@ const EnterpriseDeveloperHubPage: React.FC = () => {
               ) : (
                 <Grid container spacing={2}>
                   {workspaces.map(ws => (
-                    <Grid key={ws.id} size={{ xs: 12, md: 6, lg: 4 }}>
+                    <Grid key={ws.id} item xs={12} md={6} lg={4}>
                       <Card sx={{ bgcolor: T.card, border: `1px solid ${T.border}`, borderRadius: 2, p: 2,
                                   transition: 'border-color .15s', '&:hover': { borderColor: T.brand } }}>
                         <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1.5 }}>

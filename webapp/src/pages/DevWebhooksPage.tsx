@@ -98,7 +98,7 @@ export default function DevWebhooksPage() {
           { label: 'Deliveries Today', value: 0, color: T.brandPrimary },
           { label: 'Failed Deliveries', value: 0, color: S.danger },
         ].map(c => (
-          <Grid size={{ xs: 6, sm: 3 }} key={c.label}>
+          <Grid item xs={6} sm={3} key={c.label}>
             <Paper sx={{ p: 2, borderRadius: 2, border: `1px solid ${T.border}`, bgcolor: T.surface }}>
               <Typography variant="caption" sx={{ color: T.textSecondary, textTransform: 'uppercase', letterSpacing: '.06em' }}>{c.label}</Typography>
               <Typography variant="h4" sx={{ color: (c as any).color || T.textPrimary, fontWeight: 700, mt: 0.5 }}>{c.value}</Typography>
@@ -192,7 +192,7 @@ export default function DevWebhooksPage() {
             <Typography variant="body2" sx={{ color: T.textSecondary, mb: 2 }}>All subscribable events. Use wildcards like <Box component="span" sx={{ fontFamily: 'monospace', color: T.brandPrimary }}>iam.*</Box> to catch all events in a namespace.</Typography>
             <Grid container spacing={1}>
               {ALL_EVENTS.map(ev => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={ev}>
+                <Grid item xs={12} sm={6} md={4} key={ev}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1, borderRadius: 1, '&:hover': { bgcolor: T.surfaceHover } }}>
                     <ContentCopyIcon sx={{ fontSize: '.8rem', color: T.textSecondary, cursor: 'pointer' }} onClick={() => navigator.clipboard?.writeText(ev)} />
                     <Typography variant="caption" sx={{ color: T.textPrimary, fontFamily: 'monospace', fontSize: '.82rem' }}>{ev}</Typography>

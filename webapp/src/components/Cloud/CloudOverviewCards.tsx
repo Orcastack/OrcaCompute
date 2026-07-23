@@ -116,7 +116,7 @@ const CloudOverviewCards: React.FC<CloudOverviewCardsProps> = ({ stats, loading 
   return (
     <Grid container spacing={2.5}>
       {cards.map((card) => (
-        <Grid size={{ xs: 12, sm: 6, xl: 3 }} key={card.title}>
+        <Grid item xs={12} sm={6} xl={3} key={card.title}>
           <Paper
             elevation={0}
             sx={{

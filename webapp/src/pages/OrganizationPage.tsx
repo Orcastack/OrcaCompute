@@ -73,7 +73,7 @@ export default function OrganizationPage() {
           { label: 'Teams', value: TEAMS.length, icon: <GroupsIcon sx={{ color: S.purple, fontSize: 28 }} /> },
           { label: 'Total Users', value: TENANTS.reduce((a, t) => a + t.users, 0), icon: <GroupsIcon sx={{ color: S.warning, fontSize: 28 }} /> },
         ].map(c => (
-          <Grid size={{ xs: 6, sm: 3 }} key={c.label}>
+          <Grid item xs={6} sm={3} key={c.label}>
             <Paper sx={{ p: 2, borderRadius: 2, border: `1px solid ${T.border}`, bgcolor: T.surface, display: 'flex', alignItems: 'center', gap: 2 }}>
               {c.icon}
               <Box>

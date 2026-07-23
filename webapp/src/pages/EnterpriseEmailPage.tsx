@@ -470,7 +470,7 @@ const EnterpriseEmailPage: React.FC = () => {
       ? <Alert sx={{ bgcolor: `${T.brand}0a`, border: `1px solid ${T.border}` }}>No email templates yet. Create one to send branded emails.</Alert>
       : <Grid container spacing={2}>
           {templates.map(t => (
-            <Grid key={t.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={t.id} item xs={12} sm={6} md={4}>
               <Paper
                 onClick={() => setSelected(selected?.id === t.id ? null : t)}
                 sx={{ p: 2.5, bgcolor: T.card2, border: `1px solid ${selected?.id === t.id ? T.brand : T.border}`,

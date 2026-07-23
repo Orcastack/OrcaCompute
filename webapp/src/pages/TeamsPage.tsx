@@ -491,7 +491,7 @@ const TeamsPage: React.FC<TeamsPageProps> = ({ dashboardContext = 'all' }) => {
 
       <Grid container spacing={2}>
         {contextFiltered.map(team => (
-          <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={team.team_id}>
+          <Grid item xs={12} sm={6} lg={4} key={team.team_id}>
             <TeamCard team={team} onOpen={id => navigate(`/dashboard/teams/${id}`)} />
           </Grid>
         ))}

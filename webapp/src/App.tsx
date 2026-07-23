@@ -636,6 +636,8 @@ const AppShell: React.FC = () => {
   );
 };
 
+const routerBasename = process.env.PUBLIC_URL || '/';
+
 function App() {
   useEffect(() => {
     initializeOpenTelemetry();
@@ -643,7 +645,7 @@ function App() {
 
   return (
     <TelemetryErrorBoundary componentName="App">
-      <Router>
+      <Router basename={routerBasename}>
         <CustomThemeProvider>
           <AuthProvider>
             <OnboardingProvider>

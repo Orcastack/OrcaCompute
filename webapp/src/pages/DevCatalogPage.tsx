@@ -212,12 +212,12 @@ export default function DevCatalogPage() {
             {/* Cards grid */}
             <Grid container spacing={2}>
               {filtered.map(f => (
-                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={f.name}>
+                <Grid item xs={12} sm={6} md={4} lg={3} key={f.name}>
                   <FlavorCard f={f} />
                 </Grid>
               ))}
               {filtered.length === 0 && (
-                <Grid size={12}>
+                <Grid item xs={12}>
                   <Box sx={{ py: 6, textAlign: 'center' }}>
                     <Typography sx={{ fontFamily: FONT, color: T.textSecondary }}>No flavors match your search.</Typography>
                   </Box>
@@ -260,7 +260,7 @@ export default function DevCatalogPage() {
           <Box sx={{ p: 2.5 }}>
             <Grid container spacing={2}>
               {NETWORK_TEMPLATES.map(n => (
-                <Grid size={{ xs: 12, sm: 6 }} key={n.name}>
+                <Grid item xs={12} sm={6} key={n.name}>
                   <Paper sx={{ p: 2.5, bgcolor: T.surfaceSubtle, border: `1px solid ${T.border}`, borderRadius: 2 }}>
                     <Typography variant="body1" sx={{ color: T.textPrimary, fontWeight: 700, mb: 0.75, fontFamily: FONT }}>{n.name}</Typography>
                     <Typography variant="caption" sx={{ color: T.textSecondary, display: 'block', mb: 1.5, fontFamily: FONT }}>{n.desc}</Typography>

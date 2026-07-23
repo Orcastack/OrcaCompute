@@ -251,7 +251,7 @@ function OverviewTab({ data, loading }: { data: BillingOverview | null; loading:
           { label: 'Credits', value: fmt(credit_balance), color: t.purple },
           { label: 'Plan', value: account.plan.toUpperCase(), color: PLAN_COLOR[account.plan] },
         ].map((s) => (
-          <Grid key={s.label} size={{ xs: 12, sm: 6, md: 2 }}>
+          <Grid key={s.label} item xs={12} sm={6} md={2}>
             <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
               <CardContent sx={{ textAlign: 'center', p: 2, '&:last-child': { pb: 2 } }}>
                 <Typography sx={{ fontSize: '1.6rem', fontWeight: 800, color: s.color }}>{s.value}</Typography>
@@ -291,7 +291,7 @@ function OverviewTab({ data, loading }: { data: BillingOverview | null; loading:
               color: t.yellow,
             },
           ].map(s => (
-            <Grid key={s.label} size={{ xs: 12, sm: 6, md: 3 }}>
+            <Grid key={s.label} item xs={12} sm={6} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                   <Typography variant="caption" sx={{ color: t.sub, textTransform: 'uppercase', fontSize: '.65rem', fontWeight: 600, letterSpacing: '.05em' }}>{s.label}</Typography>
@@ -307,7 +307,7 @@ function OverviewTab({ data, loading }: { data: BillingOverview | null; loading:
       <Grid container spacing={3}>
         {/* Weekly spend trend (12 weeks) */}
         {analysis && (
-          <Grid size={{ xs: 12, md: 7 }}>
+          <Grid item xs={12} md={7}>
             <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}`, height: '100%' }}>
               <CardHeader
                 title={<Typography sx={{ color: t.text, fontWeight: 700 }}>12-Week Spend Trend</Typography>}
@@ -328,7 +328,7 @@ function OverviewTab({ data, loading }: { data: BillingOverview | null; loading:
 
         {/* Top services this week */}
         {analysis && (
-          <Grid size={{ xs: 12, md: 5 }}>
+          <Grid item xs={12} md={5}>
             <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}`, height: '100%' }}>
               <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Top Services (This Week)</Typography>} />
               <CardContent sx={{ pt: 0 }}>
@@ -366,7 +366,7 @@ function OverviewTab({ data, loading }: { data: BillingOverview | null; loading:
         )}
 
         {/* Monthly spend trend (backwards compat) */}
-        <Grid size={{ xs: 12, md: 5 }}>
+        <Grid item xs={12} md={5}>
           <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}`, height: '100%' }}>
             <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Monthly Spend Trend</Typography>} />
             <CardContent>
@@ -376,7 +376,7 @@ function OverviewTab({ data, loading }: { data: BillingOverview | null; loading:
         </Grid>
 
         {/* Spend by service */}
-        <Grid size={{ xs: 12, md: 7 }}>
+        <Grid item xs={12} md={7}>
           <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}`, height: '100%' }}>
             <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Spend by Service</Typography>} />
             <CardContent>
@@ -576,7 +576,7 @@ function UsageTab() {
 
       <Grid container spacing={3}>
         {/* By service */}
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
             <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>By Service</Typography>} />
             <CardContent>
@@ -586,7 +586,7 @@ function UsageTab() {
         </Grid>
 
         {/* Line items */}
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid item xs={12} md={8}>
           <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
             <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Usage Breakdown</Typography>} />
             <CardContent sx={{ pt: 0 }}>
@@ -664,7 +664,7 @@ function AddCardDialog({ open, onClose, onAdded }: { open: boolean; onClose: () 
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
         <TextField label="Cardholder / Display Name" value={form.display_name} onChange={handle('display_name')} fullWidth sx={inputSx} />
         <Grid container spacing={2}>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <FormControl fullWidth size="small" sx={inputSx}>
               <InputLabel>Card Brand</InputLabel>
               <Select value={form.card_brand} label="Card Brand" onChange={handle('card_brand') as any} sx={{ color: t.text }}>
@@ -672,13 +672,13 @@ function AddCardDialog({ open, onClose, onAdded }: { open: boolean; onClose: () 
               </Select>
             </FormControl>
           </Grid>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <TextField label="Last 4 digits" value={form.card_last4} onChange={handle('card_last4')} inputProps={{ maxLength: 4 }} fullWidth size="small" sx={inputSx} />
           </Grid>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <TextField label="Exp Month (MM)" type="number" value={form.card_exp_month} onChange={handle('card_exp_month')} fullWidth size="small" sx={inputSx} />
           </Grid>
-          <Grid size={{ xs: 6 }}>
+          <Grid item xs={6}>
             <TextField label="Exp Year (YYYY)" type="number" value={form.card_exp_year} onChange={handle('card_exp_year')} fullWidth size="small" sx={inputSx} />
           </Grid>
         </Grid>
@@ -743,7 +743,7 @@ function PaymentMethodsTab() {
       ) : (
         <Grid container spacing={2}>
           {methods.map(pm => (
-            <Grid key={pm.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={pm.id} item xs={12} sm={6} md={4}>
               <Card sx={{
                 bgcolor: t.cardBg, border: `1px solid ${pm.is_default ? t.brand : t.border}`,
                 position: 'relative',
@@ -924,7 +924,7 @@ function PaymentsBoardTab() {
           <Typography variant="h6" sx={{ color: t.text, mb: 3 }}>Executive Operations Dashboard</Typography>
           <Grid container spacing={3}>
             {/* KPIs */}
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.green }}>{fmt(data.executive.volume.today)}</Typography>
@@ -932,7 +932,7 @@ function PaymentsBoardTab() {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.blue }}>{data.executive.successRate}%</Typography>
@@ -940,7 +940,7 @@ function PaymentsBoardTab() {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.yellow }}>{data.executive.avgLatency}s</Typography>
@@ -948,7 +948,7 @@ function PaymentsBoardTab() {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.purple }}>{data.executive.topCurrencies.length}</Typography>
@@ -958,7 +958,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Rail Distribution Pie */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Rail Distribution</Typography>} />
                 <CardContent>
@@ -989,7 +989,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Top Corridors */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Top Corridors</Typography>} />
                 <CardContent>
@@ -1014,7 +1014,7 @@ function PaymentsBoardTab() {
           <Typography variant="h6" sx={{ color: t.text, mb: 3 }}>Risk & Compliance Dashboard</Typography>
           <Grid container spacing={3}>
             {/* Risk Metrics */}
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.red }}>{data.risk.blockedTransactions}</Typography>
@@ -1022,7 +1022,7 @@ function PaymentsBoardTab() {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.yellow }}>{data.risk.fraudRate}%</Typography>
@@ -1030,7 +1030,7 @@ function PaymentsBoardTab() {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.purple }}>{data.risk.amlFlags}</Typography>
@@ -1038,7 +1038,7 @@ function PaymentsBoardTab() {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid item xs={12} md={3}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: t.blue }}>{data.risk.velocityTriggers}</Typography>
@@ -1048,7 +1048,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Rule Hits */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Rule Hit Breakdown</Typography>} />
                 <CardContent>
@@ -1082,7 +1082,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Review Queue */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Manual Review Queue</Typography>} />
                 <CardContent>
@@ -1113,7 +1113,7 @@ function PaymentsBoardTab() {
           <Typography variant="h6" sx={{ color: t.text, mb: 3 }}>Technical Operations Dashboard</Typography>
           <Grid container spacing={3}>
             {/* Service Health */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Service Health</Typography>} />
                 <CardContent>
@@ -1155,7 +1155,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Adapter Health */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Rail Adapters</Typography>} />
                 <CardContent>
@@ -1195,7 +1195,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Circuit Breakers */}
-            <Grid size={{ xs: 12 }}>
+            <Grid item xs={12}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Circuit Breakers</Typography>} />
                 <CardContent>
@@ -1224,7 +1224,7 @@ function PaymentsBoardTab() {
           <Typography variant="h6" sx={{ color: t.text, mb: 3 }}>Finance & Settlement Dashboard</Typography>
           <Grid container spacing={3}>
             {/* Settlement Summary */}
-            <Grid size={{ xs: 12, md: 8 }}>
+            <Grid item xs={12} md={8}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Settlement by Rail</Typography>} />
                 <CardContent>
@@ -1259,7 +1259,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Reconciliation Status */}
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid item xs={12} md={4}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Reconciliation Status</Typography>} />
                 <CardContent>
@@ -1315,7 +1315,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* FX P&L */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '2rem', fontWeight: 800, color: data.finance.fxPnL > 0 ? t.green : t.red }}>
@@ -1327,7 +1327,7 @@ function PaymentsBoardTab() {
             </Grid>
 
             {/* Export Options */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <Card sx={{ bgcolor: t.cardBg, border: `1px solid ${t.border}` }}>
                 <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Export Reports</Typography>} />
                 <CardContent>
@@ -1502,13 +1502,13 @@ function BillingAccountTab() {
         <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Business Information</Typography>} />
         <CardContent sx={{ pt: 0 }}>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <TextField label="Company Name" value={form.company_name ?? ''} onChange={handleField('company_name')} fullWidth sx={inputSx} />
             </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
+            <Grid item xs={12} md={6}>
               <TextField label="Billing Email" type="email" value={form.billing_email ?? ''} onChange={handleField('billing_email')} fullWidth sx={inputSx} />
             </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid item xs={12} md={4}>
               <TextField label="Tax ID / VAT Number" value={form.tax_id ?? ''} onChange={handleField('tax_id')} fullWidth sx={inputSx} />
             </Grid>
           </Grid>
@@ -1520,22 +1520,22 @@ function BillingAccountTab() {
         <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Billing Address</Typography>} />
         <CardContent sx={{ pt: 0 }}>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12 }}>
+            <Grid item xs={12}>
               <TextField label="Address Line 1" value={form.address_line1 ?? ''} onChange={handleField('address_line1')} fullWidth sx={inputSx} />
             </Grid>
-            <Grid size={{ xs: 12 }}>
+            <Grid item xs={12}>
               <TextField label="Address Line 2" value={form.address_line2 ?? ''} onChange={handleField('address_line2')} fullWidth sx={inputSx} />
             </Grid>
-            <Grid size={{ xs: 12, sm: 5 }}>
+            <Grid item xs={12} sm={5}>
               <TextField label="City" value={form.city ?? ''} onChange={handleField('city')} fullWidth sx={inputSx} />
             </Grid>
-            <Grid size={{ xs: 12, sm: 3 }}>
+            <Grid item xs={12} sm={3}>
               <TextField label="State / Region" value={form.state ?? ''} onChange={handleField('state')} fullWidth sx={inputSx} />
             </Grid>
-            <Grid size={{ xs: 12, sm: 2 }}>
+            <Grid item xs={12} sm={2}>
               <TextField label="Postal Code" value={form.postal_code ?? ''} onChange={handleField('postal_code')} fullWidth sx={inputSx} />
             </Grid>
-            <Grid size={{ xs: 12, sm: 2 }}>
+            <Grid item xs={12} sm={2}>
               <FormControl fullWidth sx={inputSx}>
                 <InputLabel>Country</InputLabel>
                 <Select value={form.country ?? ''} label="Country" onChange={handleField('country') as any} sx={{ color: t.text }}>
@@ -1552,7 +1552,7 @@ function BillingAccountTab() {
         <CardHeader title={<Typography sx={{ color: t.text, fontWeight: 700 }}>Billing Preferences</Typography>} />
         <CardContent sx={{ pt: 0 }}>
           <Grid container spacing={2} alignItems="flex-start">
-            <Grid size={{ xs: 12, sm: 4, md: 3 }}>
+            <Grid item xs={12} sm={4} md={3}>
               <FormControl fullWidth sx={inputSx}>
                 <InputLabel>Currency</InputLabel>
                 <Select value={form.currency ?? 'USD'} label="Currency" onChange={handleField('currency') as any} sx={{ color: t.text }}>
@@ -1560,7 +1560,7 @@ function BillingAccountTab() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid size={{ xs: 12, sm: 4, md: 3 }}>
+            <Grid item xs={12} sm={4} md={3}>
               <TextField
                 label="Spend Limit (USD)"
                 type="number"
@@ -1571,7 +1571,7 @@ function BillingAccountTab() {
                 helperText={<Typography variant="caption" sx={{ color: t.sub }}>Leave blank for no limit</Typography>}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 4, md: 6 }}>
+            <Grid item xs={12} sm={4} md={6}>
               <FormControlLabel
                 control={
                   <Switch
@@ -1608,7 +1608,7 @@ function BillingAccountTab() {
                 ['Created',      new Date(account.created_at).toLocaleDateString()],
                 ['Last Updated', new Date(account.updated_at).toLocaleDateString()],
               ] as [string, string][]).map(([label, value]) => (
-                <Grid key={label} size={{ xs: 12, sm: 4 }}>
+                <Grid key={label} item xs={12} sm={4}>
                   <Typography variant="caption" sx={{ color: t.sub, textTransform: 'uppercase', fontWeight: 600, fontSize: '.65rem' }}>{label}</Typography>
                   <Typography sx={{ color: t.text, fontFamily: 'monospace', mt: 0.25 }}>{value}</Typography>
                 </Grid>

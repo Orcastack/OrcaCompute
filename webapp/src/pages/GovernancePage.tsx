@@ -75,7 +75,7 @@ export default function GovernancePage() {
           { label: 'Violations', value: POLICIES.reduce((a, p) => a + p.violations, 0), color: S.warning },
           { label: 'Pending Approvals', value: APPROVALS.filter(a => a.status === 'pending').length, color: S.warning },
         ].map(c => (
-          <Grid size={{ xs: 6, sm: 3 }} key={c.label}>
+          <Grid item xs={6} sm={3} key={c.label}>
             <Paper sx={{ p: 2, borderRadius: 2, border: `1px solid ${T.border}`, bgcolor: T.surface }}>
               <Typography variant="caption" sx={{ color: T.textSecondary, textTransform: 'uppercase', letterSpacing: '.06em' }}>{c.label}</Typography>
               <Typography variant="h4" sx={{ color: (c as any).color || T.textPrimary, fontWeight: 700, mt: 0.5 }}>{c.value}</Typography>
@@ -203,7 +203,7 @@ export default function GovernancePage() {
                 { tag: 'owner', required: true, values: 'Email address', compliant: '88%' },
                 { tag: 'data-classification', required: false, values: 'public | internal | confidential | restricted', compliant: '65%' },
               ].map((t, i) => (
-                <Grid size={{ xs: 12, sm: 6 }} key={i}>
+                <Grid item xs={12} sm={6} key={i}>
                   <Paper sx={{ p: 2, bgcolor: T.surfaceSubtle, border: `1px solid ${T.border}`, borderRadius: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
