@@ -8,6 +8,7 @@ import {
   CommunityMember,
   Discussion
 } from '../types/auth';
+import { getStoredAuthUser } from '../portal/portalSession';
 
 // Create axios instance for auth
 const ____authApi = axios.create({
@@ -275,6 +276,7 @@ export const authService = {
 
   getCurrentUser: async (): Promise<User> => {
     const token = localStorage.getItem('authToken');
+    const storedUser = getStoredAuthUser();
 
     // --- Always try real backend first if a token exists ---
     if (token) {
@@ -293,6 +295,10 @@ export const authService = {
     }
 
     // --- Local fallback for mock tokens (backend offline only) ---
+    if (storedUser && token) {
+      return storedUser;
+    }
+
     if (token === 'mock-jwt-token') {
       return {
         id: 1,

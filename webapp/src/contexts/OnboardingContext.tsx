@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import { bootstrapPortalTransferFromUrl } from '../portal/portalSession';
 
 export interface OnboardingState {
   // Phase tracking
@@ -188,6 +189,7 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
 
   // Initialise state synchronously from localStorage to avoid redirect flicker
   const [state, dispatch] = useReducer(onboardingReducer, initialState, (init) => {
+    bootstrapPortalTransferFromUrl();
     try {
       const saved = localStorage.getItem(ONBOARDING_STATE_KEY) || localStorage.getItem(LEGACY_ONBOARDING_STATE_KEY);
       if (saved) {

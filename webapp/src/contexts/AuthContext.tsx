@@ -3,6 +3,7 @@ import { User, LoginRequest, SignupRequest, AuthContextType, SocialProvider, Org
 import { authService } from '../services/authService';
 import { setAuthToken, clearAuthToken } from '../services/apiClient';
 import { SocialAuthService } from '../services/socialAuthService';
+import { bootstrapPortalTransferFromUrl, clearStoredAuthSession, setStoredAuthSession } from '../portal/portalSession';
 
 const ____AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -11,6 +12,8 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  bootstrapPortalTransferFromUrl();
+
   const [user, setUser] = useState<User | null>(null);
   const [organization, setOrganization] = useState<Organization | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       } catch (error) {
         console.warn('Auth init skipped (backend offline or token invalid):', error);
-        localStorage.removeItem('authToken');
+        clearStoredAuthSession();
         clearAuthToken();
       } finally {
         setIsInitializing(false);
@@ -79,7 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       };
 
       // Store token and set user
-      localStorage.setItem('authToken', response.token);
+      setStoredAuthSession(response.token, userWithType);
       setAuthToken(response.token);
       setUser(userWithType);
 
@@ -108,7 +111,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const individualUser = { ...response.user, user_type: 'individual' as const };
 
       // Store token and set user
-      localStorage.setItem('authToken', response.token);
+      setStoredAuthSession(response.token, individualUser);
       setAuthToken(response.token);
       setUser(individualUser);
       console.log('Individual signup successful, user set:', individualUser);
@@ -128,7 +131,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const response = await SocialAuthService.handleCallback();
 
   // Store token
-  localStorage.setItem('authToken', response.token);
+  setStoredAuthSession(response.token, response.user);
   setAuthToken(response.token);
   setUser(response.user);
         // Clean up URL
@@ -146,7 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = (): void => {
-    localStorage.removeItem('authToken');
+    clearStoredAuthSession();
     clearAuthToken();
     setUser(null);
   };
@@ -255,7 +258,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Store token and set user
       const token = `mock-jwt-token-${orgUser.id}`;
-      localStorage.setItem('authToken', token);
+      setStoredAuthSession(token, orgUser);
       setAuthToken(token);
       setUser(orgUser);
 
@@ -263,7 +266,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Organization signup failed:', error);
       // Clean up on failure
-      localStorage.removeItem('authToken');
+      clearStoredAuthSession();
       setUser(null);
       setOrganization(null);
       throw error;

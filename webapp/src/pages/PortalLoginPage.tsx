@@ -14,6 +14,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useOnboarding } from '../contexts/OnboardingContext';
 import { getPortalLoginUrl, getPortalPlan, getPortalTargetUrl, portalTargetLabels, PortalTarget, resolvePortalTarget } from '../portal/portalConfig';
+import { buildPortalTransferUrl, getStoredAuthUser } from '../portal/portalSession';
 import type { LoginRequest } from '../types/auth';
 import { dashboardTokens } from '../styles/dashboardDesignSystem';
 
@@ -33,8 +34,18 @@ export default function PortalLoginPage() {
 
   const destinationLabel = useMemo(() => portalTargetLabels[target], [target]);
 
-  const redirectToTarget = (selectedTarget: PortalTarget) => {
-    window.location.assign(getPortalTargetUrl(selectedTarget));
+  const redirectToTarget = (
+    selectedTarget: PortalTarget,
+    onboardingState?: { isCompleted: boolean; userPlan: 'cloud' | 'developer' | 'enterprise' | null },
+  ) => {
+    const token = localStorage.getItem('authToken');
+    const storedUser = getStoredAuthUser();
+    const destinationUrl = buildPortalTransferUrl(getPortalTargetUrl(selectedTarget), {
+      token,
+      user: storedUser,
+      onboarding: onboardingState || undefined,
+    });
+    window.location.assign(destinationUrl);
   };
 
   if (user) {
@@ -49,9 +60,10 @@ export default function PortalLoginPage() {
 
     try {
       await login(formData);
-      actions.setUserPlan(getPortalPlan(target));
+      const userPlan = getPortalPlan(target);
+      actions.setUserPlan(userPlan);
       actions.completeOnboarding();
-      redirectToTarget(target);
+      redirectToTarget(target, { isCompleted: true, userPlan });
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Login failed.');
     } finally {
