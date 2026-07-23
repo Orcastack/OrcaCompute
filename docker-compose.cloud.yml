@@ -226,7 +226,7 @@ services:
       - orcacompute-net
     restart: unless-stopped
 
-  x-portal-webapp: &portal-webapp
+  x-orca-cloud-webapp: &orca-cloud-webapp
     build:
       context: ./webapp
       dockerfile: Dockerfile
@@ -235,7 +235,7 @@ services:
         REACT_APP_API_URL: http://localhost:3000/api
         REACT_APP_WS_URL: ws://localhost:3000/ws
         REACT_APP_ENVIRONMENT: local-multi-dashboard
-    image: orcacompute-portal-webapp:local
+    image: orca_cloud_webapp:latest
     environment:
       REACT_APP_PORTAL_PUBLIC_PORT: 3000
     healthcheck:
@@ -248,28 +248,28 @@ services:
     restart: unless-stopped
 
   home:
-    <<: *portal-webapp
-    container_name: orcacompute_portal_home
+    <<: *orca-cloud-webapp
+    container_name: orcacompute_cloud_home
 
   login:
-    <<: *portal-webapp
-    container_name: orcacompute_portal_login
+    <<: *orca-cloud-webapp
+    container_name: orcacompute_cloud_login
 
-  cloud:
-    <<: *portal-webapp
-    container_name: orcacompute_portal_cloud
+  cloud-webapp:
+    <<: *orca-cloud-webapp
+    container_name: orcacompute_cloud_app
 
   developer:
-    <<: *portal-webapp
-    container_name: orcacompute_portal_developer
+    <<: *orca-cloud-webapp
+    container_name: orcacompute_cloud_developer
 
   matrix:
-    <<: *portal-webapp
-    container_name: orcacompute_portal_matrix
+    <<: *orca-cloud-webapp
+    container_name: orcacompute_cloud_matrix
 
   proxy:
     image: nginx:stable-alpine
-    container_name: orcacompute_portal_proxy
+    container_name: orcacompute_cloud_proxy
     ports:
       - "3000:80"
     volumes:
@@ -279,7 +279,7 @@ services:
     depends_on:
       - home
       - login
-      - cloud
+      - cloud-webapp
       - developer
       - matrix
       - backend-dev

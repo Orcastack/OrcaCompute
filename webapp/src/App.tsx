@@ -182,16 +182,17 @@ const AppShell: React.FC = () => {
     return (
       <Routes>
         <Route path="/" element={<PortalLoginPage />} />
+        <Route path="/login" element={<PortalLoginPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
   }
 
-  if (portalVariant === 'cloud' && location.pathname === '/') {
+  if (portalVariant === 'cloud' && (location.pathname === '/' || location.pathname === '/cloud')) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  if (portalVariant === 'developer' && location.pathname === '/') {
+  if (portalVariant === 'developer' && (location.pathname === '/' || location.pathname === '/developer')) {
     return <Navigate to="/developer/Dashboard" replace />;
   }
 
@@ -681,8 +682,7 @@ const AppShell: React.FC = () => {
 
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/support"   element={<SupportPage />} />
-          <Route path="/contact"   element={<ContactSalesPage />} />
-          <Route path="/account"   element={<AboutPage />} />
+          <Route path="/contact"   element={<ContactSalesPage />} />          <Route path="/account"   element={<AboutPage />} />
           <Route path="*"          element={<Homepage />} />
         </Routes>
       </Box>
