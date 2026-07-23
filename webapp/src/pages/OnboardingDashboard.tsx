@@ -31,7 +31,6 @@ const OnboardingDashboard: React.FC = () => {
   const [stats, setStats]         = useState<DashboardStats | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(false);
   const [loadingStats, setLoadingStats]       = useState(false);
-  const [vmRefreshKey, setVmRefreshKey] = useState(0);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
   const fetchProgress = useCallback(async () => {
@@ -110,7 +109,7 @@ const OnboardingDashboard: React.FC = () => {
             sx={{ fontSize: '12px', color: dashboardTokens.colors.textPrimary, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 0.5 }}
           >
             <DashboardIcon sx={{ fontSize: '.8rem' }} />
-            Dashboard
+            Overview
           </Typography>
         </Breadcrumbs>
 
@@ -125,7 +124,7 @@ const OnboardingDashboard: React.FC = () => {
               lineHeight: 1.2,
             }}
           >
-            Dashboard
+            Overview
           </Typography>
 
 
@@ -134,9 +133,6 @@ const OnboardingDashboard: React.FC = () => {
 
       {/* ── Content ──────────────────────────────────────────────────────────── */}
       <Container maxWidth="xl" sx={{ pt: 4 }}>
-        {!loadingStats && !hasCloudData ? (
-          <Box sx={{ minHeight: '40vh' }} />
-        ) : (
         <Stack spacing={3.5}>
 
           <Box sx={dashboardSummaryGridSx}>
@@ -179,7 +175,9 @@ const OnboardingDashboard: React.FC = () => {
                     Premium cloud operations view
                   </Typography>
                   <Typography sx={{ fontSize: '.92rem', color: dashboardTokens.colors.textSecondary, maxWidth: 720, lineHeight: 1.65 }}>
-                    This view now stays minimal when the account has no live resources. Once services exist, it surfaces operational posture, live capacity, and direct access into product modules without onboarding banners or placeholder prompts.
+                    {loadingProgress || loadingStats
+                      ? 'Syncing live cloud signals and operational posture from the backend.'
+                      : 'This view now stays minimal when the account has no live resources. Once services exist, it surfaces operational posture, live capacity, and direct access into product modules without onboarding banners or placeholder prompts.'}
                   </Typography>
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 1.25 }}>
                     {platformSignals.map((signal) => (
@@ -256,7 +254,7 @@ const OnboardingDashboard: React.FC = () => {
           <Box>
             <SectionHeading>Virtual Machines</SectionHeading>
             <VMListPanel
-              refreshKey={vmRefreshKey}
+              refreshKey={0}
             />
           </Box>
 
@@ -266,7 +264,6 @@ const OnboardingDashboard: React.FC = () => {
           </Box>
 
         </Stack>
-        )}
       </Container>
 
       {/* Toast */}

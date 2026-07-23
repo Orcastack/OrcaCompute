@@ -121,14 +121,14 @@ const OnboardingFlow: React.FC = () => {
 
       case 7: // advanced done
         actions.completeOnboarding();
-        navigate('/dashboard');
+        navigate('/cloud');
         break;
     }
   };
 
   const handleSkipToDashboard = () => {
     actions.completeOnboarding();
-    navigate(isEnterprise ? '/enterprise/org/overview' : isDeveloper ? '/developer/Dashboard' : '/dashboard');
+    navigate(isEnterprise ? '/enterprise/org/overview' : isDeveloper ? '/developer/Dashboard' : '/cloud');
   };
 
   const renderCurrentPhase = () => {

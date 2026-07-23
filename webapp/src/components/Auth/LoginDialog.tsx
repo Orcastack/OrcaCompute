@@ -67,8 +67,8 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSwitchToSign
       onClose();
       // Reset form
       setFormData({ email: '', password: '' });
-      // Redirect to dashboard
-      navigate('/dashboard');
+      // Redirect to the main cloud dashboard
+      navigate('/cloud');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     } finally {

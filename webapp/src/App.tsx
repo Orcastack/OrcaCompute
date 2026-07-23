@@ -134,6 +134,35 @@ const RedirectToGroupPage: React.FC = () => {
   return <Navigate to={`/groups/${groupId}`} replace />;
 };
 
+const resolveAssignedModulePath = (user: any): string | null => {
+  const assignedModule = user?.assigned_module || user?.default_module || user?.module || null;
+
+  switch (assignedModule) {
+    case 'products':
+      return '/products/Dashboard';
+    case 'sections':
+      return '/sections/Dashboard';
+    case 'domains':
+      return '/domains/Dashboard';
+    case 'billing':
+      return '/billing/Dashboard';
+    case 'teams':
+      return '/teams/Dashboard';
+    case 'observability':
+      return '/observability/Dashboard';
+    case 'compliance':
+      return '/compliance/Dashboard';
+    case 'enterprise':
+      return '/enterprise';
+    case 'developer':
+      return '/developer/Dashboard';
+    case 'support':
+      return '/support/Dashboard';
+    default:
+      return null;
+  }
+};
+
 // Protected route – redirects to home if not authenticated
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isInitializing } = useAuth() as any;
@@ -171,6 +200,7 @@ const AppShell: React.FC = () => {
   const { state: onboardingState } = useOnboarding();
   const isMatrixDashboard = location.pathname.startsWith('/matrix');
   const isAdminUser = Boolean(user?.is_admin) || /admin|owner/i.test(user?.role || '') || onboardingState.userPlan === 'enterprise';
+  const assignedModulePath = resolveAssignedModulePath(user);
 
   if (portalVariant === 'login') {
     return (
@@ -454,8 +484,8 @@ const AppShell: React.FC = () => {
   }
 
   if (isCloudDashboardHome) {
-    if (!isAdminUser && onboardingState.userPlan !== 'developer') {
-      return <Navigate to="/sections/Dashboard" replace />;
+    if (!isAdminUser && onboardingState.userPlan !== 'developer' && assignedModulePath && assignedModulePath !== '/cloud') {
+      return <Navigate to={assignedModulePath} replace />;
     }
 
     return (
@@ -664,7 +694,7 @@ const AppShell: React.FC = () => {
             <Route path="/dashboard/organization"            element={<OrganizationPage />} />
             <Route path="/dashboard/deployments"             element={<DevDeploymentsPage />} />
             <Route path="/dashboard/governance"              element={<GovernancePage />} />
-            <Route path="/dashboard/*"                       element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard/*"                       element={<Navigate to="/cloud" replace />} />
           </Routes>
         </DashboardLayout>
       </ProtectedRoute>

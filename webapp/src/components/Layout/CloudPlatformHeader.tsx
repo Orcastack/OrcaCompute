@@ -949,7 +949,7 @@ const CloudPlatformHeader: React.FC = () => {
                 fullWidth
                 onClick={() => {
                   setMobileOpen(false);
-                  go('/dashboard');
+                  go('/cloud');
                 }}
                 sx={{ borderRadius: 0, border: `1px solid ${IMPERIAL_MIDNIGHT}`, color: IMPERIAL_MIDNIGHT, textTransform: 'none', mb: 1 }}
                 startIcon={<DashboardIcon />}
@@ -1037,7 +1037,7 @@ const CloudPlatformHeader: React.FC = () => {
         <MenuItem
           onClick={() => {
             setAccountAnchor(null);
-            go('/dashboard');
+            go('/cloud');
           }}
           sx={{ fontSize: 14, py: 1 }}
         >

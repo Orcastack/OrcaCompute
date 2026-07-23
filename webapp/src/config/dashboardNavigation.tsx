@@ -65,7 +65,7 @@ interface DashboardNavigation {
 const I = (fontSize = '1.05rem') => ({ sx: { fontSize } });
 
 const cloudPrimary: NavItemConfig[] = [
-  { label: 'Dashboard', icon: <DashboardIcon {...I()} />, path: '/cloud' },
+  { label: 'Overview', icon: <DashboardIcon {...I()} />, path: '/cloud' },
   {
     label: 'Products',
     icon: <ComputerIcon {...I()} />,
