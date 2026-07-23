@@ -58,6 +58,14 @@
     ]
   },
   "proxy": "http://localhost:8000",
+  "overrides": {
+    "schema-utils@^4.0.0": {
+      "ajv": "^8.17.1"
+    },
+    "ajv-keywords@^5.1.0": {
+      "ajv": "^8.17.1"
+    }
+  },
   "devDependencies": {
     "ts-morph": "^16.0.0"
   }

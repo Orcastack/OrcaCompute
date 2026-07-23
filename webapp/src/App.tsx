@@ -122,6 +122,10 @@ import DevSandboxPage            from './pages/DevSandboxPage';
 import DevWebhooksPage           from './pages/DevWebhooksPage';
 import DevRepositoriesPage       from './pages/DevRepositoriesPage';
 import DevSSHKeysPage            from './pages/DevSSHKeysPage';
+import PortalEntryPage           from './pages/PortalEntryPage';
+import PortalLoginPage           from './pages/PortalLoginPage';
+import PortalMatrixPage          from './pages/PortalMatrixPage';
+import { getPortalLoginUrl, portalVariant } from './portal/portalConfig';
 
 // Redirect /developer/Dashboard/groups/:groupId → /groups/:groupId
 const RedirectToGroupPage: React.FC = () => {
@@ -136,7 +140,13 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const { state: onboardingState } = useOnboarding();
   const location = useLocation();
   if (isInitializing) return null; // wait for token verification before deciding
-  if (!user) return <Navigate to="/" replace />;
+  if (!user) {
+    if (portalVariant === 'cloud' || portalVariant === 'developer' || portalVariant === 'matrix') {
+      window.location.assign(getPortalLoginUrl(portalVariant));
+      return null;
+    }
+    return <Navigate to="/" replace />;
+  }
   // New users who haven't completed onboarding are redirected there first
   if (!onboardingState.isCompleted) return <Navigate to="/onboarding" replace />;
   // Developer-plan users who land on /dashboard get sent to the dev dashboard
@@ -157,6 +167,38 @@ const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 // Renders the correct shell depending on whether we are inside /dashboard/*
 const AppShell: React.FC = () => {
   const location = useLocation();
+  const isMatrixDashboard = location.pathname.startsWith('/matrix');
+
+  if (portalVariant === 'home') {
+    return (
+      <Routes>
+        <Route path="/" element={<PortalEntryPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    );
+  }
+
+  if (portalVariant === 'login') {
+    return (
+      <Routes>
+        <Route path="/" element={<PortalLoginPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    );
+  }
+
+  if (portalVariant === 'cloud' && location.pathname === '/') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (portalVariant === 'developer' && location.pathname === '/') {
+    return <Navigate to="/developer/Dashboard" replace />;
+  }
+
+  if (portalVariant === 'matrix' && location.pathname === '/') {
+    return <Navigate to="/matrix" replace />;
+  }
+
   const isDashboard = location.pathname.startsWith('/dashboard');
   const isDeveloperDashboard = location.pathname.startsWith('/developer/Dashboard');
   const isProjectPage = location.pathname.startsWith('/developer/Dashboard/projects/');
@@ -570,6 +612,19 @@ const AppShell: React.FC = () => {
             <Route path="/monitor-dashboard/settings"   element={<MonitorSettingsPage />} />
             <Route path="/monitor-dashboard/dashboards" element={<MonitorCustomDashboardsPage />} />
             <Route path="/monitor-dashboard/*"          element={<Navigate to="/monitor-dashboard/overview" replace />} />
+          </Routes>
+        </DashboardLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  if (isMatrixDashboard) {
+    return (
+      <ProtectedRoute>
+        <DashboardLayout dashboardMode="monitor">
+          <Routes>
+            <Route path="/matrix" element={<PortalMatrixPage />} />
+            <Route path="/matrix/*" element={<PortalMatrixPage />} />
           </Routes>
         </DashboardLayout>
       </ProtectedRoute>
