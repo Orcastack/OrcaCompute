@@ -167,7 +167,10 @@ const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 // Renders the correct shell depending on whether we are inside /dashboard/*
 const AppShell: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuth() as any;
+  const { state: onboardingState } = useOnboarding();
   const isMatrixDashboard = location.pathname.startsWith('/matrix');
+  const isAdminUser = Boolean(user?.is_admin) || /admin|owner/i.test(user?.role || '') || onboardingState.userPlan === 'enterprise';
 
   if (portalVariant === 'login') {
     return (
@@ -451,6 +454,10 @@ const AppShell: React.FC = () => {
   }
 
   if (isCloudDashboardHome) {
+    if (!isAdminUser && onboardingState.userPlan !== 'developer') {
+      return <Navigate to="/sections/Dashboard" replace />;
+    }
+
     return (
       <ProtectedRoute>
         <DashboardLayout>

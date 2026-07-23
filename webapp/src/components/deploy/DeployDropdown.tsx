@@ -272,7 +272,7 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
                   <Divider sx={{ my: 0.5, mx: 1.5, borderColor: isDark ? 'rgba(255,255,255,.08)' : '#F0F0F0' }} />
                   <MenuItem
                     role="menuitem"
-                    onClick={() => { setOpen(false); navigate('/dashboard'); }}
+                    onClick={() => { setOpen(false); navigate('/products/Dashboard'); }}
                     sx={{
                       gap: 1.5, py: 0.9, px: 1.5, mx: 0.5, mb: 0.5,
                       borderRadius: '6px',

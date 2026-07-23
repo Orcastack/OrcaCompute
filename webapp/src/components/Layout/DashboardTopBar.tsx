@@ -29,6 +29,7 @@ import { useAuth }           from '../../contexts/AuthContext';
 import { useTheme as useColorMode } from '../../contexts/ThemeContext';
 import { useNavigate }       from 'react-router-dom';
 import { dashboardTokens }   from '../../styles/dashboardDesignSystem';
+import { DeployButton } from '../deploy/DeployDropdown';
 
 // ── Design constants (shared with DashboardLayout) ────────────────────────────
 const BLUE        = dashboardTokens.colors.brandPrimary;
@@ -45,6 +46,8 @@ export interface DashboardTopBarProps {
   actions?: React.ReactNode;
   /** Base path prefix for profile-menu navigation items. Defaults to '/cloud'. */
   routeBase?: string;
+  deployCategory?: 'compute' | 'storage' | 'networking' | 'developer' | 'all';
+  showDeployMenu?: boolean;
   /** When true renders a hamburger icon for mobile drawers (unused when leftContent overrides). */
   showMobileMenu?: boolean;
   onMobileMenuOpen?: () => void;
@@ -55,6 +58,8 @@ const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
   leftContent,
   actions,
   routeBase = '/cloud',
+  deployCategory = 'all',
+  showDeployMenu = false,
   showMobileMenu = false,
   onMobileMenuOpen,
 }) => {
@@ -107,6 +112,10 @@ const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
 
         {/* Caller-supplied action buttons (org chip, custom buttons, etc.) */}
         {actions}
+
+        {showDeployMenu && (
+          <DeployButton label="Deploy" category={deployCategory} size="small" />
+        )}
 
         {/* ── Theme toggle ─────────────────────────────────────────────── */}
         <Tooltip title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>

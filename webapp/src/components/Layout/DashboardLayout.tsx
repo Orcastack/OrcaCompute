@@ -485,6 +485,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, dashboardMo
         : dashboardMode === 'monitor'
           ? '/monitor-dashboard'
           : '/cloud';
+  const deployCategory = dashboardMode === 'products'
+    ? 'compute'
+    : dashboardMode === 'domains'
+      ? 'networking'
+      : 'all';
+  const showDeployMenu = dashboardMode === 'cloud' || dashboardMode === 'products' || dashboardMode === 'sections' || dashboardMode === 'domains';
 
   // Enterprise sidebar is always visible for all sections
   const enterpriseOrgSlug = dashboardMode === 'enterprise'
@@ -557,6 +563,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, dashboardMo
         {/* ── Top AppBar ─────────────────────────────────────────────────────── */}
         {!hideSidebar && dashboardMode !== 'docs' && dashboardMode !== 'audit' && dashboardMode !== 'wiki' && <DashboardTopBar
           routeBase={routeBase}
+          showDeployMenu={showDeployMenu}
+          deployCategory={deployCategory}
           showMobileMenu
           onMobileMenuOpen={() => setMobileOpen(true)}
           leftContent={

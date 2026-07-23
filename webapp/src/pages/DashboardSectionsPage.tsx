@@ -25,7 +25,7 @@ import { dashboardTokens, dashboardSemanticColors } from '../styles/dashboardDes
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type DashboardMode = 'cloud' | 'developer' | 'marketing' | 'domains' | 'monitor';
+type DashboardMode = 'cloud' | 'sections' | 'developer' | 'marketing' | 'domains' | 'monitor';
 
 interface SectionItem {
   label: string;
@@ -73,13 +73,13 @@ const SECTION_GROUPS: SectionGroup[] = [
     icon: <ComputerIcon sx={ICON_SZ} />,
     color: dashboardSemanticColors.purple,
     items: [
-      { label: 'Auto Scaling Groups',  route: '/dashboard/compute',    description: 'Horizontal scaling policies' },
-      { label: 'Flavors',              route: '/dashboard/compute',    description: 'Instance size configurations' },
-      { label: 'Images',               route: '/dashboard/compute',    description: 'OS and machine images' },
-      { label: 'Instances',            route: '/dashboard/compute',    description: 'Virtual machine management' },
-      { label: 'Kubernetes Clusters',  route: '/dashboard/kubernetes', description: 'Managed Kubernetes orchestration' },
-      { label: 'Serverless Functions', route: '/dashboard/serverless', description: 'Event-driven function runtime' },
-      { label: 'Snapshots',            route: '/dashboard/storage',    description: 'Point-in-time volume snapshots' },
+      { label: 'Auto Scaling Groups',  route: '/products/Dashboard/autoscaling',    description: 'Horizontal scaling policies' },
+      { label: 'Flavors',              route: '/products/Dashboard/compute',    description: 'Instance size configurations' },
+      { label: 'Images',               route: '/products/Dashboard/compute',    description: 'OS and machine images' },
+      { label: 'Instances',            route: '/products/Dashboard/compute',    description: 'Virtual machine management' },
+      { label: 'Kubernetes Clusters',  route: '/products/Dashboard/kubernetes', description: 'Managed Kubernetes orchestration' },
+      { label: 'Serverless Functions', route: '/products/Dashboard/serverless', description: 'Event-driven function runtime' },
+      { label: 'Snapshots',            route: '/products/Dashboard/snapshots',    description: 'Point-in-time volume snapshots' },
     ],
   },
   {
@@ -88,13 +88,13 @@ const SECTION_GROUPS: SectionGroup[] = [
     icon: <StorageIcon sx={ICON_SZ} />,
     color: dashboardSemanticColors.warning,
     items: [
-      { label: 'Backup Policies', route: '/dashboard/storage',   description: 'Scheduled backup rules' },
-      { label: 'Backups',         route: '/dashboard/storage',   description: 'Restore points and archives' },
-      { label: 'Buckets',         route: '/dashboard/storage',   description: 'Object storage containers' },
-      { label: 'Databases',       route: '/dashboard/databases', description: 'Managed relational and NoSQL' },
-      { label: 'File Shares',     route: '/dashboard/storage',   description: 'NFS and SMB file systems' },
-      { label: 'S3 Objects',      route: '/dashboard/storage',   description: 'S3-compatible object store' },
-      { label: 'Volumes',         route: '/dashboard/storage',   description: 'Block storage volumes' },
+      { label: 'Backup Policies', route: '/products/Dashboard/storage',   description: 'Scheduled backup rules' },
+      { label: 'Backups',         route: '/products/Dashboard/storage',   description: 'Restore points and archives' },
+      { label: 'Buckets',         route: '/products/Dashboard/storage',   description: 'Object storage containers' },
+      { label: 'Databases',       route: '/products/Dashboard/databases', description: 'Managed relational and NoSQL' },
+      { label: 'File Shares',     route: '/products/Dashboard/storage',   description: 'NFS and SMB file systems' },
+      { label: 'S3 Objects',      route: '/products/Dashboard/storage',   description: 'S3-compatible object store' },
+      { label: 'Volumes',         route: '/products/Dashboard/storage',   description: 'Block storage volumes' },
     ],
   },
   {
@@ -103,20 +103,20 @@ const SECTION_GROUPS: SectionGroup[] = [
     icon: <RouterIcon sx={ICON_SZ} />,
     color: dashboardSemanticColors.success,
     items: [
-      { label: 'Cdn Distributions', route: '/dashboard/cdn',            description: 'Global content delivery' },
-      { label: 'Dns Records',       route: '/dashboard/domains',        description: 'DNS zone management' },
-      { label: 'Encryption Keys',   route: '/dashboard/settings',       description: 'KMS and key lifecycle' },
-      { label: 'Internet Gateways', route: '/dashboard/network',        description: 'VPC internet access' },
-      { label: 'Load Balancers',    route: '/dashboard/load-balancers', description: 'Layer 4 / 7 traffic routing' },
-      { label: 'Nat Gateways',      route: '/dashboard/network',        description: 'Outbound NAT for private subnets' },
-      { label: 'Route Tables',      route: '/dashboard/network',        description: 'VPC routing rules' },
-      { label: 'Security Groups',   route: '/dashboard/network',        description: 'Stateful firewall rules' },
-      { label: 'Ssl Certificates',  route: '/dashboard/domains',        description: 'TLS certificate management' },
-      { label: 'Subnets',           route: '/dashboard/network',        description: 'IP address segmentation' },
-      { label: 'Target Groups',     route: '/dashboard/load-balancers', description: 'Load balancer backends' },
-      { label: 'Vpcs',              route: '/dashboard/network',        description: 'Virtual private cloud networks' },
-      { label: 'Vpn Connections',   route: '/dashboard/network',        description: 'Site-to-site encrypted tunnels' },
-      { label: 'Vpn Gateways',      route: '/dashboard/network',        description: 'VPN endpoint management' },
+      { label: 'Cdn Distributions', route: '/products/Dashboard/cdn',            description: 'Global content delivery' },
+      { label: 'Dns Records',       route: '/domains/Dashboard/dns',        description: 'DNS zone management' },
+      { label: 'Encryption Keys',   route: '/compliance/Dashboard',       description: 'KMS and key lifecycle' },
+      { label: 'Internet Gateways', route: '/products/Dashboard/network',        description: 'VPC internet access' },
+      { label: 'Load Balancers',    route: '/products/Dashboard/load-balancers', description: 'Layer 4 / 7 traffic routing' },
+      { label: 'Nat Gateways',      route: '/products/Dashboard/network',        description: 'Outbound NAT for private subnets' },
+      { label: 'Route Tables',      route: '/products/Dashboard/network',        description: 'VPC routing rules' },
+      { label: 'Security Groups',   route: '/products/Dashboard/network',        description: 'Stateful firewall rules' },
+      { label: 'Ssl Certificates',  route: '/domains/Dashboard',        description: 'TLS certificate management' },
+      { label: 'Subnets',           route: '/products/Dashboard/network',        description: 'IP address segmentation' },
+      { label: 'Target Groups',     route: '/products/Dashboard/load-balancers', description: 'Load balancer backends' },
+      { label: 'Vpcs',              route: '/products/Dashboard/network',        description: 'Virtual private cloud networks' },
+      { label: 'Vpn Connections',   route: '/products/Dashboard/network',        description: 'Site-to-site encrypted tunnels' },
+      { label: 'Vpn Gateways',      route: '/products/Dashboard/network',        description: 'VPN endpoint management' },
     ],
   },
   {
@@ -125,12 +125,12 @@ const SECTION_GROUPS: SectionGroup[] = [
     icon: <AccountTreeIcon sx={ICON_SZ} />,
     color: dashboardSemanticColors.orange,
     items: [
-      { label: 'Automations',  route: '/dashboard/orchestration', description: 'Workflow and event automation' },
-      { label: 'Cloud',        route: '/dashboard',               description: 'Cloud provider overview' },
-      { label: 'Compliance',   route: '/dashboard/settings',      description: 'Policy and audit controls' },
-      { label: 'Onboarding',   route: '/dashboard',               description: 'Setup guides and wizards' },
-      { label: 'Orchestration',route: '/dashboard/orchestration', description: 'Pipeline and job orchestration' },
-      { label: 'Registries',   route: '/dashboard/containers',    description: 'Container image registries' },
+      { label: 'Automations',  route: '/products/Dashboard/orchestration', description: 'Workflow and event automation' },
+      { label: 'Cloud',        route: '/cloud',               description: 'Cloud provider overview' },
+      { label: 'Compliance',   route: '/compliance/Dashboard',      description: 'Policy and audit controls' },
+      { label: 'Onboarding',   route: '/cloud',               description: 'Setup guides and wizards' },
+      { label: 'Orchestration',route: '/products/Dashboard/orchestration', description: 'Pipeline and job orchestration' },
+      { label: 'Registries',   route: '/products/Dashboard/containers',    description: 'Container image registries' },
     ],
   },
   {
@@ -139,7 +139,7 @@ const SECTION_GROUPS: SectionGroup[] = [
     icon: <CampaignIcon sx={ICON_SZ} />,
     color: dashboardSemanticColors.pink,
     items: [
-      { label: 'Billing',          route: '/dashboard/billing',                           description: 'Invoices and payment methods' },
+      { label: 'Billing',          route: '/billing/Dashboard',                           description: 'Invoices and payment methods' },
       { label: 'Campaigns',        route: '/marketing-dashboard/campaigns',               description: 'Email and ad campaign management' },
       { label: 'Contact Lists',    route: '/marketing-dashboard/audience-segmentation',   description: 'Subscriber list management' },
       { label: 'Contacts',         route: '/marketing-dashboard/audience-segmentation',   description: 'CRM contact records' },
